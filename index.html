@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Мой сайт</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:radial-gradient(circle at 50% 30%,#161616,#000 70%);color:#e5e5e5;font-family:sans-serif;text-align:center}
+.glass{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(0,0,0,.5)}
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:6px;border-radius:999px;z-index:5}
+nav button{all:unset;color:#f5f5f5;padding:10px 16px;border-radius:999px;font-size:1rem;cursor:pointer;transition:background .3s}
+nav button.on{background:rgba(255,255,255,.25)}
+#back,#me{position:fixed;top:16px;width:48px;height:48px;border-radius:50%;border:none;padding:0;display:flex;align-items:center;justify-content:center;color:#f5f5f5;cursor:pointer;z-index:6;overflow:hidden}
+#back{left:16px;opacity:0;pointer-events:none;transform:rotate(-360deg) scale(.3);transition:transform .6s ease,opacity .4s ease}
+#back.show{opacity:1;pointer-events:auto;transform:rotate(0) scale(1)}
+#back svg{width:24px;height:24px}
+#me{right:16px;border:2px solid rgba(255,255,255,.3)}
+#me.admin{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
+.ava{border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#f5f5f5}
+.ava svg,#me svg{width:60%;height:60%}
+.ava img,#me img{width:100%;height:100%;object-fit:cover;display:block}
+.ava img.spin,#me img.spin{object-fit:contain;background:#000;animation:rot 8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+@keyframes redpulse{from{box-shadow:0 0 10px 1px rgba(239,68,68,.5)}to{box-shadow:0 0 24px 6px rgba(239,68,68,.95)}}
+#app{transition:opacity .25s ease}
+#app.swap{opacity:0}
+.view{position:fixed;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding:90px 20px 70px;box-sizing:border-box;opacity:0;transform:translateY(24px);pointer-events:none;transition:opacity .5s ease,transform .5s ease}
+.view.active{opacity:1;transform:none;pointer-events:auto}
+.box{margin:auto;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:320px}
+#home .box{margin:0 auto;max-width:420px}
+.banner{width:100%;border-radius:20px;display:block;box-shadow:0 0 24px 4px rgba(255,255,255,.35)}
+.note{width:100%;box-sizing:border-box;padding:14px 18px;border-radius:22px;font-size:.95rem;line-height:1.5;color:#e5e5e5}
+.note span{display:inline-block;opacity:0;transform:translateY(10px);animation:wordIn .7s ease forwards}
+@keyframes wordIn{to{opacity:1;transform:none}}
+h2{color:#fff;margin:0;font-size:2rem}
+p{margin:0}
+label{align-self:flex-start;font-size:.9rem;opacity:.85}
+.regonly{display:contents}
+input[type=text],input[type=email],input[type=password]{width:100%;box-sizing:border-box;padding:12px 18px;border-radius:999px;font-size:16px;color:#fff;outline:none}
+input::placeholder{color:rgba(255,255,255,.5)}
+.btn{border:none;border-radius:999px;padding:12px 26px;font-size:1rem;cursor:pointer;color:#f5f5f5}
+.btn.main{background:#fff;color:#000;font-weight:bold}
+.btn:disabled{opacity:.6}
+.link{all:unset;cursor:pointer;color:#e5e5e5;opacity:.75;font-size:.95rem;text-decoration:underline;padding:6px}
+.err{color:#fca5a5;min-height:1.2em;font-size:.9rem}
+#prev{width:96px;height:96px;border:2px solid rgba(255,255,255,.3)}
+#pava{width:130px;height:130px;border:3px solid rgba(255,255,255,.35)}
+#pava.admin{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
+#pnick{font-size:1.8rem;color:#fff;font-weight:bold;word-break:break-word}
+.mail{opacity:.6;font-size:.9rem;word-break:break-all}
+.badge{background:rgba(255,255,255,.15);color:#e5e5e5;font-weight:bold;letter-spacing:2px;font-size:.85rem;padding:5px 16px;border-radius:999px}
+.badge.admin{background:#ef4444;color:#fff;box-shadow:0 0 14px rgba(239,68,68,.7)}
+#lang{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:999px;z-index:5}
+#lang button{all:unset;color:#f5f5f5;padding:7px 16px;border-radius:999px;font-size:.9rem;cursor:pointer;transition:background .3s}
+#lang button.on{background:rgba(255,255,255,.25)}
+</style>
+</head>
+<body>
+<button id="back" class="glass" aria-label="Back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</button>
+<nav class="glass">
+  <button data-go="forum">Forum</button>
+  <button data-go="local">Local</button>
+</nav>
+<button id="me" class="glass" aria-label="Profile"></button>
+
+<div id="app">
+  <section id="home" class="view active"><div class="box">
+    <img class="banner" src="top.gif" alt="">
+    <div id="note" class="note glass"></div>
+  </div></section>
+
+  <section id="forum" class="view"><div class="box">
+    <h2>Forum</h2>
+    <p data-i18n="empty"></p>
+  </div></section>
+
+  <section id="local" class="view"><div class="box">
+    <h2>Local</h2>
+    <p data-i18n="empty"></p>
+  </div></section>
+
+  <section id="register" class="view"><div class="box">
+    <h2 id="h_auth"></h2>
+    <div class="regonly">
+      <div id="prev" class="ava glass"></div>
+      <button id="choose" class="btn glass" data-i18n="choose"></button>
+      <input id="file" type="file" accept="image/*" hidden>
+    </div>
+    <input id="email" type="email" class="glass" data-i18n-ph="email_ph" autocomplete="email">
+    <input id="pass" type="password" class="glass" data-i18n-ph="pass_ph" autocomplete="current-password">
+    <div class="regonly">
+      <label for="nick" data-i18n="nick_label"></label>
+      <input id="nick" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
+    </div>
+    <div id="err" class="err"></div>
+    <button id="go" class="btn main"></button>
+    <button id="swap" class="link"></button>
+  </div></section>
+
+  <section id="profile" class="view"><div class="box">
+    <h2 data-i18n="profile_title"></h2>
+    <div id="pava" class="ava glass"></div>
+    <div id="pnick"></div>
+    <div id="pmail" class="mail"></div>
+    <div id="badge" class="badge">USER</div>
+    <p data-i18n="welcome"></p>
+    <button id="logout" class="btn glass" data-i18n="logout"></button>
+  </div></section>
+</div>
+
+<div id="lang" class="glass">
+  <button data-l="ru">RU</button>
+  <button data-l="en">EN</button>
+</div>
+
+<script>
+const SUPABASE_URL="https://zdtgznbyuhpskiyyxslt.supabase.co";
+const SUPABASE_KEY="sb_publishable_TLJwwYVPeHvL2phuERKT6A_sGg0Aa44";
+let sb=null;
+try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
+
+const TXT={
+  ru:{note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",reg_btn:"Зарегистрироваться",login_btn:"Войти",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",wait:"Подожди...",err_nick:"Ник должен быть от 2 до 20 символов",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",welcome:"Добро пожаловать!",logout:"Выйти из профиля"},
+  en:{note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",reg_btn:"Sign up",login_btn:"Log in",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",wait:"Please wait...",err_nick:"Nickname must be 2–20 characters",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",check_mail:"Check your email and confirm it",profile_title:"Profile",welcome:"Welcome!",logout:"Log out"}
+};
+const USER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
+const $=id=>document.getElementById(id);
+function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function drop(k){try{localStorage.removeItem(k)}catch(e){}}
+
+let lang=load("lang")==="en"?"en":"ru";
+let user=null;
+let pending=null;
+let mode="reg";
+let errKey=null,errRaw="";
+drop("user");
+
+const t=k=>TXT[lang][k];
+function isAdmin(u){return !!(u&&u.app_metadata&&u.app_metadata.role==="admin")}
+
+function buildNote(){
+  const n=$("note");
+  n.textContent="";
+  t("note").split(" ").forEach((w,i)=>{
+    const s=document.createElement("span");
+    s.textContent=w;
+    s.style.animationDelay=(0.6+i*0.18)+"s";
+    n.appendChild(s);
+    n.appendChild(document.createTextNode(" "));
+  });
+}
+function showErr(){$("err").textContent=errKey?t(errKey):errRaw}
+function setErr(key,raw){errKey=key;errRaw=raw||"";showErr()}
+function applyMode(){
+  const r=mode==="reg";
+  document.querySelectorAll(".regonly").forEach(e=>e.style.display=r?"":"none");
+  $("h_auth").textContent=t(r?"reg_title":"login_title");
+  $("go").textContent=t(r?"reg_btn":"login_btn");
+  $("swap").textContent=t(r?"to_login":"to_reg");
+  $("pass").autocomplete=r?"new-password":"current-password";
+}
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
+  document.querySelectorAll("[data-i18n-ph]").forEach(e=>e.placeholder=t(e.dataset.i18nPh));
+  document.querySelectorAll("#lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  applyMode();
+  showErr();
+  buildNote();
+}
+function setLang(l){
+  if(l===lang)return;
+  lang=l;save("lang",l);
+  $("app").classList.add("swap");
+  setTimeout(()=>{applyLang();$("app").classList.remove("swap")},250);
+  document.querySelectorAll("#lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+}
+document.querySelectorAll("#lang button").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+
+function avaHTML(src,admin){
+  if(src)return '<img alt="" src="'+src+'">';
+  return admin?'<img class="spin" alt="" src="pic1.jpg">':USER_ICON;
+}
+function renderUser(){
+  const admin=!!(user&&user.admin);
+  const a=user&&user.avatar;
+  $("me").innerHTML=avaHTML(a,admin);
+  $("pava").innerHTML=avaHTML(a,admin);
+  $("me").classList.toggle("admin",admin);
+  $("pava").classList.toggle("admin",admin);
+  $("badge").textContent=admin?"ADMIN":"USER";
+  $("badge").classList.toggle("admin",admin);
+  $("pnick").textContent=user?user.nick:"";
+  $("pmail").textContent=user?user.email:"";
+}
+function setPrev(src){$("prev").innerHTML=avaHTML(src,false)}
+function setUserFrom(u){
+  const meta=u.user_metadata||{};
+  user={id:u.id,email:u.email||"",nick:meta.nick||(u.email||"user").split("@")[0],avatar:load("ava_"+u.id),admin:isAdmin(u)};
+}
+function clearForm(){
+  $("email").value="";$("pass").value="";$("nick").value="";
+  pending=null;setPrev(null);setErr(null);
+}
+
+const back=$("back");
+const btns=document.querySelectorAll("nav button");
+function go(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));
+  btns.forEach(b=>b.classList.toggle("on",b.dataset.go===name));
+  back.classList.toggle("show",name!=="home");
+  if(name==="home")buildNote();
+}
+btns.forEach(b=>b.onclick=()=>go(b.dataset.go));
+back.onclick=()=>go("home");
+$("me").onclick=()=>go(user?"profile":"register");
+
+$("choose").onclick=()=>$("file").click();
+$("file").onchange=e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement("canvas");
+      c.width=c.height=200;
+      const s=Math.min(img.width,img.height);
+      c.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,200,200);
+      pending=c.toDataURL("image/jpeg",0.85);
+      setPrev(pending);
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(f);
+};
+
+$("swap").onclick=()=>{mode=mode==="reg"?"login":"reg";setErr(null);applyMode()};
+
+function mapErr(e){
+  const m=(e.message||"").toLowerCase();
+  if(m.indexOf("invalid login")>-1)return "err_bad";
+  if(m.indexOf("already registered")>-1)return "err_exists";
+  if(m.indexOf("at least")>-1)return "err_pass";
+  return null;
+}
+function busy(b){
+  $("go").disabled=b;
+  if(b)$("go").textContent=t("wait");else applyMode();
+}
+
+$("go").onclick=async()=>{
+  if(!sb){setErr("err_net");return}
+  const email=$("email").value.trim();
+  const pass=$("pass").value;
+  if(!email){setErr("err_email");return}
+  if(pass.length<6){setErr("err_pass");return}
+  let nick="";
+  if(mode==="reg"){
+    nick=$("nick").value.trim();
+    if(nick.length<2||nick.length>20){setErr("err_nick");return}
+  }
+  setErr(null);
+  busy(true);
+  try{
+    const res=mode==="reg"
+      ?await sb.auth.signUp({email:email,password:pass,options:{data:{nick:nick}}})
+      :await sb.auth.signInWithPassword({email:email,password:pass});
+    if(res.error){setErr(mapErr(res.error),res.error.message);return}
+    const u=res.data&&res.data.user;
+    const s=res.data&&res.data.session;
+    if(!u||!s){setErr("check_mail");return}
+    if(mode==="reg"&&pending)save("ava_"+u.id,pending);
+    setUserFrom(u);
+    renderUser();
+    clearForm();
+    go("profile");
+  }catch(e){
+    setErr("err_net");
+  }finally{
+    busy(false);
+  }
+};
+
+$("logout").onclick=async()=>{
+  try{if(sb)await sb.auth.signOut()}catch(e){}
+  user=null;
+  clearForm();
+  renderUser();
+  go("home");
+};
+
+async function boot(){
+  try{
+    if(sb){
+      const r=await sb.auth.getSession();
+      if(r.data&&r.data.session)setUserFrom(r.data.session.user);
+    }
+  }catch(e){}
+  renderUser();
+}
+
+setPrev(null);
+renderUser();
+applyLang();
+boot();
+</script>
+</body>
+</html>
