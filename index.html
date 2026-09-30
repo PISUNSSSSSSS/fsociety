@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#000000">
 <title>Мой сайт</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <style>
 html,body{margin:0;height:100%;overflow:hidden}
 body{background:radial-gradient(circle at 50% 30%,#161616,#000 70%);color:#e5e5e5;font-family:sans-serif;text-align:center}
@@ -56,6 +57,7 @@ input::placeholder{color:rgba(255,255,255,.5)}
 #lang{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:999px;z-index:5}
 #lang button{all:unset;color:#f5f5f5;padding:7px 16px;border-radius:999px;font-size:.9rem;cursor:pointer;transition:background .3s}
 #lang button.on{background:rgba(255,255,255,.25)}
+#cf{display:flex;justify-content:center;min-height:0}
 </style>
 </head>
 <body>
@@ -97,6 +99,7 @@ input::placeholder{color:rgba(255,255,255,.5)}
       <label for="nick" data-i18n="nick_label"></label>
       <input id="nick" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
     </div>
+    <div id="cf"></div>
     <div id="err" class="err"></div>
     <button id="go" class="btn main"></button>
     <button id="swap" class="link"></button>
@@ -121,12 +124,15 @@ input::placeholder{color:rgba(255,255,255,.5)}
 <script>
 const SUPABASE_URL="https://zdtgznbyuhpskiyyxslt.supabase.co";
 const SUPABASE_KEY="sb_publishable_TLJwwYVPeHvL2phuERKT6A_sGg0Aa44";
+const ADMIN_EMAIL="ADMIN_EMAIL_HERE";
 let sb=null;
+const TURNSTILE_SITE_KEY="0x4AAAAAAFKAXgsl9ax7H-G_";
+let cfToken=null,cfId=null;
 try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
 
 const TXT={
-  ru:{note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",reg_btn:"Зарегистрироваться",login_btn:"Войти",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",wait:"Подожди...",err_nick:"Ник должен быть от 2 до 20 символов",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",welcome:"Добро пожаловать!",logout:"Выйти из профиля"},
-  en:{note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",reg_btn:"Sign up",login_btn:"Log in",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",wait:"Please wait...",err_nick:"Nickname must be 2–20 characters",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",check_mail:"Check your email and confirm it",profile_title:"Profile",welcome:"Welcome!",logout:"Log out"}
+  ru:{err_captcha:"Подтверди, что ты не робот (дождись галочки)",note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",reg_btn:"Зарегистрироваться",login_btn:"Войти",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",wait:"Подожди...",err_nick:"Ник должен быть от 2 до 20 символов",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",welcome:"Добро пожаловать!",logout:"Выйти из профиля"},
+  en:{err_captcha:"Please confirm you are not a robot (wait for the checkmark)",note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",reg_btn:"Sign up",login_btn:"Log in",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",wait:"Please wait...",err_nick:"Nickname must be 2–20 characters",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",check_mail:"Check your email and confirm it",profile_title:"Profile",welcome:"Welcome!",logout:"Log out"}
 };
 const USER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
 const $=id=>document.getElementById(id);
@@ -142,7 +148,7 @@ let errKey=null,errRaw="";
 drop("user");
 
 const t=k=>TXT[lang][k];
-function isAdmin(u){return !!(u&&u.app_metadata&&u.app_metadata.role==="admin")}
+function isAdmin(email){return (email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase()}
 
 function buildNote(){
   const n=$("note");
@@ -202,7 +208,7 @@ function renderUser(){
 function setPrev(src){$("prev").innerHTML=avaHTML(src,false)}
 function setUserFrom(u){
   const meta=u.user_metadata||{};
-  user={id:u.id,email:u.email||"",nick:meta.nick||(u.email||"user").split("@")[0],avatar:load("ava_"+u.id),admin:isAdmin(u)};
+  user={id:u.id,email:u.email||"",nick:meta.nick||(u.email||"user").split("@")[0],avatar:load("ava_"+u.id),admin:isAdmin(u.email)};
 }
 function clearForm(){
   $("email").value="";$("pass").value="";$("nick").value="";
@@ -266,12 +272,13 @@ $("go").onclick=async()=>{
     nick=$("nick").value.trim();
     if(nick.length<2||nick.length>20){setErr("err_nick");return}
   }
+  if(cfId!==null&&!cfToken){setErr("err_captcha");return}
   setErr(null);
   busy(true);
   try{
     const res=mode==="reg"
-      ?await sb.auth.signUp({email:email,password:pass,options:{data:{nick:nick}}})
-      :await sb.auth.signInWithPassword({email:email,password:pass});
+      ?await sb.auth.signUp({email:email,password:pass,options:{data:{nick:nick},captchaToken:cfToken||undefined}})
+      :await sb.auth.signInWithPassword({email:email,password:pass,options:{captchaToken:cfToken||undefined}});
     if(res.error){setErr(mapErr(res.error),res.error.message);return}
     const u=res.data&&res.data.user;
     const s=res.data&&res.data.session;
@@ -285,6 +292,7 @@ $("go").onclick=async()=>{
     setErr("err_net");
   }finally{
     busy(false);
+    resetCaptcha();
   }
 };
 
@@ -295,6 +303,16 @@ $("logout").onclick=async()=>{
   renderUser();
   go("home");
 };
+
+function renderCaptcha(){
+  if(cfId!==null||!window.turnstile)return;
+  cfId=turnstile.render("#cf",{sitekey:TURNSTILE_SITE_KEY,theme:"dark",callback:function(tk){cfToken=tk},"expired-callback":function(){cfToken=null},"error-callback":function(){cfToken=null}});
+}
+function resetCaptcha(){
+  cfToken=null;
+  try{if(cfId!==null)turnstile.reset(cfId)}catch(e){}
+}
+window.addEventListener("load",renderCaptcha);
 
 async function boot(){
   try{
