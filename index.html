@@ -18,20 +18,23 @@ nav button.on{background:rgba(255,255,255,.25)}
 #back{left:16px;opacity:0;pointer-events:none;transform:rotate(-360deg) scale(.3);transition:transform .6s ease,opacity .4s ease}
 #back.show{opacity:1;pointer-events:auto;transform:rotate(0) scale(1)}
 #back svg{width:24px;height:24px}
-#me{right:16px;border:2px solid rgba(255,255,255,.3)}
-#me.admin{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
+#me{right:16px;border:2px solid #4ade80;box-shadow:0 0 10px 1px rgba(74,222,128,.5)}
+#me.owner{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
+#me.admin{border-color:#f59e0b;animation:amberpulse 2s ease-in-out infinite alternate}
 .ava{border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#f5f5f5}
 .ava svg,#me svg{width:60%;height:60%}
 .ava img,#me img{width:100%;height:100%;object-fit:cover;display:block}
 .ava img.spin,#me img.spin{object-fit:contain;background:#000;animation:rot 8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 @keyframes redpulse{from{box-shadow:0 0 10px 1px rgba(239,68,68,.5)}to{box-shadow:0 0 24px 6px rgba(239,68,68,.95)}}
+@keyframes amberpulse{from{box-shadow:0 0 10px 1px rgba(245,158,11,.5)}to{box-shadow:0 0 24px 6px rgba(245,158,11,.95)}}
 #app{transition:opacity .25s ease}
 #app.swap{opacity:0}
 .view{position:fixed;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding:90px 20px 70px;box-sizing:border-box;opacity:0;transform:translateY(24px);pointer-events:none;transition:opacity .5s ease,transform .5s ease}
 .view.active{opacity:1;transform:none;pointer-events:auto}
 .box{margin:auto;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:320px}
 #home .box{margin:0 auto;max-width:420px}
+#admin .box{max-width:420px}
 .banner{width:100%;border-radius:20px;display:block;box-shadow:0 0 24px 4px rgba(255,255,255,.35)}
 .note{width:100%;box-sizing:border-box;padding:14px 18px;border-radius:22px;font-size:.95rem;line-height:1.5;color:#e5e5e5}
 .note span{display:inline-block;opacity:0;transform:translateY(10px);animation:wordIn .7s ease forwards}
@@ -47,17 +50,32 @@ input::placeholder{color:rgba(255,255,255,.5)}
 .btn:disabled{opacity:.6}
 .link{all:unset;cursor:pointer;color:#e5e5e5;opacity:.75;font-size:.95rem;text-decoration:underline;padding:6px}
 .err{color:#fca5a5;min-height:1.2em;font-size:.9rem}
-#prev{width:96px;height:96px;border:2px solid rgba(255,255,255,.3)}
-#pava{width:130px;height:130px;border:3px solid rgba(255,255,255,.35)}
-#pava.admin{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
+#cf{display:flex;justify-content:center;min-height:0}
+#prev{width:96px;height:96px;border:2px solid #4ade80}
+#pava{width:130px;height:130px;border:3px solid #4ade80;box-shadow:0 0 18px 3px rgba(74,222,128,.5)}
+#pava.owner{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
+#pava.admin{border-color:#f59e0b;animation:amberpulse 2s ease-in-out infinite alternate}
 #pnick{font-size:1.8rem;color:#fff;font-weight:bold;word-break:break-word}
 .mail{opacity:.6;font-size:.9rem;word-break:break-all}
-.badge{background:rgba(255,255,255,.15);color:#e5e5e5;font-weight:bold;letter-spacing:2px;font-size:.85rem;padding:5px 16px;border-radius:999px}
-.badge.admin{background:#ef4444;color:#fff;box-shadow:0 0 14px rgba(239,68,68,.7)}
+.badge{background:rgba(74,222,128,.18);color:#86efac;font-weight:bold;letter-spacing:2px;font-size:.8rem;padding:4px 14px;border-radius:999px;box-shadow:0 0 12px rgba(74,222,128,.35)}
+.badge.owner{background:#ef4444;color:#fff;box-shadow:0 0 14px rgba(239,68,68,.7)}
+.badge.admin{background:#f59e0b;color:#000;box-shadow:0 0 14px rgba(245,158,11,.7)}
+.ulist{display:flex;flex-direction:column;gap:10px;width:100%}
+.ucard{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:18px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.urow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.urow b{word-break:break-word}
+.uacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.mini{border:none;border-radius:999px;padding:8px 14px;font-size:.85rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
+.mini.danger{background:rgba(239,68,68,.35);color:#fecaca}
+#modal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s ease}
+#modal.show{opacity:1;pointer-events:auto}
+.mcard{width:100%;max-width:320px;box-sizing:border-box;padding:22px;border-radius:24px;display:flex;flex-direction:column;gap:18px;background:#141414;border:1px solid rgba(255,255,255,.2)}
+.mbtns{display:flex;gap:10px;justify-content:center}
+#toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);padding:10px 18px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;max-width:90%}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 #lang{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:999px;z-index:5}
 #lang button{all:unset;color:#f5f5f5;padding:7px 16px;border-radius:999px;font-size:.9rem;cursor:pointer;transition:background .3s}
 #lang button.on{background:rgba(255,255,255,.25)}
-#cf{display:flex;justify-content:center;min-height:0}
 </style>
 </head>
 <body>
@@ -68,7 +86,7 @@ input::placeholder{color:rgba(255,255,255,.5)}
   <button data-go="forum">Forum</button>
   <button data-go="local">Local</button>
 </nav>
-<button id="me" class="glass" aria-label="Profile"></button>
+<button id="me" class="glass user" aria-label="Profile"></button>
 
 <div id="app">
   <section id="home" class="view active"><div class="box">
@@ -107,14 +125,33 @@ input::placeholder{color:rgba(255,255,255,.5)}
 
   <section id="profile" class="view"><div class="box">
     <h2 data-i18n="profile_title"></h2>
-    <div id="pava" class="ava glass"></div>
+    <div id="pava" class="ava glass user"></div>
     <div id="pnick"></div>
+    <div id="psid" class="mail"></div>
     <div id="pmail" class="mail"></div>
-    <div id="badge" class="badge">USER</div>
-    <p data-i18n="welcome"></p>
+    <div id="badge" class="badge user">USER</div>
+    <button id="chava" class="btn glass" data-i18n="change_avatar"></button>
+    <input id="file2" type="file" accept="image/*" hidden>
+    <button id="admbtn" class="btn glass" data-i18n="admin_panel" style="display:none"></button>
     <button id="logout" class="btn glass" data-i18n="logout"></button>
   </div></section>
+
+  <section id="admin" class="view"><div class="box">
+    <h2 data-i18n="admin_panel"></h2>
+    <p id="utotal" class="mail"></p>
+    <input id="usearch" type="text" class="glass" data-i18n-ph="search_ph" autocomplete="off">
+    <div id="ulist" class="ulist"></div>
+  </div></section>
 </div>
+
+<div id="modal"><div class="mcard">
+  <div id="mtext"></div>
+  <div class="mbtns">
+    <button id="mno" class="btn glass" data-i18n="no"></button>
+    <button id="myes" class="btn main" data-i18n="yes"></button>
+  </div>
+</div></div>
+<div id="toast" class="glass"></div>
 
 <div id="lang" class="glass">
   <button data-l="ru">RU</button>
@@ -124,31 +161,32 @@ input::placeholder{color:rgba(255,255,255,.5)}
 <script>
 const SUPABASE_URL="https://zdtgznbyuhpskiyyxslt.supabase.co";
 const SUPABASE_KEY="sb_publishable_TLJwwYVPeHvL2phuERKT6A_sGg0Aa44";
-const ADMIN_EMAIL="ADMIN_EMAIL_HERE";
-let sb=null;
 const TURNSTILE_SITE_KEY="0x4AAAAAAFKAXgsl9ax7H-G_";
-let cfToken=null,cfId=null;
+let sb=null;
 try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
+let cfToken=null,cfId=null;
 
 const TXT={
-  ru:{err_captcha:"Подтверди, что ты не робот (дождись галочки)",note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",reg_btn:"Зарегистрироваться",login_btn:"Войти",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",wait:"Подожди...",err_nick:"Ник должен быть от 2 до 20 символов",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",welcome:"Добро пожаловать!",logout:"Выйти из профиля"},
-  en:{err_captcha:"Please confirm you are not a robot (wait for the checkmark)",note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",reg_btn:"Sign up",login_btn:"Log in",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",wait:"Please wait...",err_nick:"Nickname must be 2–20 characters",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",check_mail:"Check your email and confirm it",profile_title:"Profile",welcome:"Welcome!",logout:"Log out"}
+  ru:{note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",reg_btn:"Зарегистрироваться",login_btn:"Войти",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",wait:"Подожди...",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_generic:"Что-то пошло не так, попробуй ещё раз",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",logout:"Выйти из профиля",change_avatar:"Сменить аватарку",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",make_admin:"Сделать админом",remove_admin:"Снять админа",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено"},
+  en:{note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",reg_btn:"Sign up",login_btn:"Log in",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",wait:"Please wait...",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_generic:"Something went wrong, please try again",check_mail:"Check your email and confirm it",profile_title:"Profile",logout:"Log out",change_avatar:"Change avatar",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",make_admin:"Make admin",remove_admin:"Remove admin",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved"}
 };
 const USER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
 const $=id=>document.getElementById(id);
 function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-function drop(k){try{localStorage.removeItem(k)}catch(e){}}
 
 let lang=load("lang")==="en"?"en":"ru";
 let user=null;
 let pending=null;
 let mode="reg";
+let cur="home";
+let allUsers=[];
+let confirmCb=null;
+let toastTimer=null;
 let errKey=null,errRaw="";
-drop("user");
 
 const t=k=>TXT[lang][k];
-function isAdmin(email){return (email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase()}
+const isStaff=()=>!!(user&&(user.role==="owner"||user.role==="admin"));
 
 function buildNote(){
   const n=$("note");
@@ -163,6 +201,22 @@ function buildNote(){
 }
 function showErr(){$("err").textContent=errKey?t(errKey):errRaw}
 function setErr(key,raw){errKey=key;errRaw=raw||"";showErr()}
+function toast(msg){
+  const el=$("toast");
+  el.textContent=msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
+}
+function askConfirm(msg,cb){
+  $("mtext").textContent=msg;
+  confirmCb=cb;
+  $("modal").classList.add("show");
+}
+$("myes").onclick=()=>{$("modal").classList.remove("show");const cb=confirmCb;confirmCb=null;if(cb)cb()};
+$("mno").onclick=()=>{$("modal").classList.remove("show");confirmCb=null};
+$("modal").onclick=e=>{if(e.target===$("modal"))$("mno").onclick()};
+
 function applyMode(){
   const r=mode==="reg";
   document.querySelectorAll(".regonly").forEach(e=>e.style.display=r?"":"none");
@@ -179,6 +233,7 @@ function applyLang(){
   applyMode();
   showErr();
   buildNote();
+  if(cur==="admin"&&allUsers.length)renderUsers();
 }
 function setLang(l){
   if(l===lang)return;
@@ -189,26 +244,50 @@ function setLang(l){
 }
 document.querySelectorAll("#lang button").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
 
-function avaHTML(src,admin){
-  if(src)return '<img alt="" src="'+src+'">';
-  return admin?'<img class="spin" alt="" src="pic1.jpg">':USER_ICON;
+function setAva(el,src,spin){
+  el.textContent="";
+  if(src||spin){
+    const im=document.createElement("img");
+    im.alt="";
+    im.src=src||"pic1.jpg";
+    if(!src&&spin)im.className="spin";
+    el.appendChild(im);
+  }else{
+    el.innerHTML=USER_ICON;
+  }
 }
 function renderUser(){
-  const admin=!!(user&&user.admin);
-  const a=user&&user.avatar;
-  $("me").innerHTML=avaHTML(a,admin);
-  $("pava").innerHTML=avaHTML(a,admin);
-  $("me").classList.toggle("admin",admin);
-  $("pava").classList.toggle("admin",admin);
-  $("badge").textContent=admin?"ADMIN":"USER";
-  $("badge").classList.toggle("admin",admin);
+  const role=user?user.role:"user";
+  setAva($("me"),user&&user.avatar,role==="owner");
+  setAva($("pava"),user&&user.avatar,role==="owner");
+  ["me","pava"].forEach(id=>{
+    const e=$(id);
+    e.classList.remove("owner","admin","user");
+    e.classList.add(role);
+  });
+  $("badge").textContent=role.toUpperCase();
+  $("badge").className="badge "+role;
   $("pnick").textContent=user?user.nick:"";
+  $("psid").textContent=(user&&user.sid)?"ID: "+user.sid:"";
   $("pmail").textContent=user?user.email:"";
+  $("admbtn").style.display=isStaff()?"":"none";
 }
-function setPrev(src){$("prev").innerHTML=avaHTML(src,false)}
-function setUserFrom(u){
+function setPrev(src){setAva($("prev"),src,false)}
+async function loadUser(u){
   const meta=u.user_metadata||{};
-  user={id:u.id,email:u.email||"",nick:meta.nick||(u.email||"user").split("@")[0],avatar:load("ava_"+u.id),admin:isAdmin(u.email)};
+  let p=null;
+  try{
+    const r=await sb.from("profiles").select("short_id,nick,avatar,role").eq("id",u.id).maybeSingle();
+    p=r.data;
+  }catch(e){}
+  user={
+    id:u.id,
+    email:u.email||"",
+    nick:(p&&p.nick)||meta.nick||(u.email||"user").split("@")[0],
+    avatar:(p&&p.avatar)||null,
+    sid:p?p.short_id:null,
+    role:(p&&p.role)||"user"
+  };
 }
 function clearForm(){
   $("email").value="";$("pass").value="";$("nick").value="";
@@ -218,42 +297,69 @@ function clearForm(){
 const back=$("back");
 const btns=document.querySelectorAll("nav button");
 function go(name){
+  if(name==="admin"&&!isStaff())name="home";
+  cur=name;
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));
   btns.forEach(b=>b.classList.toggle("on",b.dataset.go===name));
   back.classList.toggle("show",name!=="home");
   if(name==="home")buildNote();
+  if(name==="admin")loadUsers();
 }
 btns.forEach(b=>b.onclick=()=>go(b.dataset.go));
-back.onclick=()=>go("home");
+back.onclick=()=>go(cur==="admin"?"profile":"home");
 $("me").onclick=()=>go(user?"profile":"register");
+$("admbtn").onclick=()=>go("admin");
 
-$("choose").onclick=()=>$("file").click();
-$("file").onchange=e=>{
-  const f=e.target.files[0];
-  if(!f)return;
-  const r=new FileReader();
-  r.onload=()=>{
-    const img=new Image();
-    img.onload=()=>{
-      const c=document.createElement("canvas");
-      c.width=c.height=200;
-      const s=Math.min(img.width,img.height);
-      c.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,200,200);
-      pending=c.toDataURL("image/jpeg",0.85);
-      setPrev(pending);
+function cropToData(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onerror=()=>rej(new Error("read"));
+    r.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>rej(new Error("img"));
+      img.onload=()=>{
+        const c=document.createElement("canvas");
+        c.width=c.height=160;
+        const s=Math.min(img.width,img.height);
+        c.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,160,160);
+        res(c.toDataURL("image/jpeg",0.8));
+      };
+      img.src=r.result;
     };
-    img.src=r.result;
-  };
-  r.readAsDataURL(f);
+    r.readAsDataURL(file);
+  });
+}
+$("choose").onclick=()=>$("file").click();
+$("file").onchange=async e=>{
+  const f=e.target.files[0];
+  e.target.value="";
+  if(!f)return;
+  try{pending=await cropToData(f);setPrev(pending)}catch(err){toast(t("err_generic"))}
+};
+$("chava").onclick=()=>$("file2").click();
+$("file2").onchange=async e=>{
+  const f=e.target.files[0];
+  e.target.value="";
+  if(!f||!user||!sb)return;
+  try{
+    const data=await cropToData(f);
+    const r=await sb.from("profiles").update({avatar:data}).eq("id",user.id);
+    if(r.error)throw r.error;
+    user.avatar=data;
+    renderUser();
+    toast(t("saved"));
+  }catch(err){toast(t("err_generic"))}
 };
 
 $("swap").onclick=()=>{mode=mode==="reg"?"login":"reg";setErr(null);applyMode()};
 
 function mapErr(e){
   const m=(e.message||"").toLowerCase();
+  if(m.indexOf("captcha")>-1)return "err_captcha";
   if(m.indexOf("invalid login")>-1)return "err_bad";
   if(m.indexOf("already registered")>-1)return "err_exists";
   if(m.indexOf("at least")>-1)return "err_pass";
+  if(m.indexOf("database error")>-1)return "err_generic";
   return null;
 }
 function busy(b){
@@ -276,6 +382,11 @@ $("go").onclick=async()=>{
   setErr(null);
   busy(true);
   try{
+    if(mode==="reg"){
+      const chk=await sb.rpc("nick_free",{n:nick});
+      if(chk.error){setErr("err_net");return}
+      if(chk.data===false){setErr("err_nick_taken");return}
+    }
     const res=mode==="reg"
       ?await sb.auth.signUp({email:email,password:pass,options:{data:{nick:nick},captchaToken:cfToken||undefined}})
       :await sb.auth.signInWithPassword({email:email,password:pass,options:{captchaToken:cfToken||undefined}});
@@ -283,8 +394,10 @@ $("go").onclick=async()=>{
     const u=res.data&&res.data.user;
     const s=res.data&&res.data.session;
     if(!u||!s){setErr("check_mail");return}
-    if(mode==="reg"&&pending)save("ava_"+u.id,pending);
-    setUserFrom(u);
+    if(mode==="reg"&&pending){
+      try{await sb.from("profiles").update({avatar:pending}).eq("id",u.id)}catch(e){}
+    }
+    await loadUser(u);
     renderUser();
     clearForm();
     go("profile");
@@ -296,13 +409,100 @@ $("go").onclick=async()=>{
   }
 };
 
-$("logout").onclick=async()=>{
+async function doLogout(){
   try{if(sb)await sb.auth.signOut()}catch(e){}
   user=null;
   clearForm();
   renderUser();
   go("home");
-};
+}
+$("logout").onclick=()=>askConfirm(t("logout_q"),doLogout);
+
+async function loadUsers(){
+  const list=$("ulist");
+  list.textContent="";
+  $("utotal").textContent=t("loading");
+  try{
+    const r=await sb.rpc("admin_users");
+    if(r.error)throw r.error;
+    allUsers=r.data||[];
+    renderUsers();
+  }catch(e){
+    $("utotal").textContent=t("err_generic");
+  }
+}
+function renderUsers(){
+  const q=$("usearch").value.trim().toLowerCase();
+  const list=$("ulist");
+  list.textContent="";
+  const rows=allUsers.filter(u=>!q||String(u.short_id).indexOf(q)>-1||u.nick.toLowerCase().indexOf(q)>-1||(u.email||"").toLowerCase().indexOf(q)>-1);
+  $("utotal").textContent=t("total").replace("{n}",allUsers.length);
+  if(!rows.length){
+    const p=document.createElement("p");
+    p.textContent=t("no_users");
+    list.appendChild(p);
+    return;
+  }
+  const me=user?user.role:"user";
+  rows.forEach(u=>{
+    const card=document.createElement("div");
+    card.className="ucard glass";
+    const top=document.createElement("div");
+    top.className="urow";
+    const name=document.createElement("b");
+    name.textContent="#"+u.short_id+" "+u.nick;
+    const bd=document.createElement("span");
+    bd.className="badge "+u.role;
+    bd.textContent=u.role.toUpperCase();
+    top.appendChild(name);
+    top.appendChild(bd);
+    const mail=document.createElement("div");
+    mail.className="mail";
+    mail.textContent=u.email;
+    const date=document.createElement("div");
+    date.className="mail";
+    date.textContent=new Date(u.created_at).toLocaleDateString(lang==="en"?"en-GB":"ru-RU");
+    card.appendChild(top);
+    card.appendChild(mail);
+    card.appendChild(date);
+    const acts=document.createElement("div");
+    acts.className="uacts";
+    if(me==="owner"&&u.role!=="owner"){
+      const b=document.createElement("button");
+      b.className="mini";
+      b.textContent=t(u.role==="admin"?"remove_admin":"make_admin");
+      b.onclick=()=>setRole(u.id,u.role==="admin"?"user":"admin");
+      acts.appendChild(b);
+    }
+    const canDel=u.role!=="owner"&&user&&u.id!==user.id&&(me==="owner"||(me==="admin"&&u.role==="user"));
+    if(canDel){
+      const d=document.createElement("button");
+      d.className="mini danger";
+      d.textContent=t("delete_user");
+      d.onclick=()=>askConfirm(t("delete_q").replace("{n}",u.nick),()=>delUser(u.id));
+      acts.appendChild(d);
+    }
+    if(acts.children.length)card.appendChild(acts);
+    list.appendChild(card);
+  });
+}
+$("usearch").oninput=renderUsers;
+async function setRole(id,role){
+  try{
+    const r=await sb.rpc("admin_set_role",{target:id,new_role:role});
+    if(r.error)throw r.error;
+    toast(t("saved"));
+    loadUsers();
+  }catch(e){toast(t("err_generic"))}
+}
+async function delUser(id){
+  try{
+    const r=await sb.rpc("admin_delete_user",{target:id});
+    if(r.error)throw r.error;
+    toast(t("saved"));
+    loadUsers();
+  }catch(e){toast(t("err_generic"))}
+}
 
 function renderCaptcha(){
   if(cfId!==null||!window.turnstile)return;
@@ -318,7 +518,7 @@ async function boot(){
   try{
     if(sb){
       const r=await sb.auth.getSession();
-      if(r.data&&r.data.session)setUserFrom(r.data.session.user);
+      if(r.data&&r.data.session)await loadUser(r.data.session.user);
     }
   }catch(e){}
   renderUser();
