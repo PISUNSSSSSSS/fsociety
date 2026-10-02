@@ -43,7 +43,8 @@ h2{color:#fff;margin:0;font-size:2rem}
 p{margin:0}
 label{align-self:flex-start;font-size:.9rem;opacity:.85}
 .regonly{display:contents}
-input[type=text],input[type=email],input[type=password]{width:100%;box-sizing:border-box;padding:12px 18px;border-radius:999px;font-size:16px;color:#fff;outline:none}
+input[type=text],input[type=email],input[type=password],input[type=number],select{width:100%;box-sizing:border-box;padding:12px 18px;border-radius:999px;font-size:16px;color:#fff;outline:none}
+select option{background:#1b1b1b;color:#fff}
 input::placeholder{color:rgba(255,255,255,.5)}
 .btn{border:none;border-radius:999px;padding:12px 26px;font-size:1rem;cursor:pointer;color:#f5f5f5}
 .btn.main{background:#fff;color:#000;font-weight:bold}
@@ -67,10 +68,19 @@ input::placeholder{color:rgba(255,255,255,.5)}
 .uacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .mini{border:none;border-radius:999px;padding:8px 14px;font-size:.85rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
 .mini.danger{background:rgba(239,68,68,.35);color:#fecaca}
-#modal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s ease}
-#modal.show{opacity:1;pointer-events:auto}
-.mcard{width:100%;max-width:320px;box-sizing:border-box;padding:22px;border-radius:24px;display:flex;flex-direction:column;gap:18px;background:#141414;border:1px solid rgba(255,255,255,.2)}
+.baninfo{color:#fca5a5;font-size:.85rem;word-break:break-word}
+#modal,#bmodal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:20px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
+#modal.show,#bmodal.show{opacity:1;pointer-events:auto}
+.mcard{margin:auto;width:100%;max-width:320px;box-sizing:border-box;padding:22px;border-radius:24px;display:flex;flex-direction:column;gap:14px;background:#141414;border:1px solid rgba(255,255,255,.2)}
+.mt{font-weight:bold;font-size:1.1rem;word-break:break-word}
+.chk{display:flex;align-items:center;gap:10px;font-size:.95rem;text-align:left;opacity:1;align-self:stretch}
+.chk input{width:20px;height:20px;flex:none}
 .mbtns{display:flex;gap:10px;justify-content:center}
+#banscreen{position:fixed;inset:0;z-index:100;background:#000;display:none;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
+#banscreen.show{display:flex}
+#banscreen .bcard{display:flex;flex-direction:column;gap:16px;max-width:320px}
+#banscreen h2{color:#ef4444}
+#bantext{white-space:pre-line;opacity:.85;line-height:1.5}
 #toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);padding:10px 18px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;max-width:90%}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 #lang{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:999px;z-index:5}
@@ -112,6 +122,7 @@ input::placeholder{color:rgba(255,255,255,.5)}
       <input id="file" type="file" accept="image/*" hidden>
     </div>
     <input id="email" type="email" class="glass" data-i18n-ph="email_ph" autocomplete="email">
+    <input id="code" type="text" inputmode="numeric" maxlength="6" class="glass" data-i18n-ph="code_ph" autocomplete="one-time-code" style="display:none">
     <input id="pass" type="password" class="glass" data-i18n-ph="pass_ph" autocomplete="current-password">
     <div class="regonly">
       <label for="nick" data-i18n="nick_label"></label>
@@ -120,6 +131,7 @@ input::placeholder{color:rgba(255,255,255,.5)}
     <div id="cf"></div>
     <div id="err" class="err"></div>
     <button id="go" class="btn main"></button>
+    <button id="forgot" class="link" data-i18n="forgot"></button>
     <button id="swap" class="link"></button>
   </div></section>
 
@@ -151,6 +163,25 @@ input::placeholder{color:rgba(255,255,255,.5)}
     <button id="myes" class="btn main" data-i18n="yes"></button>
   </div>
 </div></div>
+
+<div id="bmodal"><div class="mcard">
+  <div id="btitle" class="mt"></div>
+  <select id="bdur" class="glass"></select>
+  <input id="bcustom" type="number" min="1" class="glass" data-i18n-ph="ban_custom_ph" style="display:none">
+  <input id="breason" type="text" maxlength="200" class="glass" data-i18n-ph="ban_reason_ph" autocomplete="off">
+  <label id="bipw" class="chk"><input id="bip" type="checkbox"><span data-i18n="ban_ip"></span></label>
+  <label id="bdevw" class="chk"><input id="bdev" type="checkbox"><span data-i18n="ban_device"></span></label>
+  <div class="mbtns">
+    <button id="bno" class="btn glass" data-i18n="no"></button>
+    <button id="byes" class="btn main" data-i18n="ban_ok"></button>
+  </div>
+</div></div>
+
+<div id="banscreen"><div class="bcard">
+  <h2 data-i18n="banned_title"></h2>
+  <div id="bantext"></div>
+</div></div>
+
 <div id="toast" class="glass"></div>
 
 <div id="lang" class="glass">
@@ -167,13 +198,30 @@ try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
 let cfToken=null,cfId=null;
 
 const TXT={
-  ru:{note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",reg_btn:"Зарегистрироваться",login_btn:"Войти",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",wait:"Подожди...",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_generic:"Что-то пошло не так, попробуй ещё раз",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",logout:"Выйти из профиля",change_avatar:"Сменить аватарку",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",make_admin:"Сделать админом",remove_admin:"Снять админа",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено"},
-  en:{note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",reg_btn:"Sign up",login_btn:"Log in",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",wait:"Please wait...",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_generic:"Something went wrong, please try again",check_mail:"Check your email and confirm it",profile_title:"Profile",logout:"Log out",change_avatar:"Change avatar",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",make_admin:"Make admin",remove_admin:"Remove admin",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved"}
+  ru:{note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете. Для защиты от злоупотреблений сайт сохраняет IP-адрес и ID устройства вошедших пользователей.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",logout:"Выйти из профиля",change_avatar:"Сменить аватарку",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",make_admin:"Сделать админом",remove_admin:"Снять админа",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
+  en:{note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand. To prevent abuse, the site stores the IP address and device ID of signed-in users.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",check_mail:"Check your email and confirm it",profile_title:"Profile",logout:"Log out",change_avatar:"Change avatar",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",make_admin:"Make admin",remove_admin:"Remove admin",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
 };
+const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const USER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
 const $=id=>document.getElementById(id);
 function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function getCookie(n){
+  const m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));
+  return m?decodeURIComponent(m[1]):null;
+}
+function setCookie(n,v){
+  document.cookie=n+"="+encodeURIComponent(v)+";max-age=315360000;path=/;SameSite=Lax";
+}
+function deviceId(){
+  let d=load("did")||getCookie("did");
+  if(!d){
+    d=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("d"+Math.random().toString(36).slice(2)+Date.now().toString(36));
+  }
+  save("did",d);
+  setCookie("did",d);
+  return d;
+}
 
 let lang=load("lang")==="en"?"en":"ru";
 let user=null;
@@ -181,12 +229,15 @@ let pending=null;
 let mode="reg";
 let cur="home";
 let allUsers=[];
+let bansByUser={};
 let confirmCb=null;
+let banCtx=null;
 let toastTimer=null;
 let errKey=null,errRaw="";
 
 const t=k=>TXT[lang][k];
 const isStaff=()=>!!(user&&(user.role==="owner"||user.role==="admin"));
+const locale=()=>lang==="en"?"en-GB":"ru-RU";
 
 function buildNote(){
   const n=$("note");
@@ -194,7 +245,7 @@ function buildNote(){
   t("note").split(" ").forEach((w,i)=>{
     const s=document.createElement("span");
     s.textContent=w;
-    s.style.animationDelay=(0.6+i*0.18)+"s";
+    s.style.animationDelay=(0.6+i*0.12)+"s";
     n.appendChild(s);
     n.appendChild(document.createTextNode(" "));
   });
@@ -217,19 +268,37 @@ $("myes").onclick=()=>{$("modal").classList.remove("show");const cb=confirmCb;co
 $("mno").onclick=()=>{$("modal").classList.remove("show");confirmCb=null};
 $("modal").onclick=e=>{if(e.target===$("modal"))$("mno").onclick()};
 
+function buildDurOptions(){
+  const sel=$("bdur");
+  const keep=sel.value;
+  sel.textContent="";
+  DURS.forEach(d=>{
+    const o=document.createElement("option");
+    o.value=d[0];
+    o.textContent=t(d[1]);
+    sel.appendChild(o);
+  });
+  if(keep)sel.value=keep;
+}
 function applyMode(){
-  const r=mode==="reg";
-  document.querySelectorAll(".regonly").forEach(e=>e.style.display=r?"":"none");
-  $("h_auth").textContent=t(r?"reg_title":"login_title");
-  $("go").textContent=t(r?"reg_btn":"login_btn");
-  $("swap").textContent=t(r?"to_login":"to_reg");
-  $("pass").autocomplete=r?"new-password":"current-password";
+  const reg=mode==="reg",login=mode==="login",forgot=mode==="forgot",reset=mode==="reset";
+  document.querySelectorAll(".regonly").forEach(e=>e.style.display=reg?"":"none");
+  $("pass").style.display=forgot?"none":"";
+  $("code").style.display=reset?"":"none";
+  $("cf").style.display=reset?"none":"";
+  $("forgot").style.display=login?"":"none";
+  $("h_auth").textContent=t(reg?"reg_title":login?"login_title":forgot?"forgot_title":"reset_title");
+  $("go").textContent=t(reg?"reg_btn":login?"login_btn":forgot?"send_code":"reset_btn");
+  $("swap").textContent=t(reg?"to_login":login?"to_reg":forgot?"back_login":"resend");
+  $("pass").placeholder=t(reset?"newpass_ph":"pass_ph");
+  $("pass").autocomplete=(reg||reset)?"new-password":"current-password";
 }
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
   document.querySelectorAll("[data-i18n-ph]").forEach(e=>e.placeholder=t(e.dataset.i18nPh));
   document.querySelectorAll("#lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  buildDurOptions();
   applyMode();
   showErr();
   buildNote();
@@ -290,7 +359,7 @@ async function loadUser(u){
   };
 }
 function clearForm(){
-  $("email").value="";$("pass").value="";$("nick").value="";
+  $("email").value="";$("pass").value="";$("nick").value="";$("code").value="";
   pending=null;setPrev(null);setErr(null);
 }
 
@@ -351,14 +420,23 @@ $("file2").onchange=async e=>{
   }catch(err){toast(t("err_generic"))}
 };
 
-$("swap").onclick=()=>{mode=mode==="reg"?"login":"reg";setErr(null);applyMode()};
+$("swap").onclick=()=>{
+  mode=(mode==="reg")?"login":(mode==="login")?"reg":(mode==="forgot")?"login":"forgot";
+  setErr(null);
+  applyMode();
+};
+$("forgot").onclick=()=>{mode="forgot";setErr(null);applyMode()};
 
 function mapErr(e){
   const m=(e.message||"").toLowerCase();
+  if(m.indexOf("banned")>-1)return "err_banned";
   if(m.indexOf("captcha")>-1)return "err_captcha";
   if(m.indexOf("invalid login")>-1)return "err_bad";
   if(m.indexOf("already registered")>-1)return "err_exists";
+  if(m.indexOf("different")>-1)return "err_same";
   if(m.indexOf("at least")>-1)return "err_pass";
+  if(m.indexOf("rate limit")>-1||m.indexOf("security purposes")>-1)return "err_rate";
+  if(m.indexOf("sending")>-1)return "err_mail";
   if(m.indexOf("database error")>-1)return "err_generic";
   return null;
 }
@@ -367,11 +445,86 @@ function busy(b){
   if(b)$("go").textContent=t("wait");else applyMode();
 }
 
+function fmtUntil(b){
+  if(!b.expires_at)return t("ban_forever");
+  return t("ban_until")+" "+new Date(b.expires_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
+}
+function showBan(b){
+  const lines=[];
+  if(b.reason)lines.push(b.reason);
+  lines.push(fmtUntil(b));
+  $("bantext").textContent=lines.join("\n");
+  $("banscreen").classList.add("show");
+  try{if(sb)Promise.resolve(sb.auth.signOut()).catch(function(){})}catch(e){}
+  user=null;
+  renderUser();
+}
+async function checkBan(){
+  if(!sb)return false;
+  try{
+    const r=await sb.rpc("ban_status",{d:deviceId()});
+    if(r.error||!r.data||!r.data.length)return false;
+    showBan(r.data[0]);
+    return true;
+  }catch(e){return false}
+}
+async function afterAuth(){
+  try{await sb.rpc("log_device",{d:deviceId()})}catch(e){}
+  return await checkBan();
+}
+
+async function doForgot(email){
+  if(cfId!==null&&!cfToken){setErr("err_captcha");return}
+  setErr(null);
+  busy(true);
+  try{
+    const r=await sb.auth.resetPasswordForEmail(email,{captchaToken:cfToken||undefined});
+    if(r.error){setErr(mapErr(r.error),r.error.message);return}
+    mode="reset";
+    $("code").value="";
+    $("pass").value="";
+    toast(t("code_sent"));
+  }catch(e){
+    setErr("err_net");
+  }finally{
+    busy(false);
+    resetCaptcha();
+  }
+}
+async function doReset(email){
+  const code=$("code").value.trim();
+  const np=$("pass").value;
+  if(!/^\d{6}$/.test(code)){setErr("err_code");return}
+  if(np.length<6){setErr("err_pass");return}
+  setErr(null);
+  busy(true);
+  try{
+    const v=await sb.auth.verifyOtp({email:email,token:code,type:"recovery"});
+    if(v.error){setErr(mapErr(v.error)||"err_code");return}
+    const u=await sb.auth.updateUser({password:np});
+    if(u.error){setErr(mapErr(u.error),u.error.message);return}
+    const usr=(u.data&&u.data.user)||(v.data&&v.data.user);
+    await loadUser(usr);
+    renderUser();
+    mode="login";
+    clearForm();
+    toast(t("pass_changed"));
+    if(await afterAuth())return;
+    go("profile");
+  }catch(e){
+    setErr("err_net");
+  }finally{
+    busy(false);
+  }
+}
+
 $("go").onclick=async()=>{
   if(!sb){setErr("err_net");return}
   const email=$("email").value.trim();
-  const pass=$("pass").value;
   if(!email){setErr("err_email");return}
+  if(mode==="forgot")return doForgot(email);
+  if(mode==="reset")return doReset(email);
+  const pass=$("pass").value;
   if(pass.length<6){setErr("err_pass");return}
   let nick="";
   if(mode==="reg"){
@@ -400,6 +553,7 @@ $("go").onclick=async()=>{
     await loadUser(u);
     renderUser();
     clearForm();
+    if(await afterAuth())return;
     go("profile");
   }catch(e){
     setErr("err_net");
@@ -419,13 +573,15 @@ async function doLogout(){
 $("logout").onclick=()=>askConfirm(t("logout_q"),doLogout);
 
 async function loadUsers(){
-  const list=$("ulist");
-  list.textContent="";
+  $("ulist").textContent="";
   $("utotal").textContent=t("loading");
   try{
-    const r=await sb.rpc("admin_users");
-    if(r.error)throw r.error;
-    allUsers=r.data||[];
+    const res=await Promise.all([sb.rpc("admin_users"),sb.rpc("admin_bans")]);
+    if(res[0].error)throw res[0].error;
+    if(res[1].error)throw res[1].error;
+    allUsers=res[0].data||[];
+    bansByUser={};
+    (res[1].data||[]).forEach(b=>{bansByUser[b.user_id]=b});
     renderUsers();
   }catch(e){
     $("utotal").textContent=t("err_generic");
@@ -461,26 +617,51 @@ function renderUsers(){
     mail.textContent=u.email;
     const date=document.createElement("div");
     date.className="mail";
-    date.textContent=new Date(u.created_at).toLocaleDateString(lang==="en"?"en-GB":"ru-RU");
+    date.textContent=new Date(u.created_at).toLocaleDateString(locale());
     card.appendChild(top);
     card.appendChild(mail);
     card.appendChild(date);
+    const b=bansByUser[u.id];
+    if(b){
+      const bi=document.createElement("div");
+      bi.className="baninfo";
+      bi.textContent=t("banned")+" · "+fmtUntil(b)+(b.reason?" · "+b.reason:"")+" · IP: "+b.ips+" · "+t("devices")+": "+b.devices;
+      card.appendChild(bi);
+    }
     const acts=document.createElement("div");
     acts.className="uacts";
     if(me==="owner"&&u.role!=="owner"){
-      const b=document.createElement("button");
-      b.className="mini";
-      b.textContent=t(u.role==="admin"?"remove_admin":"make_admin");
-      b.onclick=()=>setRole(u.id,u.role==="admin"?"user":"admin");
-      acts.appendChild(b);
+      const rb=document.createElement("button");
+      rb.className="mini";
+      rb.textContent=t(u.role==="admin"?"remove_admin":"make_admin");
+      rb.onclick=()=>setRole(u.id,u.role==="admin"?"user":"admin");
+      acts.appendChild(rb);
     }
-    const canDel=u.role!=="owner"&&user&&u.id!==user.id&&(me==="owner"||(me==="admin"&&u.role==="user"));
-    if(canDel){
-      const d=document.createElement("button");
-      d.className="mini danger";
-      d.textContent=t("delete_user");
-      d.onclick=()=>askConfirm(t("delete_q").replace("{n}",u.nick),()=>delUser(u.id));
-      acts.appendChild(d);
+    const canMod=u.role!=="owner"&&user&&u.id!==user.id&&(me==="owner"||(me==="admin"&&u.role==="user"));
+    if(canMod){
+      if(b){
+        const eb=document.createElement("button");
+        eb.className="mini";
+        eb.textContent=t("ban_edit_btn");
+        eb.onclick=()=>openBan("edit",u,b);
+        acts.appendChild(eb);
+        const ub=document.createElement("button");
+        ub.className="mini";
+        ub.textContent=t("unban_btn");
+        ub.onclick=()=>askConfirm(t("unban_q").replace("{n}",u.nick),()=>unban(b.grp));
+        acts.appendChild(ub);
+      }else{
+        const bb=document.createElement("button");
+        bb.className="mini danger";
+        bb.textContent=t("ban_btn");
+        bb.onclick=()=>openBan("new",u,null);
+        acts.appendChild(bb);
+      }
+      const db=document.createElement("button");
+      db.className="mini danger";
+      db.textContent=t("delete_user");
+      db.onclick=()=>askConfirm(t("delete_q").replace("{n}",u.nick),()=>delUser(u.id));
+      acts.appendChild(db);
     }
     if(acts.children.length)card.appendChild(acts);
     list.appendChild(card);
@@ -503,6 +684,71 @@ async function delUser(id){
     loadUsers();
   }catch(e){toast(t("err_generic"))}
 }
+async function unban(grp){
+  try{
+    const r=await sb.rpc("admin_unban",{p_grp:grp});
+    if(r.error)throw r.error;
+    toast(t("saved"));
+    loadUsers();
+  }catch(e){toast(t("err_generic"))}
+}
+
+function syncCustom(){$("bcustom").style.display=$("bdur").value==="custom"?"":"none"}
+$("bdur").onchange=syncCustom;
+function openBan(m,u,b){
+  banCtx={mode:m,u:u,b:b};
+  $("btitle").textContent=t(m==="new"?"ban_title":"ban_edit_title").replace("{n}",u.nick);
+  buildDurOptions();
+  if(m==="edit"){
+    if(!b.expires_at){
+      $("bdur").value="perm";
+      $("bcustom").value="";
+    }else{
+      $("bdur").value="custom";
+      $("bcustom").value=Math.max(1,Math.ceil((new Date(b.expires_at).getTime()-Date.now())/60000));
+    }
+    $("breason").value=b.reason||"";
+  }else{
+    $("bdur").value="1440";
+    $("bcustom").value="";
+    $("breason").value="";
+    $("bip").checked=false;
+    $("bdev").checked=false;
+  }
+  const show=m==="new"?"":"none";
+  $("bipw").style.display=show;
+  $("bdevw").style.display=show;
+  syncCustom();
+  $("bmodal").classList.add("show");
+}
+$("byes").onclick=async()=>{
+  if(!banCtx)return;
+  const v=$("bdur").value;
+  let mins=null;
+  if(v==="custom"){
+    mins=parseInt($("bcustom").value,10);
+    if(!(mins>0)){toast(t("ban_bad_dur"));return}
+  }else if(v!=="perm"){
+    mins=parseInt(v,10);
+  }
+  const reason=$("breason").value.trim()||null;
+  const ctx=banCtx;
+  $("bmodal").classList.remove("show");
+  banCtx=null;
+  try{
+    let r;
+    if(ctx.mode==="new"){
+      r=await sb.rpc("admin_ban",{p_target:ctx.u.id,p_minutes:mins,p_reason:reason,p_ip:$("bip").checked,p_device:$("bdev").checked});
+    }else{
+      r=await sb.rpc("admin_edit_ban",{p_grp:ctx.b.grp,p_minutes:mins,p_reason:reason});
+    }
+    if(r.error)throw r.error;
+    toast(t("saved"));
+    loadUsers();
+  }catch(e){toast(t("err_generic"))}
+};
+$("bno").onclick=()=>{$("bmodal").classList.remove("show");banCtx=null};
+$("bmodal").onclick=e=>{if(e.target===$("bmodal"))$("bno").onclick()};
 
 function renderCaptcha(){
   if(cfId!==null||!window.turnstile)return;
@@ -522,6 +768,7 @@ async function boot(){
     }
   }catch(e){}
   renderUser();
+  if(user)await afterAuth();else await checkBan();
 }
 
 setPrev(null);
