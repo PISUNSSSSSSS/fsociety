@@ -86,6 +86,18 @@ input::placeholder{color:rgba(255,255,255,.5)}
 #lang{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:999px;z-index:5}
 #lang button{all:unset;color:#f5f5f5;padding:7px 16px;border-radius:999px;font-size:.9rem;cursor:pointer;transition:background .3s}
 #lang button.on{background:rgba(255,255,255,.25)}
+.grp{width:100%;box-sizing:border-box;border-radius:22px;padding:6px 14px;text-align:left}
+.grp>summary,.mdl>summary{cursor:pointer;font-weight:bold;padding:12px 4px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.grp>summary::-webkit-details-marker,.mdl>summary::-webkit-details-marker{display:none}
+.grp>summary::after,.mdl>summary::after{content:"›";transition:transform .25s ease;opacity:.7}
+.grp[open]>summary::after,.mdl[open]>summary::after{transform:rotate(90deg)}
+.models{display:flex;flex-direction:column;gap:8px;padding-bottom:10px}
+.mdl{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:0 14px}
+.mdl>summary{font-weight:normal}
+.mdl>p{opacity:.6;font-size:.9rem;padding:0 4px 14px;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}}
+#pmodal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:20px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
+#pmodal.show{opacity:1;pointer-events:auto}
 </style>
 </head>
 <body>
@@ -101,7 +113,6 @@ input::placeholder{color:rgba(255,255,255,.5)}
 <div id="app">
   <section id="home" class="view active"><div class="box">
     <img class="banner" src="top.gif" alt="">
-    <div id="note" class="note glass"></div>
   </div></section>
 
   <section id="forum" class="view"><div class="box">
@@ -111,7 +122,10 @@ input::placeholder{color:rgba(255,255,255,.5)}
 
   <section id="local" class="view"><div class="box">
     <h2>Local</h2>
-    <p data-i18n="empty"></p>
+    <details class="grp glass" open>
+      <summary>Jailbreak</summary>
+      <div class="models" id="models"></div>
+    </details>
   </div></section>
 
   <section id="register" class="view"><div class="box">
@@ -144,6 +158,8 @@ input::placeholder{color:rgba(255,255,255,.5)}
     <div id="badge" class="badge user">USER</div>
     <button id="chava" class="btn glass" data-i18n="change_avatar"></button>
     <input id="file2" type="file" accept="image/*" hidden>
+    <button id="chnick" class="btn glass" data-i18n="change_nick"></button>
+    <button id="chpass" class="btn glass" data-i18n="change_pass"></button>
     <button id="admbtn" class="btn glass" data-i18n="admin_panel" style="display:none"></button>
     <button id="logout" class="btn glass" data-i18n="logout"></button>
   </div></section>
@@ -177,6 +193,19 @@ input::placeholder{color:rgba(255,255,255,.5)}
   </div>
 </div></div>
 
+<div id="pmodal"><div class="mcard">
+  <div id="ptitle" class="mt"></div>
+  <input id="pnickin" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
+  <input id="pcur" type="password" class="glass" data-i18n-ph="cur_pass_ph" autocomplete="current-password">
+  <input id="pnew" type="password" class="glass" data-i18n-ph="newpass_ph" autocomplete="new-password">
+  <input id="pnew2" type="password" class="glass" data-i18n-ph="newpass2_ph" autocomplete="new-password">
+  <div id="perr" class="err"></div>
+  <div class="mbtns">
+    <button id="pno" class="btn glass" data-i18n="no"></button>
+    <button id="pyes" class="btn main" data-i18n="save"></button>
+  </div>
+</div></div>
+
 <div id="banscreen"><div class="bcard">
   <h2 data-i18n="banned_title"></h2>
   <div id="bantext"></div>
@@ -198,8 +227,8 @@ try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
 let cfToken=null,cfId=null;
 
 const TXT={
-  ru:{note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете. Для защиты от злоупотреблений сайт сохраняет IP-адрес и ID устройства вошедших пользователей.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",logout:"Выйти из профиля",change_avatar:"Сменить аватарку",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",make_admin:"Сделать админом",remove_admin:"Снять админа",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
-  en:{note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand. To prevent abuse, the site stores the IP address and device ID of signed-in users.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",check_mail:"Check your email and confirm it",profile_title:"Profile",logout:"Log out",change_avatar:"Change avatar",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",make_admin:"Make admin",remove_admin:"Remove admin",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
+  ru:{change_nick:"Сменить ник",change_pass:"Сменить пароль",save:"Сохранить",nick_title:"Новый ник",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",nick_saved:"Ник изменён",note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете. Для защиты от злоупотреблений сайт сохраняет IP-адрес и ID устройства вошедших пользователей.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",logout:"Выйти из профиля",change_avatar:"Сменить аватарку",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",make_admin:"Сделать админом",remove_admin:"Снять админа",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
+  en:{change_nick:"Change nickname",change_pass:"Change password",save:"Save",nick_title:"New nickname",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",nick_saved:"Nickname changed",note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand. To prevent abuse, the site stores the IP address and device ID of signed-in users.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",check_mail:"Check your email and confirm it",profile_title:"Profile",logout:"Log out",change_avatar:"Change avatar",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",make_admin:"Make admin",remove_admin:"Remove admin",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
 };
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const USER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
@@ -241,6 +270,7 @@ const locale=()=>lang==="en"?"en-GB":"ru-RU";
 
 function buildNote(){
   const n=$("note");
+  if(!n)return;
   n.textContent="";
   t("note").split(" ").forEach((w,i)=>{
     const s=document.createElement("span");
@@ -771,9 +801,97 @@ async function boot(){
   if(user)await afterAuth();else await checkBan();
 }
 
+const MODELS=["Gemini","Claude","freebuff","opencode","ChatGPT","DeepSeek","Muse Spark","GLM (Z.ai)","Grok","Nemotron","Momo","Qwen"];
+function buildModels(){
+  const box=$("models");
+  MODELS.forEach(n=>{
+    const d=document.createElement("details");
+    d.className="mdl";
+    const s=document.createElement("summary");
+    s.textContent=n;
+    const p=document.createElement("p");
+    p.dataset.i18n="empty";
+    d.appendChild(s);
+    d.appendChild(p);
+    box.appendChild(d);
+  });
+}
+buildModels();
 setPrev(null);
 renderUser();
 applyLang();
+let pmode=null;
+let pbusy=false;
+function perr(key){$("perr").textContent=key?t(key):""}
+function openProfileModal(m){
+  if(!user)return;
+  pmode=m;
+  perr(null);
+  const nickMode=m==="nick";
+  $("ptitle").textContent=t(nickMode?"nick_title":"pass_title");
+  $("pnickin").style.display=nickMode?"":"none";
+  $("pcur").style.display=nickMode?"none":"";
+  $("pnew").style.display=nickMode?"none":"";
+  $("pnew2").style.display=nickMode?"none":"";
+  $("pnickin").value=nickMode?user.nick:"";
+  $("pcur").value="";
+  $("pnew").value="";
+  $("pnew2").value="";
+  $("pmodal").classList.add("show");
+}
+function closeProfileModal(){$("pmodal").classList.remove("show");pmode=null}
+$("chnick").onclick=()=>openProfileModal("nick");
+$("chpass").onclick=()=>openProfileModal("pass");
+$("pno").onclick=closeProfileModal;
+$("pmodal").onclick=e=>{if(e.target===$("pmodal"))closeProfileModal()};
+async function saveNick(){
+  const nick=$("pnickin").value.trim();
+  if(nick.length<2||nick.length>20){perr("err_nick");return}
+  if(nick===user.nick){closeProfileModal();return}
+  const r=await sb.from("profiles").update({nick:nick}).eq("id",user.id);
+  if(r.error){
+    const c=r.error.code||"";
+    perr(c==="23505"?"err_nick_taken":c==="23514"?"err_nick":"err_generic");
+    return;
+  }
+  user.nick=nick;
+  renderUser();
+  closeProfileModal();
+  toast(t("nick_saved"));
+}
+async function savePass(){
+  const cur=$("pcur").value;
+  const n1=$("pnew").value;
+  const n2=$("pnew2").value;
+  if(!cur){perr("err_cur_pass");return}
+  if(n1.length<6){perr("err_pass");return}
+  if(n1!==n2){perr("err_pass_match");return}
+  const r=await sb.auth.updateUser({password:n1,current_password:cur});
+  if(r.error){
+    const m=(r.error.message||"").toLowerCase();
+    let k="err_generic";
+    if(m.indexOf("different")>-1)k="err_same";
+    else if(m.indexOf("at least")>-1)k="err_pass";
+    else if(m.indexOf("rate")>-1)k="err_rate";
+    else if(m.indexOf("current")>-1||m.indexOf("invalid")>-1||m.indexOf("incorrect")>-1)k="err_cur_pass";
+    perr(k);
+    return;
+  }
+  closeProfileModal();
+  toast(t("pass_changed"));
+}
+$("pyes").onclick=async()=>{
+  if(!user||!sb||pbusy)return;
+  pbusy=true;
+  try{
+    if(pmode==="nick")await saveNick();
+    else if(pmode==="pass")await savePass();
+  }catch(e){
+    perr("err_net");
+  }finally{
+    pbusy=false;
+  }
+};
 boot();
 </script>
 </body>
