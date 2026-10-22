@@ -2,117 +2,135 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>Мой сайт</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <style>
+*{-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden}
-body{background:radial-gradient(circle at 50% 30%,#161616,#000 70%);color:#e5e5e5;font-family:sans-serif;text-align:center}
-.glass{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(0,0,0,.5)}
-nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:6px;border-radius:999px;z-index:5}
-nav button{all:unset;color:#f5f5f5;padding:10px 16px;border-radius:999px;font-size:1rem;cursor:pointer;transition:background .3s}
-nav button.on{background:rgba(255,255,255,.25)}
-#back,#me{position:fixed;top:16px;width:48px;height:48px;border-radius:50%;border:none;padding:0;display:flex;align-items:center;justify-content:center;color:#f5f5f5;cursor:pointer;z-index:6;overflow:hidden}
-#back{left:16px;opacity:0;pointer-events:none;transform:rotate(-360deg) scale(.3);transition:transform .6s ease,opacity .4s ease}
-#back.show{opacity:1;pointer-events:auto;transform:rotate(0) scale(1)}
-#back svg{width:24px;height:24px}
-#me{right:16px;border:2px solid #4ade80;box-shadow:0 0 10px 1px rgba(74,222,128,.5)}
-#me.owner{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
-#me.admin{border-color:#f59e0b;animation:amberpulse 2s ease-in-out infinite alternate}
-.ava{border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#f5f5f5}
-.ava svg,#me svg{width:60%;height:60%}
-.ava img,#me img{width:100%;height:100%;object-fit:cover;display:block}
-.ava img.spin,#me img.spin{object-fit:contain;background:#000;animation:rot 8s linear infinite}
+body{background:radial-gradient(circle at 50% 30%,#161616,#000 70%);color:#e5e5e5;font-family:system-ui,-apple-system,sans-serif;text-align:center}
+.user{--c:#4ade80}.sponsor{--c:#facc15}.moderator{--c:#38bdf8}.admin{--c:#f59e0b}.owner{--c:#ef4444}
+#wall{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.glass{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 4px 18px rgba(0,0,0,.45)}
+#back,#langbtn{position:fixed;top:calc(10px + env(safe-area-inset-top));width:40px;height:40px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;color:#f5f5f5;cursor:pointer;z-index:6;font-size:.78rem;font-weight:bold}
+#back{left:12px;opacity:0;pointer-events:none;transform:rotate(-360deg) scale(.3);transition:transform .6s ease,opacity .4s ease}
+#back.show{opacity:1;pointer-events:auto;transform:none}
+#back svg{width:20px;height:20px}
+#langbtn{right:12px}
+#dock{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translate(-50%,170%);display:flex;width:min(92vw,420px);padding:6px;border-radius:26px;z-index:6;transition:transform .8s cubic-bezier(.2,.9,.2,1)}
+body.ready #dock{transform:translate(-50%,0)}
+#dock button{all:unset;position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0;border-radius:20px;cursor:pointer;color:#bdbdbd;font-size:.68rem;transition:color .3s,transform .2s}
+#dock button:active{transform:scale(.9)}
+#dock button.on{color:#fff}
+#dock button>svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#dind{position:absolute;top:6px;bottom:6px;left:0;width:0;border-radius:20px;background:rgba(255,255,255,.18);transition:transform .35s cubic-bezier(.3,1.3,.5,1),width .3s;z-index:0}
+.dav,.ava{border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#f5f5f5;box-sizing:border-box}
+.dav{width:24px;height:24px;border:2px solid var(--c)}
+.dav svg,.ava svg{width:68%;height:68%}
+.dav img,.ava img{width:100%;height:100%;object-fit:cover;display:block}
+.dav img.spin,.ava img.spin{object-fit:contain;background:#000;animation:rot 8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
-@keyframes redpulse{from{box-shadow:0 0 10px 1px rgba(239,68,68,.5)}to{box-shadow:0 0 24px 6px rgba(239,68,68,.95)}}
-@keyframes amberpulse{from{box-shadow:0 0 10px 1px rgba(245,158,11,.5)}to{box-shadow:0 0 24px 6px rgba(245,158,11,.95)}}
-#app{transition:opacity .25s ease}
-#app.swap{opacity:0}
-.view{position:fixed;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding:90px 20px 70px;box-sizing:border-box;opacity:0;transform:translateY(24px);pointer-events:none;transition:opacity .5s ease,transform .5s ease}
+@keyframes pulse{from{box-shadow:0 0 6px 1px var(--c)}to{box-shadow:0 0 20px 5px var(--c)}}
+.dav.owner,.dav.admin,.dav.moderator,.dav.sponsor{animation:pulse 2s ease-in-out infinite alternate}
+#app{opacity:0;transition:opacity .8s ease;position:relative;z-index:1}
+body.ready #app{opacity:1}
+.view{position:fixed;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding:calc(60px + env(safe-area-inset-top)) 14px calc(96px + env(safe-area-inset-bottom));box-sizing:border-box;opacity:0;transform:translateY(20px) scale(.98);pointer-events:none;transition:opacity .45s ease,transform .45s ease}
 .view.active{opacity:1;transform:none;pointer-events:auto}
-.box{margin:auto;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:320px}
+.box{margin:auto;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:340px}
 #home .box{margin:0 auto;max-width:420px}
-#admin .box{max-width:420px}
-.banner{width:100%;border-radius:20px;display:block;box-shadow:0 0 24px 4px rgba(255,255,255,.35)}
-.note{width:100%;box-sizing:border-box;padding:14px 18px;border-radius:22px;font-size:.95rem;line-height:1.5;color:#e5e5e5}
-.note span{display:inline-block;opacity:0;transform:translateY(10px);animation:wordIn .7s ease forwards}
-@keyframes wordIn{to{opacity:1;transform:none}}
-h2{color:#fff;margin:0;font-size:2rem}
+#admin .box{max-width:440px}
+.banner{width:100%;border-radius:18px;display:block;box-shadow:0 0 22px 3px rgba(255,255,255,.3)}
+.tag{padding:8px 16px;border-radius:999px;font-size:.85rem;letter-spacing:.06em}
+h2{color:#fff;margin:0;font-size:1.5rem}
 p{margin:0}
-label{align-self:flex-start;font-size:.9rem;opacity:.85}
 .regonly{display:contents}
-input[type=text],input[type=email],input[type=password],input[type=number],select{width:100%;box-sizing:border-box;padding:12px 18px;border-radius:999px;font-size:16px;color:#fff;outline:none}
+input[type=text],input[type=email],input[type=password],input[type=number],select{width:100%;box-sizing:border-box;padding:10px 16px;border-radius:999px;font-size:16px;color:#fff;outline:none}
+textarea{width:100%;box-sizing:border-box;padding:10px 14px;border-radius:18px;font-size:15px;color:#fff;outline:none;resize:none;font-family:inherit;height:70px}
 select option{background:#1b1b1b;color:#fff}
-input::placeholder{color:rgba(255,255,255,.5)}
-.btn{border:none;border-radius:999px;padding:12px 26px;font-size:1rem;cursor:pointer;color:#f5f5f5}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
+label{align-self:flex-start;font-size:.85rem;opacity:.85}
+.btn{border:none;border-radius:999px;padding:9px 20px;font-size:.95rem;cursor:pointer;color:#f5f5f5}
 .btn.main{background:#fff;color:#000;font-weight:bold}
+.btn.sm{padding:7px 14px;font-size:.85rem}
 .btn:disabled{opacity:.6}
-.link{all:unset;cursor:pointer;color:#e5e5e5;opacity:.75;font-size:.95rem;text-decoration:underline;padding:6px}
-.err{color:#fca5a5;min-height:1.2em;font-size:.9rem}
+.link{all:unset;cursor:pointer;color:#e5e5e5;opacity:.75;font-size:.9rem;text-decoration:underline;padding:4px}
+.err{color:#fca5a5;min-height:1.1em;font-size:.85rem}
 #cf{display:flex;justify-content:center;min-height:0}
-#prev{width:96px;height:96px;border:2px solid #4ade80}
-#pava{width:130px;height:130px;border:3px solid #4ade80;box-shadow:0 0 18px 3px rgba(74,222,128,.5)}
-#pava.owner{border-color:#ef4444;animation:redpulse 2s ease-in-out infinite alternate}
-#pava.admin{border-color:#f59e0b;animation:amberpulse 2s ease-in-out infinite alternate}
-#pnick{font-size:1.8rem;color:#fff;font-weight:bold;word-break:break-word}
-.mail{opacity:.6;font-size:.9rem;word-break:break-all}
-.badge{background:rgba(74,222,128,.18);color:#86efac;font-weight:bold;letter-spacing:2px;font-size:.8rem;padding:4px 14px;border-radius:999px;box-shadow:0 0 12px rgba(74,222,128,.35)}
-.badge.owner{background:#ef4444;color:#fff;box-shadow:0 0 14px rgba(239,68,68,.7)}
-.badge.admin{background:#f59e0b;color:#000;box-shadow:0 0 14px rgba(245,158,11,.7)}
-.ulist{display:flex;flex-direction:column;gap:10px;width:100%}
-.ucard{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:18px;text-align:left;display:flex;flex-direction:column;gap:6px}
+#prev{width:84px;height:84px;border:2px solid #4ade80}
+#pava{width:104px;height:104px;border:3px solid var(--c);box-shadow:0 0 16px 2px var(--c)}
+#pava.owner,#pava.admin,#pava.moderator,#pava.sponsor{animation:pulse 2s ease-in-out infinite alternate}
+.prow{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap}
+#pnick{font-size:1.5rem;color:#fff;font-weight:bold;word-break:break-word}
+.pen{width:30px;height:30px;border-radius:50%;padding:0;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:.95rem;color:#fff;transition:transform .2s}
+.pen:active{transform:rotate(-25deg) scale(.88)}
+.mail{opacity:.6;font-size:.85rem;word-break:break-all}
+.bio{font-size:.9rem;opacity:.85;line-height:1.4;max-width:300px;word-break:break-word}
+.badge{border:1px solid var(--c);color:var(--c);background:rgba(255,255,255,.07);font-weight:bold;letter-spacing:2px;font-size:.72rem;padding:3px 12px;border-radius:999px}
+.ulist{display:flex;flex-direction:column;gap:8px;width:100%}
+.ucard{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:16px;text-align:left;display:flex;flex-direction:column;gap:4px}
 .urow{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .urow b{word-break:break-word}
-.uacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-.mini{border:none;border-radius:999px;padding:8px 14px;font-size:.85rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
+.uacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.mini{border:none;border-radius:999px;padding:7px 12px;font-size:.8rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
 .mini.danger{background:rgba(239,68,68,.35);color:#fecaca}
-.baninfo{color:#fca5a5;font-size:.85rem;word-break:break-word}
-#modal,#bmodal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:20px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
-#modal.show,#bmodal.show{opacity:1;pointer-events:auto}
-.mcard{margin:auto;width:100%;max-width:320px;box-sizing:border-box;padding:22px;border-radius:24px;display:flex;flex-direction:column;gap:14px;background:#141414;border:1px solid rgba(255,255,255,.2)}
-.mt{font-weight:bold;font-size:1.1rem;word-break:break-word}
-.chk{display:flex;align-items:center;gap:10px;font-size:.95rem;text-align:left;opacity:1;align-self:stretch}
-.chk input{width:20px;height:20px;flex:none}
-.mbtns{display:flex;gap:10px;justify-content:center}
-#banscreen{position:fixed;inset:0;z-index:100;background:#000;display:none;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
-#banscreen.show{display:flex}
-#banscreen .bcard{display:flex;flex-direction:column;gap:16px;max-width:320px}
-#banscreen h2{color:#ef4444}
-#bantext{white-space:pre-line;opacity:.85;line-height:1.5}
-#toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);padding:10px 18px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;max-width:90%}
-#toast.show{opacity:1;transform:translate(-50%,0)}
-#lang{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:999px;z-index:5}
-#lang button{all:unset;color:#f5f5f5;padding:7px 16px;border-radius:999px;font-size:.9rem;cursor:pointer;transition:background .3s}
-#lang button.on{background:rgba(255,255,255,.25)}
-.grp{width:100%;box-sizing:border-box;border-radius:22px;padding:6px 14px;text-align:left}
-.grp>summary,.mdl>summary{cursor:pointer;font-weight:bold;padding:12px 4px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.sel{width:auto;padding:6px 10px;font-size:.8rem}
+.baninfo{color:#fca5a5;font-size:.8rem;word-break:break-word}
+.grp{width:100%;box-sizing:border-box;border-radius:20px;padding:4px 12px;text-align:left}
+.grp>summary,.mdl>summary{cursor:pointer;font-weight:bold;padding:10px 4px;list-style:none;display:flex;justify-content:space-between;align-items:center}
 .grp>summary::-webkit-details-marker,.mdl>summary::-webkit-details-marker{display:none}
 .grp>summary::after,.mdl>summary::after{content:"›";transition:transform .25s ease;opacity:.7}
 .grp[open]>summary::after,.mdl[open]>summary::after{transform:rotate(90deg)}
-.models{display:flex;flex-direction:column;gap:8px;padding-bottom:10px}
-.mdl{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:0 14px}
+.models{display:flex;flex-direction:column;gap:6px;padding-bottom:8px}
+.mdl{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:0 12px}
 .mdl>summary{font-weight:normal}
-.mdl>p{opacity:.6;font-size:.9rem;padding:0 4px 14px;animation:fadeIn .3s ease}
+.mdl>p{opacity:.6;font-size:.85rem;padding:0 4px 12px;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0}}
-#pmodal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:20px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
-#pmodal.show{opacity:1;pointer-events:auto}
+#modal,#bmodal,#pmodal,#emodal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
+#modal.show,#bmodal.show,#pmodal.show,#emodal.show{opacity:1;pointer-events:auto}
+.mcard{margin:auto;width:100%;max-width:320px;box-sizing:border-box;padding:18px;border-radius:22px;display:flex;flex-direction:column;gap:10px;background:#141414;border:1px solid rgba(255,255,255,.2)}
+.mt{font-weight:bold;font-size:1.05rem;word-break:break-word}
+.erow{display:flex;align-items:center;gap:12px;justify-content:center}
+#eava{width:64px;height:64px;border:2px solid rgba(255,255,255,.35)}
+.lab{align-self:flex-start;font-size:.85rem;opacity:.85}
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%}
+.wopt{border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:8px 2px;font-size:.72rem;cursor:pointer;background:rgba(255,255,255,.06);color:#eee}
+.wopt.on{border-color:#fff;background:rgba(255,255,255,.22)}
+.wopt.lock{opacity:.5}
+.chk{display:flex;align-items:center;gap:10px;font-size:.92rem;text-align:left;opacity:1;align-self:stretch}
+.chk input{width:20px;height:20px;flex:none}
+.mbtns{display:flex;gap:8px;justify-content:center}
+#banscreen{position:fixed;inset:0;z-index:100;background:#000;display:none;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
+#banscreen.show{display:flex}
+#banscreen .bcard{display:flex;flex-direction:column;gap:14px;max-width:320px}
+#banscreen h2{color:#ef4444}
+#bantext{white-space:pre-line;opacity:.85;line-height:1.5}
+#toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translate(-50%,20px);padding:9px 16px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;max-width:90%;font-size:.9rem}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#intro{position:fixed;inset:0;z-index:200;background:#000;display:flex;align-items:center;justify-content:center;perspective:700px;overflow:hidden;animation:introBg 3.6s ease forwards}
+#itext{font-size:clamp(2.4rem,15vw,5rem);font-weight:800;letter-spacing:.06em;color:#fff;transform-style:preserve-3d;animation:introText 3.6s cubic-bezier(.6,0,.3,1) forwards}
+#itap{position:absolute;bottom:36px;font-size:.75rem;opacity:.35;letter-spacing:.1em}
+@keyframes introBg{0%,72%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes introText{
+  0%{opacity:0;transform:scale(.4) rotateY(0);color:#fff}
+  18%{opacity:1;transform:scale(1) rotateY(0);color:#fff;text-shadow:0 0 18px rgba(255,255,255,.8)}
+  38%{opacity:1;transform:scale(1) rotateY(0);color:#fff;text-shadow:0 0 18px rgba(255,255,255,.8)}
+  52%{opacity:1;transform:scale(1.08) rotateY(0);color:#ef4444;text-shadow:0 0 28px rgba(239,68,68,.95)}
+  72%{opacity:1;transform:scale(1.15) rotateY(360deg);color:#ef4444;text-shadow:0 0 28px rgba(239,68,68,.95)}
+  100%{opacity:0;transform:scale(16) rotateY(360deg);color:#ef4444}
+}
 </style>
 </head>
 <body>
-<button id="back" class="glass" aria-label="Back">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-</button>
-<nav class="glass">
-  <button data-go="forum">Forum</button>
-  <button data-go="local">Local</button>
-</nav>
-<button id="me" class="glass user" aria-label="Profile"></button>
+<canvas id="wall"></canvas>
+<button id="back" class="glass" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+<button id="langbtn" class="glass">RU</button>
 
 <div id="app">
   <section id="home" class="view active"><div class="box">
     <img class="banner" src="top.gif" alt="">
+    <div class="tag glass" data-i18n="home_tag"></div>
   </div></section>
 
   <section id="forum" class="view"><div class="box">
@@ -132,14 +150,13 @@ input::placeholder{color:rgba(255,255,255,.5)}
     <h2 id="h_auth"></h2>
     <div class="regonly">
       <div id="prev" class="ava glass"></div>
-      <button id="choose" class="btn glass" data-i18n="choose"></button>
+      <button id="choose" class="btn glass sm" data-i18n="choose"></button>
       <input id="file" type="file" accept="image/*" hidden>
     </div>
     <input id="email" type="email" class="glass" data-i18n-ph="email_ph" autocomplete="email">
     <input id="code" type="text" inputmode="numeric" maxlength="6" class="glass" data-i18n-ph="code_ph" autocomplete="one-time-code" style="display:none">
     <input id="pass" type="password" class="glass" data-i18n-ph="pass_ph" autocomplete="current-password">
     <div class="regonly">
-      <label for="nick" data-i18n="nick_label"></label>
       <input id="nick" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
     </div>
     <div id="cf"></div>
@@ -150,17 +167,11 @@ input::placeholder{color:rgba(255,255,255,.5)}
   </div></section>
 
   <section id="profile" class="view"><div class="box">
-    <h2 data-i18n="profile_title"></h2>
     <div id="pava" class="ava glass user"></div>
-    <div id="pnick"></div>
-    <div id="psid" class="mail"></div>
+    <div class="prow"><span id="pnick"></span><button id="pen" class="pen glass" aria-label="Edit">🖋️</button></div>
+    <div class="prow"><span id="badge" class="badge user">USER</span><span id="psid" class="mail"></span></div>
     <div id="pmail" class="mail"></div>
-    <div id="badge" class="badge user">USER</div>
-    <button id="chava" class="btn glass" data-i18n="change_avatar"></button>
-    <input id="file2" type="file" accept="image/*" hidden>
-    <button id="chnick" class="btn glass" data-i18n="change_nick"></button>
-    <button id="chpass" class="btn glass" data-i18n="change_pass"></button>
-    <button id="admbtn" class="btn glass" data-i18n="admin_panel" style="display:none"></button>
+    <div id="pbio" class="bio"></div>
     <button id="logout" class="btn glass" data-i18n="logout"></button>
   </div></section>
 
@@ -170,6 +181,15 @@ input::placeholder{color:rgba(255,255,255,.5)}
     <input id="usearch" type="text" class="glass" data-i18n-ph="search_ph" autocomplete="off">
     <div id="ulist" class="ulist"></div>
   </div></section>
+</div>
+
+<div id="dock" class="glass">
+  <div id="dind"></div>
+  <button data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span data-i18n="m_home"></span></button>
+  <button data-go="forum"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span data-i18n="m_forum"></span></button>
+  <button data-go="local"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="m_local"></span></button>
+  <button data-go="profile"><span id="me" class="dav user"></span><span data-i18n="m_profile"></span></button>
+  <button data-go="admin" id="dadmin" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span data-i18n="m_admin"></span></button>
 </div>
 
 <div id="modal"><div class="mcard">
@@ -193,9 +213,27 @@ input::placeholder{color:rgba(255,255,255,.5)}
   </div>
 </div></div>
 
+<div id="emodal"><div class="mcard">
+  <div class="mt" data-i18n="edit_profile"></div>
+  <div class="erow">
+    <div id="eava" class="ava glass"></div>
+    <button id="echoose" class="btn glass sm" data-i18n="change_avatar"></button>
+    <input id="file2" type="file" accept="image/*" hidden>
+  </div>
+  <input id="enick" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
+  <textarea id="ebio" maxlength="160" class="glass" data-i18n-ph="bio_ph"></textarea>
+  <div class="lab" data-i18n="wallpaper"></div>
+  <div id="wgrid" class="wgrid"></div>
+  <button id="epass" class="btn glass sm" data-i18n="change_pass"></button>
+  <div id="eerr" class="err"></div>
+  <div class="mbtns">
+    <button id="eno" class="btn glass" data-i18n="no"></button>
+    <button id="eyes" class="btn main" data-i18n="save"></button>
+  </div>
+</div></div>
+
 <div id="pmodal"><div class="mcard">
-  <div id="ptitle" class="mt"></div>
-  <input id="pnickin" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
+  <div class="mt" data-i18n="pass_title"></div>
   <input id="pcur" type="password" class="glass" data-i18n-ph="cur_pass_ph" autocomplete="current-password">
   <input id="pnew" type="password" class="glass" data-i18n-ph="newpass_ph" autocomplete="new-password">
   <input id="pnew2" type="password" class="glass" data-i18n-ph="newpass2_ph" autocomplete="new-password">
@@ -213,10 +251,7 @@ input::placeholder{color:rgba(255,255,255,.5)}
 
 <div id="toast" class="glass"></div>
 
-<div id="lang" class="glass">
-  <button data-l="ru">RU</button>
-  <button data-l="en">EN</button>
-</div>
+<div id="intro"><div id="itext">fsociety</div><div id="itap">TAP TO SKIP</div></div>
 
 <script>
 const SUPABASE_URL="https://zdtgznbyuhpskiyyxslt.supabase.co";
@@ -227,59 +262,43 @@ try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
 let cfToken=null,cfId=null;
 
 const TXT={
-  ru:{change_nick:"Сменить ник",change_pass:"Сменить пароль",save:"Сохранить",nick_title:"Новый ник",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",nick_saved:"Ник изменён",note:"Вы несёте ответственность за свои действия при использовании моего приложения. Здесь будет всё про fsociety, надеюсь, вы понимаете. Для защиты от злоупотреблений сайт сохраняет IP-адрес и ID устройства вошедших пользователей.",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_label:"Никнейм",nick_ph:"Придумай ник",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",check_mail:"Проверь почту и подтверди email",profile_title:"Профиль",logout:"Выйти из профиля",change_avatar:"Сменить аватарку",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",make_admin:"Сделать админом",remove_admin:"Снять админа",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
-  en:{change_nick:"Change nickname",change_pass:"Change password",save:"Save",nick_title:"New nickname",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",nick_saved:"Nickname changed",note:"You are responsible for your own actions when using my app. Everything about fsociety will be here. I hope you understand. To prevent abuse, the site stores the IP address and device ID of signed-in users.",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_label:"Nickname",nick_ph:"Pick a nickname",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",check_mail:"Check your email and confirm it",profile_title:"Profile",logout:"Log out",change_avatar:"Change avatar",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",make_admin:"Make admin",remove_admin:"Remove admin",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
+  ru:{home_tag:"fsociety · наш сайт",m_home:"Главная",m_forum:"Forum",m_local:"Local",m_profile:"Профиль",m_admin:"Админ",empty:"Тут еще не добавили ничего",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_ph:"Никнейм (2–20 символов)",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_captcha_srv:"Сервер не принял проверку Cloudflare",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",check_mail:"Проверь почту и подтверди email",logout:"Выйти из профиля",change_avatar:"Сменить фото",change_pass:"Сменить пароль",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",save:"Сохранить",edit_profile:"Редактировать профиль",bio_ph:"О себе (до 160 символов)",wallpaper:"Анимированные обои",w_none:"Без обоев",w_matrix:"Matrix",w_stars:"Звёзды",w_aurora:"Сияние",w_neon:"Неон",w_embers:"Искры",locked_wall:"Эти обои для спонсоров и персонала",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
+  en:{home_tag:"fsociety · our site",m_home:"Home",m_forum:"Forum",m_local:"Local",m_profile:"Profile",m_admin:"Admin",empty:"Nothing has been added here yet",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_ph:"Nickname (2–20 characters)",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_captcha_srv:"The server rejected the Cloudflare check",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",check_mail:"Check your email and confirm it",logout:"Log out",change_avatar:"Change photo",change_pass:"Change password",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",save:"Save",edit_profile:"Edit profile",bio_ph:"About you (up to 160 characters)",wallpaper:"Animated wallpapers",w_none:"No wallpaper",w_matrix:"Matrix",w_stars:"Stars",w_aurora:"Aurora",w_neon:"Neon",w_embers:"Embers",locked_wall:"These wallpapers are for sponsors and staff",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
 };
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
+const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false]];
+const RANK={user:0,sponsor:1,moderator:2,admin:3,owner:4};
+const ROLES=["user","sponsor","moderator","admin"];
+const ROLEC=["user","sponsor","moderator","admin","owner"];
+const MODELS=["Gemini","Claude","freebuff","opencode","ChatGPT","DeepSeek","Muse Spark","GLM (Z.ai)","Grok","Nemotron","Momo","Qwen"];
 const USER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
 const $=id=>document.getElementById(id);
+const Q=s=>document.querySelectorAll(s);
 function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-function getCookie(n){
-  const m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));
-  return m?decodeURIComponent(m[1]):null;
-}
-function setCookie(n,v){
-  document.cookie=n+"="+encodeURIComponent(v)+";max-age=315360000;path=/;SameSite=Lax";
-}
+function getCookie(n){const m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));return m?decodeURIComponent(m[1]):null}
+function setCookie(n,v){document.cookie=n+"="+encodeURIComponent(v)+";max-age=315360000;path=/;SameSite=Lax"}
 function deviceId(){
   let d=load("did")||getCookie("did");
-  if(!d){
-    d=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("d"+Math.random().toString(36).slice(2)+Date.now().toString(36));
-  }
-  save("did",d);
-  setCookie("did",d);
+  if(!d){d=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("d"+Math.random().toString(36).slice(2)+Date.now().toString(36))}
+  save("did",d);setCookie("did",d);
   return d;
 }
 
 let lang=load("lang")==="en"?"en":"ru";
-let user=null;
-let pending=null;
-let mode="reg";
-let cur="home";
-let allUsers=[];
-let bansByUser={};
-let confirmCb=null;
-let banCtx=null;
-let toastTimer=null;
+let user=null,pending=null,mode="reg",cur="home";
+let allUsers=[],bansByUser={};
+let confirmCb=null,banCtx=null,toastTimer=null;
 let errKey=null,errRaw="";
+let wallId="none",raf=null,wstate=null,ww=0,wh=0;
+let eAva,eWall,ePrevWall,pbusy=false;
 
 const t=k=>TXT[lang][k];
-const isStaff=()=>!!(user&&(user.role==="owner"||user.role==="admin"));
+const rk=r=>RANK[r]||0;
+const myRank=()=>user?rk(user.role):0;
+const isStaff=()=>myRank()>=2;
 const locale=()=>lang==="en"?"en-GB":"ru-RU";
 
-function buildNote(){
-  const n=$("note");
-  if(!n)return;
-  n.textContent="";
-  t("note").split(" ").forEach((w,i)=>{
-    const s=document.createElement("span");
-    s.textContent=w;
-    s.style.animationDelay=(0.6+i*0.12)+"s";
-    n.appendChild(s);
-    n.appendChild(document.createTextNode(" "));
-  });
-}
 function showErr(){$("err").textContent=errKey?t(errKey):errRaw}
 function setErr(key,raw){errKey=key;errRaw=raw||"";showErr()}
 function toast(msg){
@@ -289,30 +308,108 @@ function toast(msg){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
 }
-function askConfirm(msg,cb){
-  $("mtext").textContent=msg;
-  confirmCb=cb;
-  $("modal").classList.add("show");
-}
+function askConfirm(msg,cb){$("mtext").textContent=msg;confirmCb=cb;$("modal").classList.add("show")}
 $("myes").onclick=()=>{$("modal").classList.remove("show");const cb=confirmCb;confirmCb=null;if(cb)cb()};
 $("mno").onclick=()=>{$("modal").classList.remove("show");confirmCb=null};
 $("modal").onclick=e=>{if(e.target===$("modal"))$("mno").onclick()};
 
-function buildDurOptions(){
-  const sel=$("bdur");
-  const keep=sel.value;
-  sel.textContent="";
-  DURS.forEach(d=>{
-    const o=document.createElement("option");
-    o.value=d[0];
-    o.textContent=t(d[1]);
-    sel.appendChild(o);
+/* ---------- обои ---------- */
+const INIT={},DRAW={};
+INIT.matrix=()=>({d:Array.from({length:Math.ceil(ww/14)},()=>Math.random()*wh/14)});
+DRAW.matrix=(c,w,h,t,s)=>{
+  c.fillStyle="rgba(0,0,0,.13)";c.fillRect(0,0,w,h);
+  c.fillStyle="#22c55e";c.font="14px monospace";
+  s.d.forEach((y,i)=>{c.fillText(Math.random()<.5?"0":"1",i*14,y*14);s.d[i]=(y*14>h&&Math.random()>.975)?0:y+1});
+};
+INIT.stars=()=>({p:Array.from({length:90},()=>({x:Math.random()*ww,y:Math.random()*wh,z:Math.random()*2+.3}))});
+DRAW.stars=(c,w,h,t,s)=>{
+  c.clearRect(0,0,w,h);c.fillStyle="#fff";
+  s.p.forEach(p=>{p.y+=p.z*.6;if(p.y>h){p.y=0;p.x=Math.random()*w}c.globalAlpha=.35+p.z/3;c.fillRect(p.x,p.y,p.z,p.z)});
+  c.globalAlpha=1;
+};
+DRAW.aurora=(c,w,h,t)=>{
+  c.clearRect(0,0,w,h);
+  ["rgba(74,222,128,.28)","rgba(56,189,248,.24)","rgba(168,85,247,.24)"].forEach((col,i)=>{
+    const x=w*(.5+.35*Math.sin(t/4000+i*2)),y=h*(.35+.2*Math.cos(t/5000+i*1.7));
+    const g=c.createRadialGradient(x,y,0,x,y,w*.7);
+    g.addColorStop(0,col);g.addColorStop(1,"rgba(0,0,0,0)");
+    c.fillStyle=g;c.fillRect(0,0,w,h);
   });
+};
+DRAW.neon=(c,w,h,t)=>{
+  c.clearRect(0,0,w,h);c.strokeStyle="rgba(168,85,247,.5)";c.lineWidth=1;
+  const hz=h*.42;
+  for(let i=-10;i<=10;i++){c.beginPath();c.moveTo(w/2,hz);c.lineTo(w/2+i*w/5,h);c.stroke()}
+  for(let k=0;k<12;k++){const f=(k+(t/900)%1)/12;const y=hz+(h-hz)*f*f;c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke()}
+};
+INIT.embers=()=>({p:Array.from({length:60},()=>({x:Math.random()*ww,y:Math.random()*wh,v:Math.random()*1.2+.3,r:Math.random()*2+.5}))});
+DRAW.embers=(c,w,h,t,s)=>{
+  c.clearRect(0,0,w,h);
+  s.p.forEach(p=>{p.y-=p.v;p.x+=Math.sin((p.y+t/50)/30)*.4;if(p.y<0){p.y=h;p.x=Math.random()*w}
+    c.fillStyle="rgba(251,146,60,"+(.3+p.r/4)+")";c.beginPath();c.arc(p.x,p.y,p.r,0,6.3);c.fill()});
+};
+function startWall(){
+  cancelAnimationFrame(raf);
+  const c=$("wall"),ctx=c.getContext("2d");
+  ww=c.width=window.innerWidth;wh=c.height=window.innerHeight;
+  ctx.clearRect(0,0,ww,wh);
+  if(wallId==="none"||!DRAW[wallId])return;
+  wstate=INIT[wallId]?INIT[wallId]():null;
+  let last=0;
+  const loop=ts=>{
+    raf=requestAnimationFrame(loop);
+    if(document.hidden||ts-last<33)return;
+    last=ts;
+    DRAW[wallId](ctx,ww,wh,ts,wstate);
+  };
+  raf=requestAnimationFrame(loop);
+}
+function setWall(id){wallId=id;save("wall",id);startWall()}
+window.addEventListener("resize",()=>{startWall();dockActive()});
+
+/* ---------- вступление и меню ---------- */
+function endIntro(){
+  const i=$("intro");
+  if(i)i.remove();
+  document.body.classList.add("ready");
+  dockActive();
+}
+$("intro").addEventListener("animationend",e=>{if(e.animationName==="introBg")endIntro()});
+$("intro").onclick=endIntro;
+setTimeout(endIntro,4800);
+
+function dockActive(){
+  const map={home:"home",forum:"forum",local:"local",profile:"profile",register:"profile",admin:"admin"};
+  const key=map[cur];
+  Q("#dock button").forEach(b=>b.classList.toggle("on",b.dataset.go===key));
+  const el=document.querySelector('#dock button[data-go="'+key+'"]');
+  if(el&&el.offsetWidth){
+    $("dind").style.width=el.offsetWidth+"px";
+    $("dind").style.transform="translateX("+el.offsetLeft+"px)";
+  }
+}
+const back=$("back");
+function go(name){
+  if(name==="admin"&&!isStaff())name="home";
+  cur=name;
+  Q(".view").forEach(v=>v.classList.toggle("active",v.id===name));
+  back.classList.toggle("show",name==="admin"||name==="register");
+  dockActive();
+  if(name==="admin")loadUsers();
+}
+Q("#dock button").forEach(b=>b.onclick=()=>{const g=b.dataset.go;go(g==="profile"?(user?"profile":"register"):g)});
+back.onclick=()=>go(cur==="admin"?"profile":"home");
+
+/* ---------- язык ---------- */
+function buildDurOptions(){
+  const sel=$("bdur"),keep=sel.value;
+  sel.textContent="";
+  DURS.forEach(d=>{const o=document.createElement("option");o.value=d[0];o.textContent=t(d[1]);sel.appendChild(o)});
   if(keep)sel.value=keep;
 }
 function applyMode(){
   const reg=mode==="reg",login=mode==="login",forgot=mode==="forgot",reset=mode==="reset";
-  document.querySelectorAll(".regonly").forEach(e=>e.style.display=reg?"":"none");
+  Q(".regonly").forEach(e=>e.style.display=reg?"":"none");
   $("pass").style.display=forgot?"none":"";
   $("code").style.display=reset?"":"none";
   $("cf").style.display=reset?"none":"";
@@ -325,89 +422,75 @@ function applyMode(){
 }
 function applyLang(){
   document.documentElement.lang=lang;
-  document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
-  document.querySelectorAll("[data-i18n-ph]").forEach(e=>e.placeholder=t(e.dataset.i18nPh));
-  document.querySelectorAll("#lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  Q("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
+  Q("[data-i18n-ph]").forEach(e=>e.placeholder=t(e.dataset.i18nPh));
+  $("langbtn").textContent=lang.toUpperCase();
   buildDurOptions();
   applyMode();
   showErr();
-  buildNote();
   if(cur==="admin"&&allUsers.length)renderUsers();
 }
 function setLang(l){
   if(l===lang)return;
   lang=l;save("lang",l);
-  $("app").classList.add("swap");
-  setTimeout(()=>{applyLang();$("app").classList.remove("swap")},250);
-  document.querySelectorAll("#lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  $("app").style.opacity=0;
+  setTimeout(()=>{applyLang();$("app").style.opacity=""},220);
 }
-document.querySelectorAll("#lang button").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+$("langbtn").onclick=()=>setLang(lang==="ru"?"en":"ru");
 
+/* ---------- профиль ---------- */
 function setAva(el,src,spin){
   el.textContent="";
   if(src||spin){
     const im=document.createElement("img");
-    im.alt="";
-    im.src=src||"pic1.jpg";
+    im.alt="";im.src=src||"pic1.jpg";
     if(!src&&spin)im.className="spin";
     el.appendChild(im);
-  }else{
-    el.innerHTML=USER_ICON;
-  }
+  }else{el.innerHTML=USER_ICON}
 }
+function setRoleClass(el,role){ROLEC.forEach(c=>el.classList.remove(c));el.classList.add(role)}
 function renderUser(){
   const role=user?user.role:"user";
-  setAva($("me"),user&&user.avatar,role==="owner");
-  setAva($("pava"),user&&user.avatar,role==="owner");
-  ["me","pava"].forEach(id=>{
-    const e=$(id);
-    e.classList.remove("owner","admin","user");
-    e.classList.add(role);
-  });
+  const spin=role==="owner";
+  setAva($("me"),user&&user.avatar,spin);
+  setAva($("pava"),user&&user.avatar,spin);
+  setRoleClass($("me"),role);
+  setRoleClass($("pava"),role);
   $("badge").textContent=role.toUpperCase();
   $("badge").className="badge "+role;
   $("pnick").textContent=user?user.nick:"";
   $("psid").textContent=(user&&user.sid)?"ID: "+user.sid:"";
   $("pmail").textContent=user?user.email:"";
-  $("admbtn").style.display=isStaff()?"":"none";
+  $("pbio").textContent=(user&&user.bio)?user.bio:"";
+  $("pbio").style.display=(user&&user.bio)?"":"none";
+  $("dadmin").style.display=isStaff()?"":"none";
+  dockActive();
 }
 function setPrev(src){setAva($("prev"),src,false)}
 async function loadUser(u){
   const meta=u.user_metadata||{};
   let p=null;
   try{
-    const r=await sb.from("profiles").select("short_id,nick,avatar,role").eq("id",u.id).maybeSingle();
+    const r=await sb.from("profiles").select("short_id,nick,avatar,role,bio,wallpaper").eq("id",u.id).maybeSingle();
     p=r.data;
   }catch(e){}
   user={
-    id:u.id,
-    email:u.email||"",
+    id:u.id,email:u.email||"",
     nick:(p&&p.nick)||meta.nick||(u.email||"user").split("@")[0],
     avatar:(p&&p.avatar)||null,
     sid:p?p.short_id:null,
-    role:(p&&p.role)||"user"
+    role:(p&&p.role)||"user",
+    bio:(p&&p.bio)||null
   };
+  if(p&&p.wallpaper){
+    const w=WALLS.find(x=>x[0]===p.wallpaper);
+    if(w&&(w[2]||rk(user.role)>=1)&&p.wallpaper!==wallId)setWall(p.wallpaper);
+  }
 }
 function clearForm(){
   $("email").value="";$("pass").value="";$("nick").value="";$("code").value="";
   pending=null;setPrev(null);setErr(null);
 }
-
-const back=$("back");
-const btns=document.querySelectorAll("nav button");
-function go(name){
-  if(name==="admin"&&!isStaff())name="home";
-  cur=name;
-  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));
-  btns.forEach(b=>b.classList.toggle("on",b.dataset.go===name));
-  back.classList.toggle("show",name!=="home");
-  if(name==="home")buildNote();
-  if(name==="admin")loadUsers();
-}
-btns.forEach(b=>b.onclick=()=>go(b.dataset.go));
-back.onclick=()=>go(cur==="admin"?"profile":"home");
-$("me").onclick=()=>go(user?"profile":"register");
-$("admbtn").onclick=()=>go("admin");
 
 function cropToData(file){
   return new Promise((res,rej)=>{
@@ -430,37 +513,121 @@ function cropToData(file){
 }
 $("choose").onclick=()=>$("file").click();
 $("file").onchange=async e=>{
-  const f=e.target.files[0];
-  e.target.value="";
+  const f=e.target.files[0];e.target.value="";
   if(!f)return;
   try{pending=await cropToData(f);setPrev(pending)}catch(err){toast(t("err_generic"))}
 };
-$("chava").onclick=()=>$("file2").click();
+
+/* ---------- редактирование профиля ---------- */
+function buildWallGrid(){
+  const g=$("wgrid");g.textContent="";
+  WALLS.forEach(w=>{
+    const ok=w[2]||myRank()>=1;
+    const b=document.createElement("button");
+    b.className="wopt"+(eWall===w[0]?" on":"")+(ok?"":" lock");
+    b.textContent=(ok?"":"🔒 ")+t(w[1]);
+    b.onclick=()=>{
+      if(!ok){toast(t("locked_wall"));return}
+      eWall=w[0];setWall(w[0]);buildWallGrid();
+    };
+    g.appendChild(b);
+  });
+}
+function openEdit(){
+  if(!user)return;
+  eAva=undefined;eWall=wallId;ePrevWall=wallId;
+  $("enick").value=user.nick;
+  $("ebio").value=user.bio||"";
+  setAva($("eava"),user.avatar,user.role==="owner");
+  $("eerr").textContent="";
+  buildWallGrid();
+  $("emodal").classList.add("show");
+}
+function closeEdit(revert){
+  if(revert)setWall(ePrevWall);
+  $("emodal").classList.remove("show");
+}
+$("pen").onclick=openEdit;
+$("eno").onclick=()=>closeEdit(true);
+$("emodal").onclick=e=>{if(e.target===$("emodal"))closeEdit(true)};
+$("echoose").onclick=()=>$("file2").click();
 $("file2").onchange=async e=>{
-  const f=e.target.files[0];
-  e.target.value="";
-  if(!f||!user||!sb)return;
+  const f=e.target.files[0];e.target.value="";
+  if(!f)return;
+  try{eAva=await cropToData(f);setAva($("eava"),eAva,false)}catch(err){$("eerr").textContent=t("err_generic")}
+};
+$("epass").onclick=()=>openPass();
+$("eyes").onclick=async()=>{
+  if(!user||!sb||pbusy)return;
+  const nick=$("enick").value.trim();
+  const bio=$("ebio").value.trim();
+  if(nick.length<2||nick.length>20){$("eerr").textContent=t("err_nick");return}
+  const patch={nick:nick,bio:bio||null,wallpaper:eWall};
+  if(eAva!==undefined)patch.avatar=eAva;
+  pbusy=true;
   try{
-    const data=await cropToData(f);
-    const r=await sb.from("profiles").update({avatar:data}).eq("id",user.id);
-    if(r.error)throw r.error;
-    user.avatar=data;
+    const r=await sb.from("profiles").update(patch).eq("id",user.id);
+    if(r.error){
+      const c=r.error.code||"";
+      $("eerr").textContent=t(c==="23505"?"err_nick_taken":c==="23514"?"err_nick":"err_generic");
+      return;
+    }
+    user.nick=nick;user.bio=bio||null;
+    if(eAva!==undefined)user.avatar=eAva;
     renderUser();
+    closeEdit(false);
     toast(t("saved"));
-  }catch(err){toast(t("err_generic"))}
+  }catch(e){
+    $("eerr").textContent=t("err_net");
+  }finally{pbusy=false}
 };
 
+/* ---------- смена пароля ---------- */
+function perr(key){$("perr").textContent=key?t(key):""}
+function openPass(){
+  perr(null);
+  $("pcur").value="";$("pnew").value="";$("pnew2").value="";
+  $("pmodal").classList.add("show");
+}
+function closePass(){$("pmodal").classList.remove("show")}
+$("pno").onclick=closePass;
+$("pmodal").onclick=e=>{if(e.target===$("pmodal"))closePass()};
+$("pyes").onclick=async()=>{
+  if(!user||!sb||pbusy)return;
+  const cur=$("pcur").value,n1=$("pnew").value,n2=$("pnew2").value;
+  if(!cur){perr("err_cur_pass");return}
+  if(n1.length<6){perr("err_pass");return}
+  if(n1!==n2){perr("err_pass_match");return}
+  pbusy=true;
+  try{
+    const r=await sb.auth.updateUser({password:n1,current_password:cur});
+    if(r.error){
+      const m=(r.error.message||"").toLowerCase();
+      let k="err_generic";
+      if(m.indexOf("different")>-1)k="err_same";
+      else if(m.indexOf("at least")>-1)k="err_pass";
+      else if(m.indexOf("rate")>-1)k="err_rate";
+      else if(m.indexOf("current")>-1||m.indexOf("invalid")>-1||m.indexOf("incorrect")>-1)k="err_cur_pass";
+      perr(k);
+      return;
+    }
+    closePass();
+    toast(t("pass_changed"));
+  }catch(e){
+    perr("err_net");
+  }finally{pbusy=false}
+};
+
+/* ---------- вход / регистрация ---------- */
 $("swap").onclick=()=>{
   mode=(mode==="reg")?"login":(mode==="login")?"reg":(mode==="forgot")?"login":"forgot";
-  setErr(null);
-  applyMode();
+  setErr(null);applyMode();
 };
 $("forgot").onclick=()=>{mode="forgot";setErr(null);applyMode()};
-
 function mapErr(e){
   const m=(e.message||"").toLowerCase();
   if(m.indexOf("banned")>-1)return "err_banned";
-  if(m.indexOf("captcha")>-1)return "err_captcha";
+  if(m.indexOf("captcha")>-1)return "err_captcha_srv";
   if(m.indexOf("invalid login")>-1)return "err_bad";
   if(m.indexOf("already registered")>-1)return "err_exists";
   if(m.indexOf("different")>-1)return "err_same";
@@ -474,7 +641,6 @@ function busy(b){
   $("go").disabled=b;
   if(b)$("go").textContent=t("wait");else applyMode();
 }
-
 function fmtUntil(b){
   if(!b.expires_at)return t("ban_forever");
   return t("ban_until")+" "+new Date(b.expires_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
@@ -486,68 +652,49 @@ function showBan(b){
   $("bantext").textContent=lines.join("\n");
   $("banscreen").classList.add("show");
   try{if(sb)Promise.resolve(sb.auth.signOut()).catch(function(){})}catch(e){}
-  user=null;
-  renderUser();
+  user=null;renderUser();
 }
 async function checkBan(){
   if(!sb)return false;
   try{
     const r=await sb.rpc("ban_status",{d:deviceId()});
     if(r.error||!r.data||!r.data.length)return false;
-    showBan(r.data[0]);
-    return true;
+    showBan(r.data[0]);return true;
   }catch(e){return false}
 }
 async function afterAuth(){
   try{await sb.rpc("log_device",{d:deviceId()})}catch(e){}
   return await checkBan();
 }
-
 async function doForgot(email){
   if(cfId!==null&&!cfToken){setErr("err_captcha");return}
-  setErr(null);
-  busy(true);
+  setErr(null);busy(true);
   try{
     const r=await sb.auth.resetPasswordForEmail(email,{captchaToken:cfToken||undefined});
     if(r.error){setErr(mapErr(r.error),r.error.message);return}
-    mode="reset";
-    $("code").value="";
-    $("pass").value="";
+    mode="reset";$("code").value="";$("pass").value="";
     toast(t("code_sent"));
-  }catch(e){
-    setErr("err_net");
-  }finally{
-    busy(false);
-    resetCaptcha();
-  }
+  }catch(e){setErr("err_net")}
+  finally{busy(false);resetCaptcha()}
 }
 async function doReset(email){
-  const code=$("code").value.trim();
-  const np=$("pass").value;
+  const code=$("code").value.trim(),np=$("pass").value;
   if(!/^\d{6}$/.test(code)){setErr("err_code");return}
   if(np.length<6){setErr("err_pass");return}
-  setErr(null);
-  busy(true);
+  setErr(null);busy(true);
   try{
     const v=await sb.auth.verifyOtp({email:email,token:code,type:"recovery"});
     if(v.error){setErr(mapErr(v.error)||"err_code");return}
     const u=await sb.auth.updateUser({password:np});
     if(u.error){setErr(mapErr(u.error),u.error.message);return}
-    const usr=(u.data&&u.data.user)||(v.data&&v.data.user);
-    await loadUser(usr);
-    renderUser();
-    mode="login";
-    clearForm();
+    await loadUser((u.data&&u.data.user)||(v.data&&v.data.user));
+    renderUser();mode="login";clearForm();
     toast(t("pass_changed"));
     if(await afterAuth())return;
     go("profile");
-  }catch(e){
-    setErr("err_net");
-  }finally{
-    busy(false);
-  }
+  }catch(e){setErr("err_net")}
+  finally{busy(false)}
 }
-
 $("go").onclick=async()=>{
   if(!sb){setErr("err_net");return}
   const email=$("email").value.trim();
@@ -562,8 +709,7 @@ $("go").onclick=async()=>{
     if(nick.length<2||nick.length>20){setErr("err_nick");return}
   }
   if(cfId!==null&&!cfToken){setErr("err_captcha");return}
-  setErr(null);
-  busy(true);
+  setErr(null);busy(true);
   try{
     if(mode==="reg"){
       const chk=await sb.rpc("nick_free",{n:nick});
@@ -574,34 +720,23 @@ $("go").onclick=async()=>{
       ?await sb.auth.signUp({email:email,password:pass,options:{data:{nick:nick},captchaToken:cfToken||undefined}})
       :await sb.auth.signInWithPassword({email:email,password:pass,options:{captchaToken:cfToken||undefined}});
     if(res.error){setErr(mapErr(res.error),res.error.message);return}
-    const u=res.data&&res.data.user;
-    const s=res.data&&res.data.session;
+    const u=res.data&&res.data.user,s=res.data&&res.data.session;
     if(!u||!s){setErr("check_mail");return}
-    if(mode==="reg"&&pending){
-      try{await sb.from("profiles").update({avatar:pending}).eq("id",u.id)}catch(e){}
-    }
+    if(mode==="reg"&&pending){try{await sb.from("profiles").update({avatar:pending}).eq("id",u.id)}catch(e){}}
     await loadUser(u);
-    renderUser();
-    clearForm();
+    renderUser();clearForm();
     if(await afterAuth())return;
     go("profile");
-  }catch(e){
-    setErr("err_net");
-  }finally{
-    busy(false);
-    resetCaptcha();
-  }
+  }catch(e){setErr("err_net")}
+  finally{busy(false);resetCaptcha()}
 };
-
 async function doLogout(){
   try{if(sb)await sb.auth.signOut()}catch(e){}
-  user=null;
-  clearForm();
-  renderUser();
-  go("home");
+  user=null;clearForm();renderUser();go("home");
 }
 $("logout").onclick=()=>askConfirm(t("logout_q"),doLogout);
 
+/* ---------- админ-панель ---------- */
 async function loadUsers(){
   $("ulist").textContent="";
   $("utotal").textContent=t("loading");
@@ -613,115 +748,71 @@ async function loadUsers(){
     bansByUser={};
     (res[1].data||[]).forEach(b=>{bansByUser[b.user_id]=b});
     renderUsers();
-  }catch(e){
-    $("utotal").textContent=t("err_generic");
-  }
+  }catch(e){$("utotal").textContent=t("err_generic")}
 }
 function renderUsers(){
   const q=$("usearch").value.trim().toLowerCase();
-  const list=$("ulist");
-  list.textContent="";
+  const list=$("ulist");list.textContent="";
   const rows=allUsers.filter(u=>!q||String(u.short_id).indexOf(q)>-1||u.nick.toLowerCase().indexOf(q)>-1||(u.email||"").toLowerCase().indexOf(q)>-1);
   $("utotal").textContent=t("total").replace("{n}",allUsers.length);
-  if(!rows.length){
-    const p=document.createElement("p");
-    p.textContent=t("no_users");
-    list.appendChild(p);
-    return;
-  }
-  const me=user?user.role:"user";
+  if(!rows.length){const p=document.createElement("p");p.textContent=t("no_users");list.appendChild(p);return}
+  const mr=myRank();
   rows.forEach(u=>{
-    const card=document.createElement("div");
-    card.className="ucard glass";
-    const top=document.createElement("div");
-    top.className="urow";
-    const name=document.createElement("b");
-    name.textContent="#"+u.short_id+" "+u.nick;
-    const bd=document.createElement("span");
-    bd.className="badge "+u.role;
-    bd.textContent=u.role.toUpperCase();
-    top.appendChild(name);
-    top.appendChild(bd);
-    const mail=document.createElement("div");
-    mail.className="mail";
-    mail.textContent=u.email;
-    const date=document.createElement("div");
-    date.className="mail";
-    date.textContent=new Date(u.created_at).toLocaleDateString(locale());
-    card.appendChild(top);
-    card.appendChild(mail);
-    card.appendChild(date);
+    const card=document.createElement("div");card.className="ucard glass";
+    const top=document.createElement("div");top.className="urow";
+    const name=document.createElement("b");name.textContent="#"+u.short_id+" "+u.nick;
+    const bd=document.createElement("span");bd.className="badge "+u.role;bd.textContent=u.role.toUpperCase();
+    top.appendChild(name);top.appendChild(bd);
+    const mail=document.createElement("div");mail.className="mail";mail.textContent=u.email;
+    const date=document.createElement("div");date.className="mail";date.textContent=new Date(u.created_at).toLocaleDateString(locale());
+    card.appendChild(top);card.appendChild(mail);card.appendChild(date);
     const b=bansByUser[u.id];
     if(b){
-      const bi=document.createElement("div");
-      bi.className="baninfo";
+      const bi=document.createElement("div");bi.className="baninfo";
       bi.textContent=t("banned")+" · "+fmtUntil(b)+(b.reason?" · "+b.reason:"")+" · IP: "+b.ips+" · "+t("devices")+": "+b.devices;
       card.appendChild(bi);
     }
-    const acts=document.createElement("div");
-    acts.className="uacts";
-    if(me==="owner"&&u.role!=="owner"){
-      const rb=document.createElement("button");
-      rb.className="mini";
-      rb.textContent=t(u.role==="admin"?"remove_admin":"make_admin");
-      rb.onclick=()=>setRole(u.id,u.role==="admin"?"user":"admin");
-      acts.appendChild(rb);
+    const acts=document.createElement("div");acts.className="uacts";
+    const lower=user&&u.id!==user.id&&rk(u.role)<mr;
+    if(mr>=3&&lower){
+      const sel=document.createElement("select");sel.className="mini sel";
+      ROLES.filter(r=>rk(r)<mr).forEach(r=>{
+        const o=document.createElement("option");o.value=r;o.textContent=r.toUpperCase();
+        if(r===u.role)o.selected=true;sel.appendChild(o);
+      });
+      sel.onchange=()=>setRole(u.id,sel.value);
+      acts.appendChild(sel);
     }
-    const canMod=u.role!=="owner"&&user&&u.id!==user.id&&(me==="owner"||(me==="admin"&&u.role==="user"));
-    if(canMod){
+    if(mr>=2&&lower){
       if(b){
-        const eb=document.createElement("button");
-        eb.className="mini";
-        eb.textContent=t("ban_edit_btn");
-        eb.onclick=()=>openBan("edit",u,b);
-        acts.appendChild(eb);
-        const ub=document.createElement("button");
-        ub.className="mini";
-        ub.textContent=t("unban_btn");
-        ub.onclick=()=>askConfirm(t("unban_q").replace("{n}",u.nick),()=>unban(b.grp));
-        acts.appendChild(ub);
+        const eb=document.createElement("button");eb.className="mini";eb.textContent=t("ban_edit_btn");
+        eb.onclick=()=>openBan("edit",u,b);acts.appendChild(eb);
+        const ub=document.createElement("button");ub.className="mini";ub.textContent=t("unban_btn");
+        ub.onclick=()=>askConfirm(t("unban_q").replace("{n}",u.nick),()=>unban(b.grp));acts.appendChild(ub);
       }else{
-        const bb=document.createElement("button");
-        bb.className="mini danger";
-        bb.textContent=t("ban_btn");
-        bb.onclick=()=>openBan("new",u,null);
-        acts.appendChild(bb);
+        const bb=document.createElement("button");bb.className="mini danger";bb.textContent=t("ban_btn");
+        bb.onclick=()=>openBan("new",u,null);acts.appendChild(bb);
       }
-      const db=document.createElement("button");
-      db.className="mini danger";
-      db.textContent=t("delete_user");
-      db.onclick=()=>askConfirm(t("delete_q").replace("{n}",u.nick),()=>delUser(u.id));
-      acts.appendChild(db);
+    }
+    if(mr>=3&&lower){
+      const db=document.createElement("button");db.className="mini danger";db.textContent=t("delete_user");
+      db.onclick=()=>askConfirm(t("delete_q").replace("{n}",u.nick),()=>delUser(u.id));acts.appendChild(db);
     }
     if(acts.children.length)card.appendChild(acts);
     list.appendChild(card);
   });
 }
 $("usearch").oninput=renderUsers;
-async function setRole(id,role){
+async function rpcDone(name,args){
   try{
-    const r=await sb.rpc("admin_set_role",{target:id,new_role:role});
+    const r=await sb.rpc(name,args);
     if(r.error)throw r.error;
-    toast(t("saved"));
-    loadUsers();
-  }catch(e){toast(t("err_generic"))}
+    toast(t("saved"));loadUsers();
+  }catch(e){toast(t("err_generic"));loadUsers()}
 }
-async function delUser(id){
-  try{
-    const r=await sb.rpc("admin_delete_user",{target:id});
-    if(r.error)throw r.error;
-    toast(t("saved"));
-    loadUsers();
-  }catch(e){toast(t("err_generic"))}
-}
-async function unban(grp){
-  try{
-    const r=await sb.rpc("admin_unban",{p_grp:grp});
-    if(r.error)throw r.error;
-    toast(t("saved"));
-    loadUsers();
-  }catch(e){toast(t("err_generic"))}
-}
+const setRole=(id,role)=>rpcDone("admin_set_role",{target:id,new_role:role});
+const delUser=id=>rpcDone("admin_delete_user",{target:id});
+const unban=grp=>rpcDone("admin_unban",{p_grp:grp});
 
 function syncCustom(){$("bcustom").style.display=$("bdur").value==="custom"?"":"none"}
 $("bdur").onchange=syncCustom;
@@ -730,24 +821,15 @@ function openBan(m,u,b){
   $("btitle").textContent=t(m==="new"?"ban_title":"ban_edit_title").replace("{n}",u.nick);
   buildDurOptions();
   if(m==="edit"){
-    if(!b.expires_at){
-      $("bdur").value="perm";
-      $("bcustom").value="";
-    }else{
-      $("bdur").value="custom";
-      $("bcustom").value=Math.max(1,Math.ceil((new Date(b.expires_at).getTime()-Date.now())/60000));
-    }
+    if(!b.expires_at){$("bdur").value="perm";$("bcustom").value=""}
+    else{$("bdur").value="custom";$("bcustom").value=Math.max(1,Math.ceil((new Date(b.expires_at).getTime()-Date.now())/60000))}
     $("breason").value=b.reason||"";
   }else{
-    $("bdur").value="1440";
-    $("bcustom").value="";
-    $("breason").value="";
-    $("bip").checked=false;
-    $("bdev").checked=false;
+    $("bdur").value="1440";$("bcustom").value="";$("breason").value="";
+    $("bip").checked=false;$("bdev").checked=false;
   }
   const show=m==="new"?"":"none";
-  $("bipw").style.display=show;
-  $("bdevw").style.display=show;
+  $("bipw").style.display=show;$("bdevw").style.display=show;
   syncCustom();
   $("bmodal").classList.add("show");
 }
@@ -758,28 +840,17 @@ $("byes").onclick=async()=>{
   if(v==="custom"){
     mins=parseInt($("bcustom").value,10);
     if(!(mins>0)){toast(t("ban_bad_dur"));return}
-  }else if(v!=="perm"){
-    mins=parseInt(v,10);
-  }
+  }else if(v!=="perm"){mins=parseInt(v,10)}
   const reason=$("breason").value.trim()||null;
   const ctx=banCtx;
-  $("bmodal").classList.remove("show");
-  banCtx=null;
-  try{
-    let r;
-    if(ctx.mode==="new"){
-      r=await sb.rpc("admin_ban",{p_target:ctx.u.id,p_minutes:mins,p_reason:reason,p_ip:$("bip").checked,p_device:$("bdev").checked});
-    }else{
-      r=await sb.rpc("admin_edit_ban",{p_grp:ctx.b.grp,p_minutes:mins,p_reason:reason});
-    }
-    if(r.error)throw r.error;
-    toast(t("saved"));
-    loadUsers();
-  }catch(e){toast(t("err_generic"))}
+  $("bmodal").classList.remove("show");banCtx=null;
+  if(ctx.mode==="new")rpcDone("admin_ban",{p_target:ctx.u.id,p_minutes:mins,p_reason:reason,p_ip:$("bip").checked,p_device:$("bdev").checked});
+  else rpcDone("admin_edit_ban",{p_grp:ctx.b.grp,p_minutes:mins,p_reason:reason});
 };
 $("bno").onclick=()=>{$("bmodal").classList.remove("show");banCtx=null};
 $("bmodal").onclick=e=>{if(e.target===$("bmodal"))$("bno").onclick()};
 
+/* ---------- капча, Local, запуск ---------- */
 function renderCaptcha(){
   if(cfId!==null||!window.turnstile)return;
   cfId=turnstile.render("#cf",{sitekey:TURNSTILE_SITE_KEY,theme:"dark",callback:function(tk){cfToken=tk},"expired-callback":function(){cfToken=null},"error-callback":function(){cfToken=null}});
@@ -789,7 +860,15 @@ function resetCaptcha(){
   try{if(cfId!==null)turnstile.reset(cfId)}catch(e){}
 }
 window.addEventListener("load",renderCaptcha);
-
+function buildModels(){
+  const box=$("models");
+  MODELS.forEach(n=>{
+    const d=document.createElement("details");d.className="mdl";
+    const s=document.createElement("summary");s.textContent=n;
+    const p=document.createElement("p");p.dataset.i18n="empty";
+    d.appendChild(s);d.appendChild(p);box.appendChild(d);
+  });
+}
 async function boot(){
   try{
     if(sb){
@@ -800,98 +879,12 @@ async function boot(){
   renderUser();
   if(user)await afterAuth();else await checkBan();
 }
-
-const MODELS=["Gemini","Claude","freebuff","opencode","ChatGPT","DeepSeek","Muse Spark","GLM (Z.ai)","Grok","Nemotron","Momo","Qwen"];
-function buildModels(){
-  const box=$("models");
-  MODELS.forEach(n=>{
-    const d=document.createElement("details");
-    d.className="mdl";
-    const s=document.createElement("summary");
-    s.textContent=n;
-    const p=document.createElement("p");
-    p.dataset.i18n="empty";
-    d.appendChild(s);
-    d.appendChild(p);
-    box.appendChild(d);
-  });
-}
 buildModels();
 setPrev(null);
 renderUser();
 applyLang();
-let pmode=null;
-let pbusy=false;
-function perr(key){$("perr").textContent=key?t(key):""}
-function openProfileModal(m){
-  if(!user)return;
-  pmode=m;
-  perr(null);
-  const nickMode=m==="nick";
-  $("ptitle").textContent=t(nickMode?"nick_title":"pass_title");
-  $("pnickin").style.display=nickMode?"":"none";
-  $("pcur").style.display=nickMode?"none":"";
-  $("pnew").style.display=nickMode?"none":"";
-  $("pnew2").style.display=nickMode?"none":"";
-  $("pnickin").value=nickMode?user.nick:"";
-  $("pcur").value="";
-  $("pnew").value="";
-  $("pnew2").value="";
-  $("pmodal").classList.add("show");
-}
-function closeProfileModal(){$("pmodal").classList.remove("show");pmode=null}
-$("chnick").onclick=()=>openProfileModal("nick");
-$("chpass").onclick=()=>openProfileModal("pass");
-$("pno").onclick=closeProfileModal;
-$("pmodal").onclick=e=>{if(e.target===$("pmodal"))closeProfileModal()};
-async function saveNick(){
-  const nick=$("pnickin").value.trim();
-  if(nick.length<2||nick.length>20){perr("err_nick");return}
-  if(nick===user.nick){closeProfileModal();return}
-  const r=await sb.from("profiles").update({nick:nick}).eq("id",user.id);
-  if(r.error){
-    const c=r.error.code||"";
-    perr(c==="23505"?"err_nick_taken":c==="23514"?"err_nick":"err_generic");
-    return;
-  }
-  user.nick=nick;
-  renderUser();
-  closeProfileModal();
-  toast(t("nick_saved"));
-}
-async function savePass(){
-  const cur=$("pcur").value;
-  const n1=$("pnew").value;
-  const n2=$("pnew2").value;
-  if(!cur){perr("err_cur_pass");return}
-  if(n1.length<6){perr("err_pass");return}
-  if(n1!==n2){perr("err_pass_match");return}
-  const r=await sb.auth.updateUser({password:n1,current_password:cur});
-  if(r.error){
-    const m=(r.error.message||"").toLowerCase();
-    let k="err_generic";
-    if(m.indexOf("different")>-1)k="err_same";
-    else if(m.indexOf("at least")>-1)k="err_pass";
-    else if(m.indexOf("rate")>-1)k="err_rate";
-    else if(m.indexOf("current")>-1||m.indexOf("invalid")>-1||m.indexOf("incorrect")>-1)k="err_cur_pass";
-    perr(k);
-    return;
-  }
-  closeProfileModal();
-  toast(t("pass_changed"));
-}
-$("pyes").onclick=async()=>{
-  if(!user||!sb||pbusy)return;
-  pbusy=true;
-  try{
-    if(pmode==="nick")await saveNick();
-    else if(pmode==="pass")await savePass();
-  }catch(e){
-    perr("err_net");
-  }finally{
-    pbusy=false;
-  }
-};
+const w0=load("wall");
+if(w0&&WALLS.some(x=>x[0]===w0))setWall(w0);
 boot();
 </script>
 </body>
