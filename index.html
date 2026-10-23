@@ -100,6 +100,13 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .urow{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .urow b{word-break:break-word}
 .uopen{all:unset;cursor:pointer;font-weight:bold;text-align:left;word-break:break-word}
+.mini.warn{background:rgba(245,158,11,.22);border-color:rgba(245,158,11,.5)}
+#pwarn{display:flex;flex-direction:column;gap:3px;width:100%;text-align:left;font-size:.84rem;margin-top:4px}
+#pwarn .wt{color:#f59e0b;font-weight:bold}
+#pwarn .we{opacity:.85;font-size:.8rem}
+.witem{display:flex;gap:8px;align-items:flex-start;text-align:left;padding:9px 11px;border-radius:14px;font-size:.85rem}
+.witem .wr{flex:1;word-break:break-word}
+.witem .wmeta{display:block;font-size:.72rem;opacity:.55;margin-top:2px}
 .uacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .mini{border:none;border-radius:999px;padding:7px 12px;font-size:.8rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
 .mini.danger{background:rgba(239,68,68,.35);color:#fecaca}
@@ -158,8 +165,9 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 #bell svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #nbadge{position:absolute;top:-1px;right:-1px;min-width:16px;height:16px;border-radius:8px;background:#ef4444;color:#fff;font-size:.6rem;font-weight:bold;align-items:center;justify-content:center;padding:0 3px;box-sizing:border-box;display:none}
 #nbadge.show{display:flex}
-#umodal,#nmodal,#tmodal{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
-#umodal.show,#nmodal.show,#tmodal.show{opacity:1;pointer-events:auto}
+#umodal,#nmodal,#tmodal,#wmodal,#wlmodal{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
+#umodal.show,#nmodal.show,#tmodal.show,#wmodal.show,#wlmodal.show{opacity:1;pointer-events:auto}
+#modal{z-index:60}
 #u_ava{width:88px;height:88px;border:2px solid var(--c);margin:0 auto}
 .nlist{display:flex;flex-direction:column;gap:6px;max-height:48vh;overflow-y:auto;width:100%;text-align:left}
 .nitem{all:unset;box-sizing:border-box;width:100%;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer;font-size:.86rem;display:flex;gap:8px;align-items:flex-start}
@@ -295,6 +303,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
     <div class="prow"><span id="badge" class="badge user">USER</span><span id="psid" class="mail"></span></div>
     <div id="pmail" class="mail"></div>
     <div id="pbio" class="bio"></div>
+    <div id="pwarn"></div>
     <button id="logout" class="btn glass" data-i18n="logout"></button>
   </div></section>
 
@@ -419,8 +428,27 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <div id="u_bio" class="bio"></div>
   <div id="u_meta" class="mail"></div>
   <div class="mbtns">
+    <button id="u_warn" class="btn glass sm" data-i18n="w_warn" style="display:none"></button>
     <button id="u_setava" class="btn glass sm" data-i18n="p_set_ava" style="display:none"></button>
     <button id="u_close" class="btn main" data-i18n="close"></button>
+  </div>
+</div></div>
+
+<div id="wmodal"><div class="mcard">
+  <div id="wtitle" class="mt"></div>
+  <button id="wdurbtn" class="btn glass pick"></button>
+  <input id="wreason" type="text" maxlength="300" class="glass" data-i18n-ph="w_reason_ph" autocomplete="off">
+  <div class="mbtns">
+    <button id="wno" class="btn glass" data-i18n="no"></button>
+    <button id="wyes" class="btn main" data-i18n="w_ok"></button>
+  </div>
+</div></div>
+
+<div id="wlmodal"><div class="mcard">
+  <div id="wltitle" class="mt"></div>
+  <div id="wlist" class="ulist"></div>
+  <div class="mbtns">
+    <button id="wl_close" class="btn main" data-i18n="close"></button>
   </div>
 </div></div>
 
@@ -457,7 +485,12 @@ Object.assign(TXT.ru,{
   n_avatar:"Твой аватар обновили",n_role:"Тебе выдали роль {role}",n_ban:"Тебя заблокировали",
   p_set_ava:"Сменить аватар",close:"Закрыть",p_id:"ID",
   chat_uploading:"Загружаю фото...",chat_upload_fail:"Не удалось загрузить фото",chat_replying:"В ответ {nick}",
-  ava_changed:"Аватар обновлён",chat_photo:"Фото",n_open:"Открыть"
+  ava_changed:"Аватар обновлён",chat_photo:"Фото",n_open:"Открыть",
+  w_warn:"Предупредить",w_title:"Предупреждения",w_reason_ph:"Причина (3–300 символов)",w_ok:"Выдать",
+  w_empty:"Предупреждений нет",w_until:"до",w_forever:"навсегда",w_revoked:"снято",w_revoke:"Снять",
+  w_given:"Предупреждение выдано",w_gone:"Предупреждение снято",w_rev_q:"Снять это предупреждение?",
+  w_count:"Предупреждений: {n}",n_warn:"Тебе выдали предупреждение: {reason}",w_by:"выдал",
+  w_cant:"Нельзя предупредить этого пользователя"
 });
 Object.assign(TXT.en,{
   f_new:"New topic",f_new_title:"New topic",f_thread_title:"Topic title",f_body_ph:"Topic text...",f_create:"Create",
@@ -468,7 +501,12 @@ Object.assign(TXT.en,{
   n_avatar:"Your avatar was changed",n_role:"You were given the role {role}",n_ban:"You were banned",
   p_set_ava:"Change avatar",close:"Close",p_id:"ID",
   chat_uploading:"Uploading photo...",chat_upload_fail:"Could not upload the photo",chat_replying:"Replying to {nick}",
-  ava_changed:"Avatar updated",chat_photo:"Photo",n_open:"Open"
+  ava_changed:"Avatar updated",chat_photo:"Photo",n_open:"Open",
+  w_warn:"Warn",w_title:"Warnings",w_reason_ph:"Reason (3–300 characters)",w_ok:"Issue",
+  w_empty:"No warnings",w_until:"until",w_forever:"forever",w_revoked:"revoked",w_revoke:"Revoke",
+  w_given:"Warning issued",w_gone:"Warning revoked",w_rev_q:"Revoke this warning?",
+  w_count:"Warnings: {n}",n_warn:"You were warned: {reason}",w_by:"by",
+  w_cant:"You cannot warn this user"
 });
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false]];
@@ -514,6 +552,7 @@ let chatRooms=[],chatRoom=null,chatTimer=null,chatSig="",chatBusy=false,chatStic
 let chatRows=[],chatLastId=0,chatMap=new Map(),chatReply=null,chatImg=null,chatPollTick=0;
 let forumThreadId=null,forumCache=[];
 let notif=[],notifTimer=null,uCtx=null,avaTarget=null,nOpen=false;
+let warnCtx=null,warnDur="10080",warnByUser={};
 
 const t=k=>TXT[lang][k];
 const rk=r=>RANK[r]||0;
@@ -647,6 +686,7 @@ function go(name){
   dockActive();
   if(name==="admin")loadUsers();
   if(name==="forum")loadForum();
+  if(name==="profile")loadMyWarnings();
   if(name==="chat"){pauseWall();chatInit()}else{stopChat();resumeWall()}
 }
 Q("#dock button").forEach(b=>b.onclick=()=>{const g=b.dataset.go;go(g==="profile"?(user?"profile":"register"):g)});
@@ -1338,8 +1378,18 @@ async function openProfile(id){
     $("u_bio").textContent=p.bio||"";
     $("u_bio").style.display=p.bio?"":"none";
     $("u_meta").textContent=t("p_id")+": "+p.short_id;
+    const canWarn=myRank()>=2&&rk(p.role||"user")<myRank();
+    $("u_warn").style.display=canWarn?"":"none";
+    $("u_warn").onclick=()=>{if(canWarn)openWarn(p)};
     $("u_setava").style.display=myRank()>=4?"":"none";
     $("umodal").classList.add("show");
+    try{
+      const wr=await sb.rpc("warnings_list",{p_user:id});
+      if(!wr.error){
+        const cnt=(wr.data||[]).filter(w=>w.active).length;
+        if(cnt)$("u_meta").textContent+=" · ⚠ "+cnt;
+      }
+    }catch(e){}
   }catch(e){toast(t("err_generic"))}
 }
 $("u_close").onclick=()=>$("umodal").classList.remove("show");
@@ -1395,6 +1445,7 @@ function nText(n){
   if(n.kind==="role")return t("n_role").replace("{role}",String(p.role||"").toUpperCase());
   if(n.kind==="avatar")return t("n_avatar");
   if(n.kind==="ban")return t("n_ban");
+  if(n.kind==="warn")return t("n_warn").replace("{reason}",p.reason||"");
   return p.text||n.kind;
 }
 function renderNotifs(){
@@ -1574,17 +1625,132 @@ $("th_send").onclick=async()=>{
   finally{$("th_send").disabled=false}
 };
 
+/* ---------- предупреждения (варны) ---------- */
+function setWarnDur(v){
+  warnDur=v;
+  $("wdurbtn").textContent=durLabel(v)+" ▾";
+}
+$("wdurbtn").onclick=()=>openSheet(t("pick_dur"),DURS.filter(d=>d[0]!=="custom").map(d=>({v:d[0],label:t(d[1])})),warnDur,setWarnDur);
+function openWarn(u){
+  if(!user||!sb)return;
+  if(myRank()<2||rk(u.role)>=myRank()){toast(t("w_cant"));return}
+  warnCtx=u;
+  $("wtitle").textContent=t("w_warn")+" · "+(u.nick||"?");
+  setWarnDur("10080");
+  $("wreason").value="";
+  $("wmodal").classList.add("show");
+  setTimeout(()=>$("wreason").focus(),200);
+}
+$("wno").onclick=()=>{$("wmodal").classList.remove("show");warnCtx=null};
+$("wmodal").onclick=e=>{if(e.target===$("wmodal"))$("wno").onclick()};
+$("wyes").onclick=async()=>{
+  if(!warnCtx||!sb)return;
+  const ctx=warnCtx;
+  const reason=$("wreason").value.trim();
+  if(reason.length<3){toast(t("w_reason_ph"));$("wreason").focus();return}
+  const mins=warnDur==="perm"?null:parseInt(warnDur,10);
+  $("wyes").disabled=true;
+  try{
+    const r=await sb.rpc("warn_user",{p_target:ctx.id,p_minutes:mins,p_reason:reason});
+    if(r.error)throw r.error;
+    $("wmodal").classList.remove("show");warnCtx=null;
+    toast(t("w_given"));
+    await loadWarnCounts();
+    if(cur==="admin")renderUsers();
+  }catch(e){toast(t("err_generic"))}
+  finally{$("wyes").disabled=false}
+};
+async function loadWarnCounts(){
+  if(!isStaff()||!sb)return;
+  try{
+    const r=await sb.rpc("warnings_counts");
+    if(r.error)return;
+    warnByUser={};
+    (r.data||[]).forEach(w=>{warnByUser[w.user_id]=Number(w.cnt)});
+  }catch(e){}
+}
+async function openWarnList(u){
+  if(!user||!sb)return;
+  $("wltitle").textContent=t("w_title")+" · "+(u.nick||"?");
+  const box=$("wlist");
+  box.textContent=t("loading");
+  $("wlmodal").classList.add("show");
+  try{
+    const r=await sb.rpc("warnings_list",{p_user:u.id});
+    if(r.error)throw r.error;
+    const rows=r.data||[];
+    box.textContent="";
+    if(!rows.length){
+      const p=document.createElement("p");p.className="mail";p.textContent=t("w_empty");box.appendChild(p);return;
+    }
+    const canRevoke=myRank()>=2&&rk(u.role)<myRank();
+    rows.forEach(w=>{
+      const it=document.createElement("div");it.className="witem glass";
+      const tx=document.createElement("div");tx.className="wr";
+      tx.textContent=w.reason;
+      const meta=document.createElement("span");meta.className="wmeta";
+      meta.textContent=new Date(w.created_at).toLocaleDateString(locale())
+        +(w.by_nick?" · "+t("w_by")+" "+w.by_nick:"")
+        +(w.expires_at?" · "+t("w_until")+" "+new Date(w.expires_at).toLocaleDateString(locale()):" · "+t("w_forever"))
+        +(w.revoked?" · "+t("w_revoked"):"");
+      tx.appendChild(meta);
+      it.appendChild(tx);
+      if(w.active&&canRevoke){
+        const rb=document.createElement("button");rb.className="mini";rb.textContent=t("w_revoke");
+        rb.onclick=()=>askConfirm(t("w_rev_q"),()=>revokeWarn(w.id,u));
+        it.appendChild(rb);
+      }
+      box.appendChild(it);
+    });
+  }catch(e){box.textContent=t("err_generic")}
+}
+async function revokeWarn(id,u){
+  try{
+    const r=await sb.rpc("warn_revoke",{p_id:id});
+    if(r.error)throw r.error;
+    toast(t("w_gone"));
+    await loadWarnCounts();
+    if(cur==="admin")renderUsers();
+    openWarnList(u);
+  }catch(e){toast(t("err_generic"))}
+}
+$("wl_close").onclick=()=>$("wlmodal").classList.remove("show");
+$("wlmodal").onclick=e=>{if(e.target===$("wlmodal"))$("wlmodal").classList.remove("show")};
+async function loadMyWarnings(){
+  const box=$("pwarn");
+  if(!box)return;
+  box.textContent="";
+  if(!user||!sb){box.style.display="none";return}
+  try{
+    const r=await sb.rpc("warnings_list",{p_user:user.id});
+    if(r.error)throw r.error;
+    const act=(r.data||[]).filter(w=>w.active);
+    if(!act.length){box.style.display="none";return}
+    box.style.display="";
+    const h=document.createElement("div");h.className="wt";
+    h.textContent="⚠ "+t("w_count").replace("{n}",act.length);
+    box.appendChild(h);
+    act.forEach(w=>{
+      const e=document.createElement("div");e.className="we";
+      e.textContent="• "+w.reason+(w.expires_at?" — "+t("w_until")+" "+new Date(w.expires_at).toLocaleDateString(locale()):"");
+      box.appendChild(e);
+    });
+  }catch(e){box.style.display="none"}
+}
+
 /* ---------- админ-панель ---------- */
 async function loadUsers(){
   $("ulist").textContent="";
   $("utotal").textContent=t("loading");
   try{
-    const res=await Promise.all([sb.rpc("admin_users"),sb.rpc("admin_bans")]);
+    const res=await Promise.all([sb.rpc("admin_users"),sb.rpc("admin_bans"),sb.rpc("warnings_counts")]);
     if(res[0].error)throw res[0].error;
     if(res[1].error)throw res[1].error;
     allUsers=res[0].data||[];
     bansByUser={};
     (res[1].data||[]).forEach(b=>{bansByUser[b.user_id]=b});
+    warnByUser={};
+    if(res[2]&&!res[2].error)(res[2].data||[]).forEach(w=>{warnByUser[w.user_id]=Number(w.cnt)});
     renderUsers();
   }catch(e){$("utotal").textContent=t("err_generic")}
 }
@@ -1613,7 +1779,14 @@ function renderUsers(){
     }
     const acts=document.createElement("div");acts.className="uacts";
     const lower=user&&u.id!==user.id&&rk(u.role)<mr;
+    const wc=warnByUser[u.id]||0;
+    if(wc){
+      const wb=document.createElement("button");wb.className="mini warn";wb.textContent="⚠ "+wc;
+      wb.onclick=()=>openWarnList(u);acts.appendChild(wb);
+    }
     if(mr>=2&&lower){
+      const wb2=document.createElement("button");wb2.className="mini warn";wb2.textContent="⚠ "+t("w_warn");
+      wb2.onclick=()=>openWarn(u);acts.appendChild(wb2);
       const rb=document.createElement("button");rb.className="mini";
       rb.textContent=u.role.toUpperCase()+" ▾";
       rb.onclick=()=>openSheet(t("pick_role"),ROLES.filter(r=>rk(r)<mr).map(r=>({v:r,label:r.toUpperCase()})),u.role,v=>{if(v!==u.role)setRole(u.id,v)});
