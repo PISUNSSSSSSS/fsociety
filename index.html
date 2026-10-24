@@ -274,6 +274,89 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 #dmatt svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .tile .ti svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
+/* ---------- редактор ---------- */
+.etools{display:flex;gap:4px;align-items:center;overflow-x:auto;width:100%;flex:none;padding:1px 0;scrollbar-width:none}
+.etools::-webkit-scrollbar{display:none}
+.etool{all:unset;box-sizing:border-box;flex:none;min-width:30px;height:28px;padding:0 7px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:#ddd;font-size:.72rem;font-weight:600;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.etool:active{transform:scale(.94)}
+.etool.b{font-weight:800}.etool.i{font-style:italic}.etool.s{text-decoration:line-through}
+.sendrow textarea{flex:1;min-width:0;min-height:42px;max-height:130px;height:42px;padding:9px 14px;border-radius:18px;font-size:16px;line-height:1.35;resize:none;overflow-y:auto;box-sizing:border-box}
+#th_in{height:76px;min-height:76px;max-height:220px}
+#t_body{min-height:70px;max-height:260px}
+.rich a{color:#93c5fd;text-decoration:underline;word-break:break-all}
+.rich code{background:rgba(255,255,255,.12);border-radius:5px;padding:1px 5px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em}
+.rich blockquote{margin:4px 0;padding:6px 9px;border-left:3px solid rgba(147,197,253,.7);background:rgba(147,197,253,.08);border-radius:0 8px 8px 0}
+.rich .spoiler{background:rgba(255,255,255,.14);color:transparent;border-radius:4px;padding:0 3px;cursor:pointer}
+.rich .spoiler.open{color:inherit;background:rgba(255,255,255,.08)}
+
+/* ---------- группы в мессенджере ---------- */
+.dmtabs{width:100%;flex:none}
+#dm .box>#groupnew{flex:none}
+.grouplist{display:flex;flex-direction:column;gap:8px;width:100%;flex:1;min-height:0;overflow-y:auto}
+.grouprow{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:16px;cursor:pointer;width:100%}
+.grouprow:active{transform:scale(.99)}
+.gicon{width:42px;height:42px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#8b5cf6,#4f46e5);box-shadow:0 0 14px rgba(139,92,246,.25)}
+.gicon.lg{width:36px;height:36px;font-size:.95rem}
+.grouph{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:16px;flex:none}
+.grouph .dmwho{flex:1}
+.groupmsgs{flex:1;min-height:0;overflow-y:auto;width:100%;display:flex;flex-direction:column;gap:6px;text-align:left;padding:4px 0}
+.groupchat{display:flex;flex-direction:column;flex:1;min-height:0;gap:8px;width:100%}
+.grouprow .dmunread{flex:none}
+.gsub{font-size:.68rem;opacity:.55}
+
+/* ---------- серверы ---------- */
+#servers .box{max-width:520px;flex:1;min-height:0;height:100%;align-items:stretch}
+.srvhome{display:flex;flex-direction:column;gap:10px;width:100%;flex:1;min-height:0}
+.srvtop{display:flex;flex-direction:column;gap:8px;flex:none}
+.srvactions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.srvlist{display:flex;flex-direction:column;gap:8px;width:100%;overflow-y:auto;flex:1;min-height:0}
+.srvcard{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:10px;border-radius:16px;cursor:pointer;text-align:left;width:100%}
+.srvcard:active{transform:scale(.99)}
+.srvicon{width:44px;height:44px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.15rem;color:#03150c;background:linear-gradient(135deg,#4ade80,#0f766e);box-shadow:0 0 16px rgba(34,197,94,.2)}
+.srvmid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.srvname{font-weight:700;font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srvmeta{font-size:.7rem;opacity:.55;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srvchat{display:flex;flex-direction:column;gap:8px;width:100%;flex:1;min-height:0}
+.srvhead{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:16px;flex:none}
+.srvhead .srvicon{width:34px;height:34px;border-radius:11px;font-size:.95rem}
+.srvhead .dmwho{flex:1}
+.srvchannels{display:flex;gap:6px;overflow-x:auto;width:100%;padding-bottom:2px;flex:none;scrollbar-width:none}
+.srvchannels::-webkit-scrollbar{display:none}
+.srvch{all:unset;box-sizing:border-box;border-radius:999px;padding:6px 11px;font-size:.78rem;cursor:pointer;color:#ddd;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.1);white-space:nowrap;flex:none}
+.srvch.on{background:#fff;color:#000;font-weight:bold}
+.srvch.add{opacity:.7}
+#srvmsgs{flex:1;min-height:0}
+#srvmsgs .msg{max-width:96%}
+.srvrole{font-size:.55rem;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:0 5px;opacity:.7;white-space:nowrap}
+
+/* ---------- журнал действий ---------- */
+.abar{display:flex;justify-content:center;width:100%}
+.alist{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow-y:auto;text-align:left;width:100%}
+.aitem{padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:.8rem}
+.aitem .atop{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.aitem .aact{font-weight:700}
+.aitem .atime{opacity:.5;margin-left:auto;font-size:.7rem}
+.aitem .adet{opacity:.72;margin-top:3px;word-break:break-word;line-height:1.35}
+.aitem .awho{opacity:.65;font-size:.72rem}
+
+/* ---------- универсальная форма ---------- */
+#formmodal,#amodal{position:fixed;inset:0;z-index:26;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
+#formmodal.show,#amodal.show{opacity:1;pointer-events:auto}
+#fm_body{display:flex;flex-direction:column;gap:8px;text-align:left;max-height:60vh;overflow-y:auto;width:100%}
+.formhint{font-size:.75rem;opacity:.55;line-height:1.4;text-align:left}
+.formcode{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:rgba(255,255,255,.1);padding:7px 10px;border-radius:10px;word-break:break-all;text-align:left}
+.pickrow{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:12px;background:rgba(255,255,255,.06);width:100%;box-sizing:border-box}
+.pickrow .ava{width:32px;height:32px;flex:none;border:2px solid var(--c)}
+.pickrow .grow{flex:1;min-width:0}
+.pickrow .pname{font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pickrow .mini{flex:none}
+
+@media(max-width:380px){
+  #dock button{font-size:.58rem}
+  #dock button>svg{width:20px;height:20px}
+  .srvicon{width:38px;height:38px;font-size:1rem}
+}
+
 @keyframes introBg{0%,72%{opacity:1}100%{opacity:0;visibility:hidden}}
 @keyframes introText{
   0%{opacity:0;transform:scale(.4) rotateY(0);color:#fff}
@@ -314,11 +397,12 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 
   <section id="thread" class="view"><div class="box">
     <div id="th_head" class="thead"></div>
-    <div id="th_body" class="tpost glass"></div>
+    <div id="th_body" class="tpost glass rich"></div>
     <div id="th_atts" class="fprev"></div>
     <div id="th_replies" class="ulist"></div>
     <div id="th_form" class="tform" style="display:none">
-      <textarea id="th_in" maxlength="2000" class="glass" data-i18n-ph="f_reply_ph"></textarea>
+      <div id="th_tools" class="etools" data-for="th_in"></div>
+      <textarea id="th_in" maxlength="8000" class="glass" data-i18n-ph="f_reply_ph"></textarea>
       <div id="th_files" class="fprev"></div>
       <div class="row2">
         <button id="th_att" class="btn glass sm" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M20 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L9.5 18a2 2 0 0 1-3-3l8-8"/></svg></button>
@@ -337,16 +421,23 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
     </div>
     <div id="replybar" class="replybar" style="display:none"><span id="replytxt"></span><button id="replyx" aria-label="Cancel">✕</button></div>
     <div id="imgprev" class="imgprev" style="display:none"><img id="imgprevim" alt=""><button id="imgx" aria-label="Remove">✕</button></div>
+    <div id="chat_tools" class="etools" data-for="msgin"></div>
     <div id="sendrow" class="sendrow">
       <button id="att" class="btn glass sm" aria-label="Photo"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M5 17l4.5-4.5L13 16l3-3 3 3"/></svg></button>
-      <input id="msgin" type="text" maxlength="500" class="glass" data-i18n-ph="msg_ph" autocomplete="off">
+      <textarea id="msgin" rows="1" maxlength="2000" class="glass" data-i18n-ph="msg_ph" autocomplete="off"></textarea>
       <button id="msgsend" class="btn main sm">➤</button>
     </div>
   </div></section>
 
   <section id="dm" class="view"><div class="box">
     <h2 data-i18n="dm_title"></h2>
+    <div class="seg glass dmtabs" id="dmtabs">
+      <button id="dmtab0" class="on" data-i18n="dm_tab_dm"></button>
+      <button id="dmtab1" data-i18n="dm_tab_groups"></button>
+    </div>
+    <button id="groupnew" class="btn main sm" data-i18n="group_new" style="display:none"></button>
     <div id="dmcontacts" class="dmcontacts"></div>
+    <div id="grouplist" class="grouplist" style="display:none"></div>
     <div id="dmchat" class="dmchat" style="display:none">
       <div class="dmhead glass">
         <button id="dmback" class="dmback" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
@@ -355,15 +446,63 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       </div>
       <div id="dmmsgs" class="msgs"></div>
       <div id="dm_files" class="fprev"></div>
+      <div id="dm_tools" class="etools" data-for="dmin"></div>
       <div class="sendrow">
         <button id="dmatt" class="btn glass sm" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M20 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L9.5 18a2 2 0 0 1-3-3l8-8"/></svg></button>
-        <input id="dmin" type="text" maxlength="1000" class="glass" data-i18n-ph="dm_ph" autocomplete="off">
+        <textarea id="dmin" rows="1" maxlength="4000" class="glass" data-i18n-ph="dm_ph" autocomplete="off"></textarea>
         <button id="dmsendbtn" class="btn main sm">➤</button>
+      </div>
+    </div>
+    <div id="groupchat" class="groupchat" style="display:none">
+      <div class="grouph glass">
+        <button id="groupback" class="dmback" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <div id="groupava" class="gicon lg">#</div>
+        <div class="dmwho"><div id="groupname"></div><div id="grouprel" class="mail"></div></div>
+        <button id="groupmore" class="mini" aria-label="Menu">⋯</button>
+      </div>
+      <div id="groupmsgs" class="groupmsgs"></div>
+      <div id="group_tools" class="etools" data-for="groupin"></div>
+      <div class="sendrow">
+        <textarea id="groupin" rows="1" maxlength="4000" class="glass" data-i18n-ph="group_msg_ph" autocomplete="off"></textarea>
+        <button id="groupsendbtn" class="btn main sm">➤</button>
       </div>
     </div>
     <div id="dmlogin" class="chatlogin" style="display:none">
       <p data-i18n="dm_login"></p>
       <button id="dmgo" class="btn main" data-i18n="login_btn"></button>
+    </div>
+  </div></section>
+
+  <section id="servers" class="view"><div class="box">
+    <div id="srvhome" class="srvhome">
+      <h2 data-i18n="srv_title"></h2>
+      <div class="srvtop">
+        <p class="mail" data-i18n="srv_sub"></p>
+        <div class="srvactions">
+          <button id="srvnew" class="btn main sm" data-i18n="srv_new"></button>
+          <button id="srvjoinbtn" class="btn glass sm" data-i18n="srv_join"></button>
+        </div>
+      </div>
+      <div id="srvlist" class="srvlist"></div>
+      <div id="srvlogin" class="chatlogin" style="display:none">
+        <p data-i18n="srv_login"></p>
+        <button id="srvgo" class="btn main" data-i18n="login_btn"></button>
+      </div>
+    </div>
+    <div id="srvchat" class="srvchat" style="display:none">
+      <div class="srvhead glass">
+        <button id="srvback" class="dmback" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <div id="srvicon" class="srvicon">#</div>
+        <div class="dmwho"><div id="srvname"></div><div id="srvmeta" class="mail"></div></div>
+        <button id="srvmore" class="mini" aria-label="Menu">⋯</button>
+      </div>
+      <div id="srvchannels" class="srvchannels"></div>
+      <div id="srvmsgs" class="msgs"></div>
+      <div id="srv_tools" class="etools" data-for="srvin"></div>
+      <div class="sendrow">
+        <textarea id="srvin" rows="1" maxlength="4000" class="glass" data-i18n-ph="srv_msg_ph" autocomplete="off"></textarea>
+        <button id="srvsend" class="btn main sm">➤</button>
+      </div>
     </div>
   </div></section>
 
@@ -403,6 +542,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <section id="admin" class="view"><div class="box">
     <h2 data-i18n="admin_panel"></h2>
     <p id="utotal" class="mail"></p>
+    <div class="abar"><button id="auditbtn" class="btn glass sm" data-i18n="audit_title"></button></div>
     <input id="usearch" type="text" class="glass" data-i18n-ph="search_ph" autocomplete="off">
     <div id="ulist" class="ulist"></div>
   </div></section>
@@ -414,6 +554,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <button data-go="forum"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M8 21h8M12 18v3"/></svg><span data-i18n="m_forum"></span></button>
   <button data-go="chat"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span data-i18n="m_chat"></span></button>
   <button data-go="dm"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg><span data-i18n="m_dm"></span><span id="dmbadge">0</span></button>
+  <button data-go="servers"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg><span data-i18n="m_servers"></span></button>
   <button data-go="profile"><span id="me" class="dav user"></span><span data-i18n="m_profile"></span></button>
   <button data-go="admin" id="dadmin" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span data-i18n="m_admin"></span></button>
 </div>
@@ -470,6 +611,23 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   </div>
 </div></div>
 
+<div id="formmodal"><div class="mcard">
+  <div id="fm_title" class="mt"></div>
+  <div id="fm_body"></div>
+  <div class="mbtns">
+    <button id="fm_close" class="btn glass" data-i18n="close"></button>
+  </div>
+</div></div>
+
+<div id="amodal"><div class="mcard">
+  <div class="mt" data-i18n="audit_title"></div>
+  <div id="alist" class="alist"></div>
+  <div class="mbtns">
+    <button id="arefresh" class="btn glass sm" data-i18n="audit_refresh"></button>
+    <button id="aclose" class="btn main" data-i18n="close"></button>
+  </div>
+</div></div>
+
 <div id="sheet"><div id="sheetcard">
   <div class="shandle"></div>
   <div id="sheettitle" class="mt"></div>
@@ -487,6 +645,8 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       <button class="tile" id="t_lang"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg></span><span id="t_lang_l"></span></button>
       <button class="tile" id="t_wall"><span class="ti"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5 1-2 2-2h1a4 4 0 0 0 4-4c0-5-4-10-9-10z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="14" cy="7.5" r="1"/></svg></span><span id="t_wall_l"></span></button>
       <button class="tile" id="t_chat"><span class="ti"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg></span><span data-i18n="m_chat"></span></button>
+      <button class="tile" id="t_groups"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c2.8 0 5 2.2 5 5"/></svg></span><span data-i18n="m_groups"></span></button>
+      <button class="tile" id="t_servers"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span><span data-i18n="m_servers"></span></button>
       <button class="tile" id="t_prof"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></span><span data-i18n="m_profile"></span></button>
       <button class="tile" id="t_admin"><span class="ti"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></span><span data-i18n="m_admin"></span></button>
       <button class="tile" id="t_out"><span class="ti"><svg viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M6.5 6.5a8 8 0 1 0 11 0"/></svg></span><span id="t_out_l"></span></button>
@@ -498,7 +658,8 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 <div id="tmodal"><div class="mcard">
   <div class="mt" data-i18n="f_new_title"></div>
   <input id="t_title" type="text" maxlength="120" class="glass" data-i18n-ph="f_thread_title" autocomplete="off">
-  <textarea id="t_body" maxlength="4000" class="glass" data-i18n-ph="f_body_ph"></textarea>
+  <div id="t_tools" class="etools" data-for="t_body"></div>
+  <textarea id="t_body" maxlength="12000" class="glass" data-i18n-ph="f_body_ph"></textarea>
   <div id="t_files" class="fprev"></div>
   <button id="t_att" class="btn glass sm" data-i18n="f_attach"></button>
   <div id="t_err" class="err"></div>
@@ -654,6 +815,126 @@ Object.assign(TXT.en,{
   dm_req_out:"request sent",dm_req_in:"wants to add you",dm_friend:"friend",dm_slow:"Not so fast, wait a second",
   dm_photo:"Photo",dm_file:"File",dm_wait_upload:"Wait, files are still uploading",dm_gif:"GIF",dm_video:"Video"
 });
+Object.assign(TXT.ru,{
+  m_servers:"Серверы",m_groups:"Группы",
+  dm_tab_dm:"Личные",dm_tab_groups:"Группы",
+  group_new:"Создать группу",group_create_title:"Новая группа",group_name_ph:"Название группы (2–60)",
+  group_create_hint:"Отметь друзей, которых сразу добавим в группу.",group_create:"Создать",
+  group_empty:"Групп пока нет. Создай свою!",group_members:"участников",group_owner:"владелец",group_member:"участник",
+  group_invite:"Пригласить",group_invite_title:"Пригласить друзей",
+  group_invite_hint:"Друг сразу попадёт в группу и получит уведомление.",
+  group_invited:"Приглашение отправлено",group_already:"Уже в группе",group_not_friend:"Можно приглашать только друзей",
+  group_leave:"Покинуть группу",group_leave_q:"Покинуть эту группу?",group_left:"Ты покинул группу",
+  group_delete:"Удалить группу",group_delete_q:"Удалить группу для всех?",group_deleted:"Группа удалена",
+  group_kick:"Исключить",group_kick_q:"Исключить этого участника?",group_kicked:"Участник исключён",
+  group_members_title:"Участники группы",group_msg_ph:"Сообщение в группу...",
+  group_empty_msgs:"Сообщений пока нет. Напиши первым!",group_you:"ты",group_need_name:"Название: от 2 до 60 символов",
+  group_menu:"Группа",group_left_owner:"Владелец покинул группу, владельцем стал другой участник",
+  group_deleted_msg:"группа удалена",group_slow:"Не так быстро, подожди секунду",
+  srv_title:"Серверы",srv_sub:"Создавай свои серверы и общайся в текстовых каналах.",
+  srv_login:"Войди, чтобы создавать серверы и общаться",srv_new:"Создать сервер",srv_join:"Войти по коду",
+  srv_empty:"Пока нет серверов. Создай первый!",srv_create_title:"Новый сервер",
+  srv_name_ph:"Название сервера (2–60)",srv_desc_ph:"Описание (до 200 символов)",srv_create:"Создать",
+  srv_join_title:"Войти на сервер",srv_code_ph:"Код приглашения",srv_join_btn:"Войти",
+  srv_join_q:"Войти на этот сервер?",srv_joined:"Ты на сервере",srv_join_fail:"Не удалось войти: проверь код",
+  srv_need_name:"Название: от 2 до 60 символов",srv_need_code:"Введи код приглашения",
+  srv_member_count:"{n} участников",srv_channel_count:"{n} каналов",srv_owner:"владелец",srv_admin:"админ",
+  srv_member:"участник",srv_you:"ты",srv_msg_ph:"Сообщение в канал...",srv_empty_msgs:"Сообщений пока нет. Напиши первым!",
+  srv_manage:"Управление",srv_invite:"Пригласить друзей",srv_invite_title:"Пригласить друзей",
+  srv_invite_hint:"Друг получит уведомление со ссылкой на сервер.",srv_invite_code:"Код приглашения",
+  srv_copy:"Копировать",srv_copied:"Код скопирован",srv_regenerate:"Обновить код",srv_regenerated:"Код обновлён",
+  srv_regenerate_q:"Создать новый код? Старый перестанет работать.",srv_members_title:"Участники сервера",
+  srv_channel_new:"Создать канал",srv_channel_name_ph:"Название канала",srv_channel_create:"Создать канал",
+  srv_channel_created:"Канал создан",srv_channel_delete:"Удалить канал",
+  srv_channel_del_q:"Удалить канал «{name}»?",srv_channel_deleted:"Канал удалён",
+  srv_channel_last:"Нельзя удалить последний канал",srv_leave:"Покинуть сервер",srv_leave_q:"Покинуть сервер?",
+  srv_left:"Ты покинул сервер",srv_delete:"Удалить сервер",srv_delete_q:"Удалить сервер для всех?",
+  srv_deleted:"Сервер удалён",srv_owner_leave:"Владелец не может покинуть сервер. Удали его.",
+  srv_kick:"Исключить",srv_kick_q:"Исключить участника?",srv_kicked:"Участник исключён",
+  srv_make_admin:"Сделать админом",srv_make_member:"Снять админа",srv_role_changed:"Роль изменена",
+  srv_settings:"Настройки сервера",srv_edit_title:"Настройки сервера",srv_save:"Сохранить",
+  srv_saved:"Сервер обновлён",srv_need_admin:"Это может только владелец или админ",
+  srv_not_friend:"Приглашать можно только друзей",srv_already_member:"Уже на сервере",
+  srv_invited:"Приглашение отправлено",srv_no_channels:"Нет каналов",srv_code_hint:"Поделись кодом с другом.",
+  srv_friends_empty:"Сначала добавь друзей.",srv_server:"Сервер",srv_invite_reset:"Код приглашения обновлён",
+  ed_bold:"Жирный",ed_italic:"Курсив",ed_strike:"Зачёркнутый",ed_code:"Код",ed_quote:"Цитата",
+  ed_spoiler:"Спойлер",ed_link:"Ссылка",ed_link_url:"Адрес ссылки",ed_link_text:"Текст ссылки",
+  ed_hint:"**жирный**, *курсив*, `код`, > цитата, ||спойлер||",
+  audit_title:"Журнал действий",audit_refresh:"Обновить",audit_empty:"Записей пока нет",audit_loading:"Загружаю...",
+  audit_actor:"Кто",audit_action:"Действие",audit_target:"Объект",audit_system:"система",
+  audit_old:"Было",audit_new:"Стало",audit_reason:"Причина",audit_until:"До",audit_role:"Роль",
+  audit_channel:"Канал",audit_group:"Группа",audit_server:"Сервер",audit_user:"Пользователь",
+  a_role_change:"Смена роли",a_ban:"Бан",a_unban:"Разбан",a_ban_edit:"Изменение бана",a_warn:"Предупреждение",
+  a_warn_revoke:"Снятие предупреждения",a_forum_thread_delete:"Удаление темы",a_forum_reply_delete:"Удаление ответа",
+  a_chat_delete:"Удаление сообщения",a_server_create:"Создание сервера",a_server_delete:"Удаление сервера",
+  a_server_update:"Изменение сервера",a_server_join:"Вход на сервер",a_server_leave:"Выход с сервера",
+  a_server_kick:"Исключение с сервера",a_server_role:"Смена роли на сервере",a_server_channel_create:"Создание канала",
+  a_server_channel_delete:"Удаление канала",a_server_invite_reset:"Новый код сервера",a_group_create:"Создание группы",
+  a_group_delete:"Удаление группы",a_group_invite:"Приглашение в группу",a_group_leave:"Выход из группы",
+  a_group_kick:"Исключение из группы",a_group_message_delete:"Удаление сообщения группы",
+  a_server_message_delete:"Удаление сообщения сервера",
+  n_group_invite:"{nick} пригласил тебя в группу {name}",n_server_invite:"{nick} пригласил тебя на сервер {name}"
+});
+Object.assign(TXT.en,{
+  m_servers:"Servers",m_groups:"Groups",
+  dm_tab_dm:"Direct",dm_tab_groups:"Groups",
+  group_new:"Create group",group_create_title:"New group",group_name_ph:"Group name (2–60)",
+  group_create_hint:"Pick friends to add to the group right away.",group_create:"Create",
+  group_empty:"No groups yet. Create your own!",group_members:"members",group_owner:"owner",group_member:"member",
+  group_invite:"Invite",group_invite_title:"Invite friends",
+  group_invite_hint:"A friend joins the group immediately and gets a notification.",
+  group_invited:"Invitation sent",group_already:"Already in the group",group_not_friend:"You can only invite friends",
+  group_leave:"Leave group",group_leave_q:"Leave this group?",group_left:"You left the group",
+  group_delete:"Delete group",group_delete_q:"Delete the group for everyone?",group_deleted:"Group deleted",
+  group_kick:"Kick",group_kick_q:"Kick this member?",group_kicked:"Member kicked",
+  group_members_title:"Group members",group_msg_ph:"Message the group...",
+  group_empty_msgs:"No messages yet. Be the first!",group_you:"you",group_need_name:"Name: 2 to 60 characters",
+  group_menu:"Group",group_left_owner:"The owner left; another member became the owner",
+  group_deleted_msg:"group deleted",group_slow:"Not so fast, wait a second",
+  srv_title:"Servers",srv_sub:"Create your own servers and talk in text channels.",
+  srv_login:"Log in to create servers and chat",srv_new:"Create server",srv_join:"Join by code",
+  srv_empty:"No servers yet. Create the first one!",srv_create_title:"New server",
+  srv_name_ph:"Server name (2–60)",srv_desc_ph:"Description (up to 200 characters)",srv_create:"Create",
+  srv_join_title:"Join a server",srv_code_ph:"Invite code",srv_join_btn:"Join",
+  srv_join_q:"Join this server?",srv_joined:"You joined the server",srv_join_fail:"Could not join: check the code",
+  srv_need_name:"Name: 2 to 60 characters",srv_need_code:"Enter an invite code",
+  srv_member_count:"{n} members",srv_channel_count:"{n} channels",srv_owner:"owner",srv_admin:"admin",
+  srv_member:"member",srv_you:"you",srv_msg_ph:"Message the channel...",srv_empty_msgs:"No messages yet. Be the first!",
+  srv_manage:"Manage",srv_invite:"Invite friends",srv_invite_title:"Invite friends",
+  srv_invite_hint:"Your friend gets a notification with a link to the server.",srv_invite_code:"Invite code",
+  srv_copy:"Copy",srv_copied:"Code copied",srv_regenerate:"New code",srv_regenerated:"Code updated",
+  srv_regenerate_q:"Create a new code? The old one will stop working.",srv_members_title:"Server members",
+  srv_channel_new:"Create channel",srv_channel_name_ph:"Channel name",srv_channel_create:"Create channel",
+  srv_channel_created:"Channel created",srv_channel_delete:"Delete channel",
+  srv_channel_del_q:"Delete channel {name}?",srv_channel_deleted:"Channel deleted",
+  srv_channel_last:"You cannot delete the last channel",srv_leave:"Leave server",srv_leave_q:"Leave the server?",
+  srv_left:"You left the server",srv_delete:"Delete server",srv_delete_q:"Delete the server for everyone?",
+  srv_deleted:"Server deleted",srv_owner_leave:"The owner cannot leave. Delete the server instead.",
+  srv_kick:"Kick",srv_kick_q:"Kick this member?",srv_kicked:"Member kicked",
+  srv_make_admin:"Make admin",srv_make_member:"Remove admin",srv_role_changed:"Role changed",
+  srv_settings:"Server settings",srv_edit_title:"Server settings",srv_save:"Save",
+  srv_saved:"Server updated",srv_need_admin:"Only the owner or an admin can do that",
+  srv_not_friend:"You can only invite friends",srv_already_member:"Already on the server",
+  srv_invited:"Invitation sent",srv_no_channels:"No channels",srv_code_hint:"Share this code with a friend.",
+  srv_friends_empty:"Add some friends first.",srv_server:"Server",srv_invite_reset:"Invite code updated",
+  ed_bold:"Bold",ed_italic:"Italic",ed_strike:"Strikethrough",ed_code:"Code",ed_quote:"Quote",
+  ed_spoiler:"Spoiler",ed_link:"Link",ed_link_url:"Link URL",ed_link_text:"Link text",
+  ed_hint:"**bold**, *italic*, `code`, > quote, ||spoiler||",
+  audit_title:"Activity log",audit_refresh:"Refresh",audit_empty:"No entries yet",audit_loading:"Loading...",
+  audit_actor:"Who",audit_action:"Action",audit_target:"Target",audit_system:"system",
+  audit_old:"Was",audit_new:"Now",audit_reason:"Reason",audit_until:"Until",audit_role:"Role",
+  audit_channel:"Channel",audit_group:"Group",audit_server:"Server",audit_user:"User",
+  a_role_change:"Role change",a_ban:"Ban",a_unban:"Unban",a_ban_edit:"Ban edit",a_warn:"Warning",
+  a_warn_revoke:"Warning revoked",a_forum_thread_delete:"Topic deleted",a_forum_reply_delete:"Reply deleted",
+  a_chat_delete:"Message deleted",a_server_create:"Server created",a_server_delete:"Server deleted",
+  a_server_update:"Server updated",a_server_join:"Joined server",a_server_leave:"Left server",
+  a_server_kick:"Kicked from server",a_server_role:"Server role change",a_server_channel_create:"Channel created",
+  a_server_channel_delete:"Channel deleted",a_server_invite_reset:"New server code",a_group_create:"Group created",
+  a_group_delete:"Group deleted",a_group_invite:"Invited to group",a_group_leave:"Left group",
+  a_group_kick:"Kicked from group",a_group_message_delete:"Group message deleted",
+  a_server_message_delete:"Server message deleted",
+  n_group_invite:"{nick} invited you to group {name}",n_server_invite:"{nick} invited you to server {name}"
+});
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false],["rich","w_rich",false]];
 const RANK={user:0,sponsor:1,moderator:2,admin:3,coowner:4,owner:5};
@@ -707,8 +988,12 @@ let forumThreadId=null,forumCache=[],forumFiles=[],forumReplyFiles=[],fileTarget
 let notif=[],notifTimer=null,uCtx=null,avaTarget=null,nOpen=false;
 let dmContacts=[],dmWith=null,dmRows=[],dmLastId=0,dmPollTimer=null,dmBadgeTimer=null,dmUnread=0,dmPending=[];
 let warnCtx=null,warnDur="10080",warnByUser={};
+let dmTab="dm",groupList=[],groupWith=null,groupRows=[],groupLastId=0,groupTimer=null,groupBusy=false;
+let srvList=[],srvCurrent=null,srvChannels=[],srvChannel=null,srvRows=[],srvLastId=0,srvTimer=null,srvBusy=false,srvTick=0;
+let auditOpen=false,edSel={};
 
 const t=k=>TXT[lang][k];
+const tf=(k,vars)=>{let s=t(k)||k;Object.keys(vars||{}).forEach(a=>{s=s.split("{"+a+"}").join(vars[a])});return s};
 const rk=r=>RANK[r]||0;
 function roleLabel(r){r=r||"user";if(r==="coowner")return lang==="en"?"CO-OWNER":"СОВЛАДЕЛЕЦ";return String(r).toUpperCase()}
 const myRank=()=>user?rk(user.role):0;
@@ -850,7 +1135,7 @@ $("intro").onclick=endIntro;
 setTimeout(endIntro,4800);
 
 function dockActive(){
-  const map={home:"home",forum:"forum",thread:"forum",chat:"chat",dm:"dm",profile:"profile",register:"profile",admin:"admin"};
+  const map={home:"home",forum:"forum",thread:"forum",chat:"chat",dm:"dm",servers:"servers",profile:"profile",register:"profile",admin:"admin"};
   const key=map[cur];
   Q("#dock button").forEach(b=>b.classList.toggle("on",b.dataset.go===key));
   const el=document.querySelector('#dock button[data-go="'+key+'"]');
@@ -863,6 +1148,7 @@ const back=$("back");
 function go(name){
   if(name==="admin"&&!isStaff())name="home";
   if(name==="thread"&&!forumThreadId)name="forum";
+  stopChat();stopDmPoll();stopGroupPoll();stopServerPoll();
   cur=name;
   Q(".view").forEach(v=>v.classList.toggle("active",v.id===name));
   back.classList.toggle("show",name==="admin"||name==="register"||name==="thread");
@@ -870,9 +1156,10 @@ function go(name){
   if(name==="admin")loadUsers();
   if(name==="forum")loadForum();
   if(name==="profile"){loadMyWarnings();loadFriends()}
-  if(name==="chat"){stopDmPoll();pauseWall();chatInit()}
-  else if(name==="dm"){stopChat();pauseWall();dmInit()}
-  else{stopChat();stopDmPoll();resumeWall()}
+  if(name==="chat"){pauseWall();chatInit()}
+  else if(name==="dm"){pauseWall();dmInit()}
+  else if(name==="servers"){pauseWall();serverInit()}
+  else resumeWall();
 }
 Q("#dock button").forEach(b=>b.onclick=()=>{const g=b.dataset.go;go(g==="profile"?(user?"profile":"register"):g)});
 back.onclick=()=>{
@@ -936,10 +1223,19 @@ function applyLang(){
   if(user)renderUser();
   if(cur==="admin"&&allUsers.length)renderUsers();
   if(cur==="chat")renderRooms();
-  if(cur==="dm"){if(dmWith)$("dmrel").textContent=dmRelText(dmWith.rel);renderDmContacts()}
+  if(cur==="dm"){
+    if(dmWith)$("dmrel").textContent=dmRelText(dmWith.rel);
+    if(groupWith)renderGroupHead();
+    renderDmContacts();renderGroupList();dmShow();
+  }
+  if(cur==="servers"){
+    renderServerList();
+    if(srvCurrent){renderServerHead();renderServerChannels();renderServerMsgs()}
+  }
   if(cur==="forum")renderForum(forumCache);
   if(cur==="thread"&&forumThreadId)openThread(forumThreadId,true);
   if(nOpen)renderNotifs();
+  buildEditorTools();
 }
 function setLang(l){
   if(l===lang)return;
@@ -975,6 +1271,8 @@ function renderUser(){
   $("pbio").textContent=(user&&user.bio)?user.bio:"";
   $("pbio").style.display=(user&&user.bio)?"":"none";
   $("dadmin").style.display=isStaff()?"":"none";
+  const ab=$("auditbtn");
+  if(ab)ab.style.display=myRank()>=3?"":"none";
   dockActive();
 }
 function setPrev(src){setAva($("prev"),src,false)}
@@ -1249,12 +1547,149 @@ $("authform").onsubmit=e=>{e.preventDefault();doAuth()};
 async function doLogout(){
   try{if(sb)await sb.auth.signOut()}catch(e){}
   user=null;chatRooms=[];chatRoom=null;chatSig="";
-  stopChat();chatReset();stopNotif();dmReset();
+  stopChat();chatReset();stopNotif();dmReset();serverReset();
+  auditOpen=false;const am=$("amodal");if(am)am.classList.remove("show");
   notif=[];renderNotifBadge();frState={friends:[],req:[]};
   const pf=$("pfriends");if(pf)pf.textContent="";
   clearForm();renderUser();go("home");
 }
 $("logout").onclick=()=>askConfirm(t("logout_q"),doLogout);
+
+/* ---------- безопасный markdown-lite и панель редактора ---------- */
+function escHtml(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function safeHref(u){
+  u=String(u||"").trim();
+  return /^https?:\/\/[^\s]+$/i.test(u)?u:"";
+}
+function mdInline(s){
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,(m,txt,url)=>{
+    const h=safeHref(url);
+    return h?'<a href="'+h+'" target="_blank" rel="noopener noreferrer">'+txt+'</a>':m;
+  });
+  s=s.replace(/\*\*([^*\n]+?)\*\*/g,"<strong>$1</strong>");
+  s=s.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g,"$1<em>$2</em>");
+  s=s.replace(/~~([^~\n]+?)~~/g,"<del>$1</del>");
+  s=s.replace(/\|\|([^|\n]+?)\|\|/g,'<span class="spoiler">$1</span>');
+  s=s.replace(/__([^_\n]+?)__/g,"<u>$1</u>");
+  return s;
+}
+function mdHtml(text){
+  const src=String(text==null?"":text).replace(/\r\n?/g,"\n");
+  let s=escHtml(src);
+  const codes=[];
+  s=s.replace(/`([^`\n]+)`/g,(m,c)=>{
+    const ph="\uE000"+codes.length+"\uE001";
+    codes.push("<code>"+c+"</code>");
+    return ph;
+  });
+  const out=[],quote=[];
+  const flush=()=>{
+    if(quote.length){out.push("<blockquote>"+quote.map(mdInline).join("<br>")+"</blockquote>");quote.length=0}
+  };
+  s.split("\n").forEach(line=>{
+    if(/^&gt;\s?/.test(line))quote.push(line.replace(/^&gt;\s?/,""));
+    else{flush();out.push(mdInline(line))}
+  });
+  flush();
+  let html=out.join("<br>");
+  codes.forEach((c,i)=>{html=html.split("\uE000"+i+"\uE001").join(c)});
+  return html;
+}
+function mdPlain(text){
+  return String(text==null?"":text)
+    .replace(/`([^`\n]+)`/g,"$1")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g,"$1")
+    .replace(/\*\*([^*]+)\*\*/g,"$1")
+    .replace(/~~([^~]+)~~/g,"$1")
+    .replace(/\|\|([^|]+)\|\|/g,"$1")
+    .replace(/__([^_]+)__/g,"$1")
+    .replace(/\*([^*\n]+)\*/g,"$1")
+    .replace(/^&gt;\s?/gm,"")
+    .replace(/^>\s?/gm,"");
+}
+function setRich(el,text){el.innerHTML=mdHtml(text)}
+const ED_OPS=[
+  {op:"bold",label:"B",key:"ed_bold",cls:"b"},
+  {op:"italic",label:"I",key:"ed_italic",cls:"i"},
+  {op:"strike",label:"S",key:"ed_strike",cls:"s"},
+  {op:"code",label:"</>",key:"ed_code",cls:""},
+  {op:"quote",label:"❝",key:"ed_quote",cls:""},
+  {op:"spoiler",label:"◉",key:"ed_spoiler",cls:""},
+  {op:"link",label:"🔗",key:"ed_link",cls:""}
+];
+function resizeEditor(ta){
+  if(!ta)return;
+  ta.style.height="auto";
+  ta.style.height=Math.min(Math.max(ta.scrollHeight,42),160)+"px";
+}
+function buildEditorTools(){
+  Q(".etools").forEach(box=>{
+    const id=box.dataset.for;
+    const ta=$(id);
+    box.textContent="";
+    ED_OPS.forEach(o=>{
+      const b=document.createElement("button");
+      b.type="button";b.className="etool "+o.cls;b.textContent=o.label;
+      b.title=t(o.key);b.setAttribute("aria-label",t(o.key));
+      b.addEventListener("pointerdown",e=>e.preventDefault());
+      b.onclick=()=>editorOp(id,o.op);
+      box.appendChild(b);
+    });
+    if(ta&&!ta.dataset.edBound){
+      ta.dataset.edBound="1";
+      const remember=()=>{edSel[id]=[ta.selectionStart,ta.selectionEnd]};
+      ["click","keyup","select","blur","input"].forEach(ev=>ta.addEventListener(ev,remember));
+      ta.addEventListener("input",()=>resizeEditor(ta));
+    }
+    resizeEditor(ta);
+  });
+}
+function editorOp(id,op){
+  const ta=$(id);if(!ta)return;
+  let s=ta.selectionStart,e=ta.selectionEnd;
+  if(document.activeElement!==ta&&edSel[id]){s=edSel[id][0];e=edSel[id][1]}
+  const val=ta.value;
+  s=Math.max(0,Math.min(s,val.length));
+  e=Math.max(s,Math.min(e,val.length));
+  const sel=val.slice(s,e);
+  let ns=s,ne=e;
+  const wrap=(a,b)=>{
+    const ins=sel?a+sel+b:a+b;
+    ta.value=val.slice(0,s)+ins+val.slice(e);
+    ns=s+a.length;ne=sel?ns+sel.length:s+a.length;
+  };
+  if(op==="bold")wrap("**","**");
+  else if(op==="italic")wrap("*","*");
+  else if(op==="strike")wrap("~~","~~");
+  else if(op==="code")wrap("`","`");
+  else if(op==="spoiler")wrap("||","||");
+  else if(op==="link"){
+    let url=window.prompt(t("ed_link_url"),"https://");
+    if(url===null)return;
+    url=url.trim();
+    if(!safeHref(url)){toast(t("ed_link"));return}
+    const label=(sel||t("ed_link_text")||url).replace(/[\[\]\n]/g," ");
+    const ins="["+label+"]("+url+")";
+    ta.value=val.slice(0,s)+ins+val.slice(e);
+    ns=s;ne=s+ins.length;
+  }else if(op==="quote"){
+    const lineStart=val.lastIndexOf("\n",Math.max(0,s-1))+1;
+    const block=val.slice(lineStart,e);
+    const pref=block.split("\n").map(l=>l.indexOf("> ")===0?l:"> "+l).join("\n");
+    ta.value=val.slice(0,lineStart)+pref+val.slice(e);
+    ns=lineStart;ne=lineStart+pref.length;
+  }
+  ta.focus();
+  try{ta.setSelectionRange(ns,ne)}catch(err){}
+  ta.dispatchEvent(new Event("input",{bubbles:true}));
+}
+document.addEventListener("click",e=>{
+  const sp=e.target&&e.target.closest?e.target.closest(".spoiler"):null;
+  if(sp)sp.classList.toggle("open");
+});
 
 /* ---------- чат ---------- */
 function stopChat(){if(chatTimer){clearInterval(chatTimer);chatTimer=null}}
@@ -1420,8 +1855,8 @@ function msgNode(m){
     row.appendChild(im);
   }
   if(m.body||m.deleted){
-    const body=document.createElement("div");body.className="mb"+(m.deleted?" del":"");
-    body.textContent=m.deleted?t("msg_deleted"):m.body;
+    const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
+    if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
     row.appendChild(body);
   }
   return row;
@@ -1442,7 +1877,7 @@ $("msgs").addEventListener("scroll",()=>{
   chatStick=b.scrollHeight-b.scrollTop-b.clientHeight<60;
 });
 function setReplying(m){
-  chatReply=m?{id:m.id,nick:m.nick||"?",excerpt:(m.body||"").replace(/\s+/g," ").slice(0,70)}:null;
+  chatReply=m?{id:m.id,nick:m.nick||"?",excerpt:mdPlain(m.body||"").replace(/\s+/g," ").slice(0,70)}:null;
   const bar=$("replybar");
   if(chatReply){
     bar.style.display="";
@@ -1551,7 +1986,7 @@ async function chatDelete(id){
   }catch(e){toast(t("err_generic"))}
 }
 $("msgsend").onclick=chatSend;
-$("msgin").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();chatSend()}};
+$("msgin").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();chatSend()}});
 $("chatgo").onclick=()=>go("register");
 
 /* ---------- профили пользователей ---------- */
@@ -1621,7 +2056,8 @@ function startNotif(){
   dmBadgeTimer=setInterval(()=>{
     if(document.hidden||!user)return;
     loadDmUnread();
-    if(cur==="dm"&&!dmWith)loadDmContacts();
+    if(cur==="dm"&&dmTab==="dm"&&!dmWith)loadDmContacts();
+    if(cur==="dm"&&dmTab==="groups"&&!groupWith)loadGroupList();
   },12000);
 }
 function stopNotif(){
@@ -1656,6 +2092,8 @@ function nText(n){
   if(n.kind==="friend")return t("n_friend").replace("{nick}",p.nick||"?");
   if(n.kind==="friend_ok")return t("n_friend_ok").replace("{nick}",p.nick||"?");
   if(n.kind==="chat_reply")return t("n_chat_reply").replace("{nick}",p.nick||"?").replace("{text}",p.text||"");
+  if(n.kind==="group_invite")return t("n_group_invite").replace("{nick}",p.nick||"?").replace("{name}",p.name||"");
+  if(n.kind==="server_invite")return t("n_server_invite").replace("{nick}",p.nick||"?").replace("{name}",p.name||"");
   return p.text||n.kind;
 }
 function renderNotifs(){
@@ -1696,6 +2134,17 @@ async function openNotif(n){
       chatRoom=rid;chatReset();renderRooms();
       chatLoadFull();
     }
+  }else if(n.link&&n.link.indexOf("group:")===0){
+    closeNotifs();
+    const gid=Number(n.link.slice(6));
+    dmTab="groups";dmWith=null;groupWith=null;
+    go("dm");
+    if(gid)openGroupById(gid);
+  }else if(n.link&&n.link.indexOf("server_code:")===0){
+    closeNotifs();
+    const code=n.link.slice(12);
+    go("servers");
+    if(code)askConfirm(t("srv_join_q"),()=>joinServerCode(code,false));
   }
 }
 function closeNotifs(){nOpen=false;$("nmodal").classList.remove("show")}
@@ -1801,7 +2250,7 @@ function renderThread(th,rows){
     meta.appendChild(d);
   }
   head.appendChild(h);head.appendChild(meta);
-  $("th_body").textContent=th.body;
+  setRich($("th_body"),th.body);
   const atts=$("th_atts");atts.textContent="";
   (th.files||[]).forEach(f=>atts.appendChild(fileNode(f)));
   box.textContent="";
@@ -1821,7 +2270,7 @@ function renderThread(th,rows){
       d.onclick=()=>askConfirm(t("f_del_reply"),()=>delForum("reply",rp.id));
       hd.appendChild(d);
     }
-    const bd=document.createElement("div");bd.className="trb";bd.textContent=rp.body;
+    const bd=document.createElement("div");bd.className="trb rich";setRich(bd,rp.body);
     card.appendChild(hd);card.appendChild(bd);
     (rp.files||[]).forEach(f=>card.appendChild(fileNode(f)));
     box.appendChild(card);
@@ -2228,20 +2677,29 @@ function updateDmBadge(n){
   b.classList.toggle("show",dmUnread>0&&!!user);
 }
 function dmReset(){
-  stopDmPoll();
+  stopDmPoll();stopGroupPoll();
   dmWith=null;dmContacts=[];dmRows=[];dmLastId=0;dmPending=[];
+  dmTab="dm";groupReset();
   dmPendingRender();
   updateDmBadge(0);
-  const ch=$("dmchat"),co=$("dmcontacts");
+  const ch=$("dmchat"),co=$("dmcontacts"),gl=$("grouplist"),gc=$("groupchat");
   if(ch)ch.style.display="none";
   if(co){co.style.display="none";co.textContent=""}
+  if(gl){gl.style.display="none";gl.textContent=""}
+  if(gc)gc.style.display="none";
 }
 async function loadDmUnread(){
   if(!user||!sb){updateDmBadge(0);return}
+  let total=0;
   try{
     const r=await sb.rpc("dm_unread");
-    if(!r.error)updateDmBadge(r.data||0);
+    if(!r.error)total+=Number(r.data)||0;
   }catch(e){}
+  try{
+    const r=await sb.rpc("group_unread");
+    if(!r.error)total+=Number(r.data)||0;
+  }catch(e){}
+  updateDmBadge(total);
 }
 async function loadDmContacts(){
   if(!user||!sb)return;
@@ -2276,26 +2734,53 @@ function renderDmContacts(){
     box.appendChild(b);
   });
 }
+function dmShow(){
+  const logged=!!user&&!!sb;
+  const groups=logged&&dmTab==="groups";
+  $("dmlogin").style.display=logged?"none":"";
+  $("dmtabs").style.display=logged?"":"none";
+  $("dmcontacts").style.display=logged&&dmTab==="dm"&&!dmWith?"":"none";
+  $("dmchat").style.display=logged&&dmTab==="dm"&&dmWith?"":"none";
+  $("grouplist").style.display=groups&&!groupWith?"":"none";
+  $("groupchat").style.display=groups&&groupWith?"":"none";
+  $("groupnew").style.display=groups&&!groupWith?"":"none";
+  $("dmtab0").classList.toggle("on",dmTab==="dm");
+  $("dmtab1").classList.toggle("on",dmTab==="groups");
+  if(!logged){$("dmcontacts").textContent="";$("grouplist").textContent=""}
+}
 async function dmInit(){
   const logged=!!user&&!!sb;
-  $("dmlogin").style.display=logged?"none":"";
-  $("dmcontacts").style.display=logged&&!dmWith?"":"none";
-  $("dmchat").style.display=logged&&dmWith?"":"none";
-  if(!logged){stopDmPoll();$("dmcontacts").textContent="";updateDmBadge(0);return}
-  if(dmWith){
-    $("dmnick").textContent=dmWith.nick||"?";
-    $("dmrel").textContent=dmRelText(dmWith.rel);
-    setAva($("dmava"),dmWith.avatar,false);setRoleClass($("dmava"),dmWith.role||"user");
-    await dmLoadMsgs();
-    if(dmWith)await dmRead();
-    if(dmWith)startDmPoll();
-  }else{
+  dmShow();
+  if(!logged){stopDmPoll();stopGroupPoll();updateDmBadge(0);return}
+  if(dmTab==="groups"){
     stopDmPoll();
-    await loadDmContacts();
+    if(groupWith){
+      renderGroupHead();
+      await groupLoadMsgs();
+      if(groupWith)await groupRead();
+      if(groupWith)startGroupPoll();
+    }else{
+      stopGroupPoll();
+      await loadGroupList();
+    }
+  }else{
+    stopGroupPoll();
+    if(dmWith){
+      $("dmnick").textContent=dmWith.nick||"?";
+      $("dmrel").textContent=dmRelText(dmWith.rel);
+      setAva($("dmava"),dmWith.avatar,false);setRoleClass($("dmava"),dmWith.role||"user");
+      await dmLoadMsgs();
+      if(dmWith)await dmRead();
+      if(dmWith)startDmPoll();
+    }else{
+      stopDmPoll();
+      await loadDmContacts();
+    }
   }
   loadDmUnread();
 }
 function openDm(c){
+  dmTab="dm";groupWith=null;stopGroupPoll();
   dmWith={id:c.id,nick:c.nick,role:c.role,avatar:c.avatar,rel:c.rel};
   dmRows=[];dmLastId=0;dmPending=[];
   dmPendingRender();
@@ -2303,12 +2788,336 @@ function openDm(c){
 }
 function closeDm(){
   dmWith=null;stopDmPoll();
-  $("dmchat").style.display="none";
-  $("dmcontacts").style.display=user?"":"none";
+  dmShow();
   loadDmContacts();
 }
+function setDmTab(tab){
+  if(tab===dmTab)return;
+  dmTab=tab;
+  if(tab==="dm"){groupWith=null;stopGroupPoll()}
+  else{dmWith=null;stopDmPoll()}
+  dmShow();
+  dmInit();
+}
+$("dmtab0").onclick=()=>setDmTab("dm");
+$("dmtab1").onclick=()=>setDmTab("groups");
 $("dmback").onclick=closeDm;
 $("dmgo").onclick=()=>go("register");
+
+/* ---------- группы ---------- */
+function stopGroupPoll(){if(groupTimer){clearInterval(groupTimer);groupTimer=null}}
+function groupReset(){
+  stopGroupPoll();
+  groupWith=null;groupList=[];groupRows=[];groupLastId=0;
+  const gl=$("grouplist"),gc=$("groupchat");
+  if(gl){gl.style.display="none";gl.textContent=""}
+  if(gc)gc.style.display="none";
+}
+function initialOf(name){
+  const s=String(name||"?").trim();
+  return (s?s.charAt(0):"?").toUpperCase();
+}
+async function loadGroupList(){
+  if(!user||!sb)return;
+  try{
+    const r=await sb.rpc("group_list");
+    if(r.error)throw r.error;
+    groupList=r.data||[];
+    renderGroupList();
+  }catch(e){groupList=[];renderGroupList()}
+}
+function renderGroupList(){
+  const box=$("grouplist");
+  if(!box)return;
+  box.textContent="";
+  if(!groupList.length){
+    const p=document.createElement("p");p.className="mail";p.textContent=t("group_empty");box.appendChild(p);return;
+  }
+  groupList.forEach(g=>{
+    const b=document.createElement("button");b.type="button";b.className="grouprow glass";
+    const ic=document.createElement("div");ic.className="gicon";ic.textContent=initialOf(g.name);b.appendChild(ic);
+    const mid=document.createElement("div");mid.className="dmmid";
+    const top=document.createElement("div");top.className="dmtop";
+    const nm=document.createElement("span");nm.className="dmn2";nm.textContent=g.name||"?";top.appendChild(nm);
+    if(g.member_role==="owner"){const rl=document.createElement("span");rl.className="dmrel";rl.textContent=t("group_owner");top.appendChild(rl)}
+    mid.appendChild(top);
+    const last=document.createElement("div");last.className="dmlast";
+    const cnt=Number(g.members)||0;
+    last.textContent=(g.last_text?mdPlain(g.last_text):t("group_empty_msgs"))+" · "+cnt+" "+t("group_members");
+    mid.appendChild(last);
+    b.appendChild(mid);
+    if(Number(g.unread)>0){const u=document.createElement("span");u.className="dmunread";u.textContent=Number(g.unread)>9?"9+":String(Number(g.unread));b.appendChild(u)}
+    b.onclick=()=>openGroup(g);
+    box.appendChild(b);
+  });
+}
+async function openGroup(g){
+  dmTab="groups";
+  groupWith=Object.assign({},g);
+  groupRows=[];groupLastId=0;
+  dmShow();
+  renderGroupHead();
+  await groupLoadMsgs();
+  if(groupWith){await groupRead();startGroupPoll()}
+}
+async function openGroupById(id){
+  let g=groupList.find(x=>String(x.id)===String(id));
+  if(!g){await loadGroupList();g=groupList.find(x=>String(x.id)===String(id))}
+  if(!g){toast(t("err_generic"));return}
+  await openGroup(g);
+}
+function closeGroup(){
+  groupWith=null;stopGroupPoll();groupRows=[];groupLastId=0;
+  dmShow();
+  loadGroupList();
+}
+function renderGroupHead(){
+  if(!groupWith)return;
+  $("groupname").textContent=groupWith.name||"?";
+  const cnt=Number(groupWith.members)||0;
+  $("grouprel").textContent=cnt+" "+t("group_members")+" · "+(groupWith.member_role==="owner"?t("group_owner"):t("group_member"));
+  $("groupava").textContent=initialOf(groupWith.name);
+}
+async function groupLoadMsgs(){
+  if(!groupWith||!sb)return;
+  const gid=groupWith.id;
+  groupBusy=true;
+  try{
+    const r=await sb.rpc("group_messages",{p_group:gid,p_after:groupLastId,p_limit:100});
+    if(r.error)throw r.error;
+    if(!groupWith||groupWith.id!==gid)return;
+    const rows=r.data||[];
+    if(!groupLastId)groupRows=rows.slice();
+    else rows.forEach(m=>{if(!groupRows.some(x=>String(x.id)===String(m.id)))groupRows.push(m)});
+    if(groupRows.length)groupLastId=Math.max(...groupRows.map(m=>Number(m.id)));
+    renderGroupMsgs();
+  }catch(e){}
+  finally{groupBusy=false}
+}
+function renderGroupMsgs(){
+  const box=$("groupmsgs");if(!box)return;
+  box.textContent="";
+  if(!groupRows.length){
+    const p=document.createElement("p");p.className="mail";p.textContent=t("group_empty_msgs");box.appendChild(p);return;
+  }
+  groupRows.forEach(m=>{
+    const mine=m.author===user.id;
+    const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
+    const head=document.createElement("div");head.className="mh";
+    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";nk.textContent=m.nick||"?";
+    nk.onclick=()=>{if(m.author)openProfile(m.author)};
+    head.appendChild(nk);
+    if(m.author===groupWith.owner){const tg=document.createElement("span");tg.className="mtag";tg.textContent=t("group_owner");head.appendChild(tg)}
+    else if(m.role&&m.role!=="user"){const tg=document.createElement("span");tg.className="mtag";tg.textContent=roleLabel(m.role);head.appendChild(tg)}
+    const tm=document.createElement("span");tm.className="mtime";
+    tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
+    head.appendChild(tm);
+    if(!m.deleted&&user&&(m.author===user.id||groupWith.owner===user.id||myRank()>=2)){
+      const db=document.createElement("button");db.type="button";db.className="mact";db.textContent="✕";
+      db.onclick=()=>askConfirm(t("msg_del_q"),()=>groupDelete(m.id));
+      head.appendChild(db);
+    }
+    d.appendChild(head);
+    const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
+    if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
+    d.appendChild(body);
+    box.appendChild(d);
+  });
+  box.scrollTop=box.scrollHeight;
+}
+async function groupRead(){
+  if(!groupWith||!sb||cur!=="dm"||dmTab!=="groups")return;
+  const gid=groupWith.id;
+  try{await sb.rpc("group_read",{p_group:gid})}catch(e){}
+  groupList.forEach(g=>{if(String(g.id)===String(gid))g.unread=0});
+  renderGroupList();
+  loadDmUnread();
+}
+async function groupSend(){
+  if(!groupWith||!user||!sb)return;
+  const inp=$("groupin");
+  const txt=inp.value.trim();
+  if(!txt)return;
+  const gid=groupWith.id;
+  inp.value="";resizeEditor(inp);
+  const btn=$("groupsendbtn");btn.disabled=true;
+  try{
+    const r=await sb.rpc("group_send",{p_group:gid,p_body:txt});
+    if(r.error)throw r.error;
+    await groupLoadMsgs();
+    groupRead();
+  }catch(e){
+    const msg=((e&&e.message)||"").toLowerCase();
+    toast(t(msg.indexOf("slow")>-1?"group_slow":"err_generic"));
+    inp.value=txt;resizeEditor(inp);
+  }finally{btn.disabled=false}
+}
+async function groupDelete(id){
+  try{
+    const r=await sb.rpc("group_message_delete",{p_id:id});
+    if(r.error)throw r.error;
+    const m=groupRows.find(x=>String(x.id)===String(id));
+    if(m){m.deleted=true;m.body=""}
+    renderGroupMsgs();
+  }catch(e){toast(t("err_generic"))}
+}
+function startGroupPoll(){
+  stopGroupPoll();
+  groupTimer=setInterval(()=>{
+    if(cur!=="dm"||dmTab!=="groups"||document.hidden||!groupWith)return;
+    groupLoadMsgs().then(()=>{if(groupWith)groupRead()});
+  },2500);
+}
+$("groupback").onclick=closeGroup;
+$("groupmore").onclick=groupMenu;
+$("groupnew").onclick=openGroupCreate;
+$("groupsendbtn").onclick=groupSend;
+$("groupin").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();groupSend()}});
+async function fetchFriends(){
+  if(!user||!sb)return [];
+  try{
+    const r=await sb.rpc("friends_list");
+    return r.error?[]:(r.data||[]);
+  }catch(e){return []}
+}
+function groupMenu(){
+  if(!groupWith)return;
+  const opts=[
+    {v:"members",label:t("group_members_title")},
+    {v:"invite",label:t("group_invite")},
+    {v:"leave",label:t("group_leave")}
+  ];
+  if(groupWith.owner===user.id)opts.push({v:"delete",label:t("group_delete")});
+  openSheet(t("group_menu"),opts,"",v=>{
+    if(v==="members")openGroupMembers();
+    else if(v==="invite")openGroupInvite();
+    else if(v==="leave")askConfirm(t("group_leave_q"),async()=>{
+      try{
+        const r=await sb.rpc("group_leave",{p_group:groupWith.id});
+        if(r.error)throw r.error;
+        toast(t("group_left"));closeGroup();
+      }catch(e){toast(t("err_generic"))}
+    });
+    else if(v==="delete")askConfirm(t("group_delete_q"),async()=>{
+      try{
+        const r=await sb.rpc("group_delete",{p_group:groupWith.id});
+        if(r.error)throw r.error;
+        toast(t("group_deleted"));closeGroup();
+      }catch(e){toast(t("err_generic"))}
+    });
+  });
+}
+async function openGroupMembers(){
+  if(!groupWith||!sb)return;
+  const g=groupWith;
+  let rows=[];
+  try{
+    const r=await sb.rpc("group_members",{p_group:g.id});
+    if(r.error)throw r.error;
+    rows=r.data||[];
+  }catch(e){toast(t("err_generic"));return}
+  openFormModal(t("group_members_title"),body=>{
+    rows.forEach(m=>{
+      const row=document.createElement("div");row.className="pickrow";
+      const av=document.createElement("div");av.className="ava";setAva(av,m.avatar,false);setRoleClass(av,m.user_role||"user");row.appendChild(av);
+      const gr=document.createElement("div");gr.className="grow";
+      const nm=document.createElement("div");nm.className="pname";nm.textContent=(m.nick||"?")+(m.user_id===user.id?" ("+t("group_you")+")":"");
+      const sub=document.createElement("div");sub.className="gsub";sub.textContent=m.member_role==="owner"?t("group_owner"):t("group_member");
+      gr.appendChild(nm);gr.appendChild(sub);row.appendChild(gr);
+      if(g.owner===user.id&&m.member_role!=="owner"){
+        const kb=document.createElement("button");kb.type="button";kb.className="mini danger";kb.textContent=t("group_kick");
+        kb.onclick=()=>askConfirm(t("group_kick_q"),async()=>{
+          try{
+            const r=await sb.rpc("group_kick",{p_group:g.id,p_target:m.user_id});
+            if(r.error)throw r.error;
+            toast(t("group_kicked"));closeFormModal();await openGroupMembers();
+          }catch(e){toast(t("err_generic"))}
+        });
+        row.appendChild(kb);
+      }
+      body.appendChild(row);
+    });
+  });
+}
+async function openGroupInvite(){
+  if(!groupWith||!sb)return;
+  const g=groupWith;
+  const friends=await fetchFriends();
+  let members=[];
+  try{
+    const r=await sb.rpc("group_members",{p_group:g.id});
+    if(!r.error)members=r.data||[];
+  }catch(e){}
+  const ids=new Set(members.map(m=>m.user_id));
+  openFormModal(t("group_invite_title"),body=>{
+    const hint=document.createElement("div");hint.className="formhint";hint.textContent=t("group_invite_hint");body.appendChild(hint);
+    const list=friends.filter(f=>!ids.has(f.id));
+    if(!list.length){const p=document.createElement("p");p.className="mail";p.textContent=t("srv_friends_empty");body.appendChild(p);return}
+    list.forEach(f=>{
+      const row=document.createElement("div");row.className="pickrow";
+      const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");row.appendChild(av);
+      const gr=document.createElement("div");gr.className="grow";
+      const nm=document.createElement("div");nm.className="pname";nm.textContent=f.nick||"?";gr.appendChild(nm);row.appendChild(gr);
+      const b=document.createElement("button");b.type="button";b.className="mini main";b.textContent=t("group_invite");
+      b.onclick=async()=>{
+        b.disabled=true;
+        try{
+          const r=await sb.rpc("group_invite",{p_group:g.id,p_target:f.id});
+          if(r.error)throw r.error;
+          if(r.data==="member")toast(t("group_already"));
+          else toast(t("group_invited"));
+          b.textContent="✓";b.classList.remove("main");
+        }catch(e){
+          const msg=((e&&e.message)||"").toLowerCase();
+          toast(t(msg.indexOf("not friends")>-1?"group_not_friend":"err_generic"));
+          b.disabled=false;
+        }
+      };
+      row.appendChild(b);body.appendChild(row);
+    });
+  });
+}
+async function openGroupCreate(){
+  if(!user){go("register");return}
+  const friends=await fetchFriends();
+  openFormModal(t("group_create_title"),body=>{
+    const name=document.createElement("input");name.type="text";name.maxLength=60;name.className="glass";name.placeholder=t("group_name_ph");body.appendChild(name);
+    const hint=document.createElement("div");hint.className="formhint";hint.textContent=t("group_create_hint");body.appendChild(hint);
+    const picked=new Set();
+    if(friends.length){
+      const wrap=document.createElement("div");wrap.style.cssText="display:flex;flex-direction:column;gap:6px";
+      friends.forEach(f=>{
+        const row=document.createElement("label");row.className="pickrow";
+        const cb=document.createElement("input");cb.type="checkbox";cb.value=f.id;
+        cb.onchange=()=>{cb.checked?picked.add(f.id):picked.delete(f.id)};
+        const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");
+        const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";nm.textContent=f.nick||"?";
+        gr.appendChild(nm);
+        row.appendChild(cb);row.appendChild(av);row.appendChild(gr);wrap.appendChild(row);
+      });
+      body.appendChild(wrap);
+    }
+    const err=document.createElement("div");err.className="err";body.appendChild(err);
+    const btn=document.createElement("button");btn.type="button";btn.className="btn main";btn.textContent=t("group_create");body.appendChild(btn);
+    btn.onclick=async()=>{
+      const nm=name.value.trim();
+      if(nm.length<2||nm.length>60){err.textContent=t("group_need_name");return}
+      btn.disabled=true;
+      try{
+        const r=await sb.rpc("group_create",{p_name:nm,p_members:[...picked]});
+        if(r.error)throw r.error;
+        closeFormModal();
+        await loadGroupList();
+        if(r.data)await openGroupById(Number(r.data));
+      }catch(e){
+        const msg=((e&&e.message)||"").toLowerCase();
+        err.textContent=msg.indexOf("slow")>-1?t("group_slow"):t("err_generic");
+        btn.disabled=false;
+      }
+    };
+    setTimeout(()=>name.focus(),150);
+  });
+}
 function startDmPoll(){
   stopDmPoll();
   dmPollTimer=setInterval(()=>{
@@ -2363,7 +3172,7 @@ function renderDmMsgs(){
         d.appendChild(fileNode({name:m.att_name||"file",size:m.att_size,type:m.att_type,url:u}));
       }
     }
-    if(m.body){const b=document.createElement("div");b.className="mb";b.textContent=m.body;d.appendChild(b)}
+    if(m.body){const b=document.createElement("div");b.className="mb rich";setRich(b,m.body);d.appendChild(b)}
     const tm=document.createElement("div");tm.className="mtime dmt";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     d.appendChild(tm);
@@ -2431,7 +3240,7 @@ async function dmSend(){
   }finally{btn.disabled=false}
 }
 $("dmsendbtn").onclick=dmSend;
-$("dmin").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();dmSend()}});
+$("dmin").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();dmSend()}});
 $("dmatt").onclick=()=>{
   if(!user){go("register");return}
   if(!dmWith)return;
@@ -2459,6 +3268,584 @@ $("file6").onchange=async e=>{
     dmPendingRender();
   }
 };
+
+/* ---------- универсальная форма ---------- */
+function openFormModal(title,builder){
+  $("fm_title").textContent=title;
+  const body=$("fm_body");body.textContent="";
+  builder(body);
+  $("formmodal").classList.add("show");
+}
+function closeFormModal(){$("formmodal").classList.remove("show")}
+$("fm_close").onclick=closeFormModal;
+$("formmodal").onclick=e=>{if(e.target===$("formmodal"))closeFormModal()};
+
+/* ---------- серверы ---------- */
+function srvRoleLabel(r){return t(r==="owner"?"srv_owner":r==="admin"?"srv_admin":"srv_member")}
+function stopServerPoll(){if(srvTimer){clearInterval(srvTimer);srvTimer=null}}
+function serverReset(){
+  stopServerPoll();
+  srvList=[];srvCurrent=null;srvChannels=[];srvChannel=null;srvRows=[];srvLastId=0;srvTick=0;
+  const home=$("srvhome"),chat=$("srvchat"),list=$("srvlist");
+  if(home)home.style.display="";
+  if(chat)chat.style.display="none";
+  if(list)list.textContent="";
+}
+function showServer(){
+  $("srvhome").style.display=srvCurrent?"none":"";
+  $("srvchat").style.display=srvCurrent?"":"none";
+}
+async function serverInit(){
+  const logged=!!user&&!!sb;
+  $("srvlogin").style.display=logged?"none":"";
+  $("srvnew").style.display=logged?"":"none";
+  $("srvjoinbtn").style.display=logged?"":"none";
+  $("srvlist").style.display=logged?"":"none";
+  if(!logged){stopServerPoll();$("srvlist").textContent="";showServer();return}
+  if(srvCurrent){
+    await openServer(srvCurrent.id,true);
+  }else{
+    showServer();
+    await loadServerList();
+  }
+}
+async function loadServerList(){
+  if(!user||!sb)return;
+  try{
+    const r=await sb.rpc("server_list");
+    if(r.error)throw r.error;
+    srvList=r.data||[];
+    renderServerList();
+  }catch(e){srvList=[];renderServerList()}
+}
+function renderServerList(){
+  const box=$("srvlist");if(!box)return;
+  box.textContent="";
+  if(!srvList.length){
+    const p=document.createElement("p");p.className="mail";p.textContent=t("srv_empty");box.appendChild(p);return;
+  }
+  srvList.forEach(s=>{
+    const b=document.createElement("button");b.type="button";b.className="srvcard glass";
+    const ic=document.createElement("div");ic.className="srvicon";ic.textContent=initialOf(s.name);b.appendChild(ic);
+    const mid=document.createElement("div");mid.className="srvmid";
+    const nm=document.createElement("div");nm.className="srvname";nm.textContent=s.name||"?";
+    const meta=document.createElement("div");meta.className="srvmeta";
+    const cnt=Number(s.members)||0,chc=Number(s.channels)||0;
+    meta.textContent=tf("srv_member_count",{n:cnt})+" · "+tf("srv_channel_count",{n:chc})+" · "+srvRoleLabel(s.member_role);
+    mid.appendChild(nm);mid.appendChild(meta);b.appendChild(mid);
+    b.onclick=()=>openServer(s.id,false);
+    box.appendChild(b);
+  });
+}
+async function openServer(id,keep){
+  if(!id||!sb)return;
+  stopServerPoll();
+  try{
+    const res=await Promise.all([
+      sb.rpc("server_get",{p_server:id}),
+      sb.rpc("server_channels",{p_server:id})
+    ]);
+    if(res[0].error)throw res[0].error;
+    if(res[1].error)throw res[1].error;
+    const s=(res[0].data||[])[0];
+    if(!s){toast(t("err_generic"));srvCurrent=null;showServer();await loadServerList();return}
+    srvCurrent=s;
+    srvChannels=res[1].data||[];
+    if(!srvChannels.some(c=>String(c.id)===String(srvChannel)))srvChannel=srvChannels.length?srvChannels[0].id:null;
+    srvRows=[];srvLastId=0;srvTick=0;
+    showServer();
+    renderServerHead();
+    renderServerChannels();
+    await serverLoadMsgs(true);
+    startServerPoll();
+  }catch(e){toast(t("err_generic"))}
+}
+function closeServer(){
+  stopServerPoll();
+  srvCurrent=null;srvChannels=[];srvChannel=null;srvRows=[];srvLastId=0;srvTick=0;
+  showServer();
+  loadServerList();
+}
+function renderServerHead(){
+  if(!srvCurrent)return;
+  const cnt=Number(srvCurrent.members)||0,chc=srvChannels.length;
+  $("srvicon").textContent=initialOf(srvCurrent.name);
+  $("srvname").textContent=srvCurrent.name||"?";
+  $("srvmeta").textContent=tf("srv_member_count",{n:cnt})+" · "+srvRoleLabel(srvCurrent.member_role);
+  $("srv_tools").style.display=srvChannel?"":"none";
+  $("srvin").style.display=srvChannel?"":"none";
+  $("srvsend").style.display=srvChannel?"":"none";
+}
+function renderServerChannels(){
+  const box=$("srvchannels");if(!box)return;
+  box.textContent="";
+  srvChannels.forEach(c=>{
+    const b=document.createElement("button");b.type="button";b.className="srvch"+(String(c.id)===String(srvChannel)?" on":"");
+    b.textContent="# "+c.name;
+    b.onclick=()=>switchServerChannel(c.id);
+    box.appendChild(b);
+  });
+  if(srvCurrent&&(srvCurrent.member_role==="owner"||srvCurrent.member_role==="admin")){
+    const a=document.createElement("button");a.type="button";a.className="srvch add";a.textContent="+";a.title=t("srv_channel_new");
+    a.onclick=openServerChannelCreate;box.appendChild(a);
+  }
+}
+async function switchServerChannel(id){
+  if(String(srvChannel)===String(id))return;
+  srvChannel=id;srvRows=[];srvLastId=0;srvTick=0;
+  renderServerChannels();
+  await serverLoadMsgs(true);
+}
+async function serverLoadMsgs(full){
+  if(!srvCurrent||!srvChannel||!sb)return;
+  const sid=srvCurrent.id,cid=srvChannel;
+  if(full){srvRows=[];srvLastId=0}
+  srvBusy=true;
+  try{
+    const r=await sb.rpc("server_messages",{p_channel:cid,p_after:srvLastId,p_limit:100});
+    if(r.error)throw r.error;
+    if(!srvCurrent||String(srvCurrent.id)!==String(sid)||String(srvChannel)!==String(cid))return;
+    const rows=r.data||[];
+    if(full)srvRows=rows.slice();
+    else rows.forEach(m=>{if(!srvRows.some(x=>String(x.id)===String(m.id)))srvRows.push(m)});
+    if(srvRows.length)srvLastId=Math.max(...srvRows.map(m=>Number(m.id)));
+    renderServerMsgs();
+  }catch(e){}
+  finally{srvBusy=false}
+}
+function renderServerMsgs(){
+  const box=$("srvmsgs");if(!box)return;
+  box.textContent="";
+  if(!srvRows.length){
+    const p=document.createElement("p");p.className="mail";p.textContent=t("srv_empty_msgs");box.appendChild(p);return;
+  }
+  srvRows.forEach(m=>{
+    const mine=m.author===user.id;
+    const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
+    const head=document.createElement("div");head.className="mh";
+    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";nk.textContent=m.nick||"?";
+    nk.onclick=()=>{if(m.author)openProfile(m.author)};
+    head.appendChild(nk);
+    if(m.role&&m.role!=="user"){const tg=document.createElement("span");tg.className="mtag";tg.textContent=roleLabel(m.role);head.appendChild(tg)}
+    if(m.author===srvCurrent.owner){const tg=document.createElement("span");tg.className="mtag";tg.textContent=t("srv_owner");head.appendChild(tg)}
+    const tm=document.createElement("span");tm.className="mtime";
+    tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
+    head.appendChild(tm);
+    if(!m.deleted&&user&&(m.author===user.id||srvCurrent.member_role==="owner"||srvCurrent.member_role==="admin"||myRank()>=2)){
+      const db=document.createElement("button");db.type="button";db.className="mact";db.textContent="✕";
+      db.onclick=()=>askConfirm(t("msg_del_q"),()=>serverDeleteMsg(m.id));
+      head.appendChild(db);
+    }
+    d.appendChild(head);
+    const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
+    if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
+    d.appendChild(body);
+    box.appendChild(d);
+  });
+  box.scrollTop=box.scrollHeight;
+}
+async function serverSend(){
+  if(!srvCurrent||!srvChannel||!user||!sb)return;
+  const inp=$("srvin");
+  const txt=inp.value.trim();
+  if(!txt)return;
+  const cid=srvChannel;
+  inp.value="";resizeEditor(inp);
+  const btn=$("srvsend");btn.disabled=true;
+  try{
+    const r=await sb.rpc("server_send",{p_channel:cid,p_body:txt});
+    if(r.error)throw r.error;
+    await serverLoadMsgs(false);
+  }catch(e){
+    const msg=((e&&e.message)||"").toLowerCase();
+    toast(t(msg.indexOf("slow")>-1?"chat_slow":"err_generic"));
+    inp.value=txt;resizeEditor(inp);
+  }finally{btn.disabled=false}
+}
+async function serverDeleteMsg(id){
+  try{
+    const r=await sb.rpc("server_message_delete",{p_id:id});
+    if(r.error)throw r.error;
+    const m=srvRows.find(x=>String(x.id)===String(id));
+    if(m){m.deleted=true;m.body=""}
+    renderServerMsgs();
+  }catch(e){toast(t("err_generic"))}
+}
+function startServerPoll(){
+  stopServerPoll();
+  srvTimer=setInterval(()=>{
+    if(cur!=="servers"||document.hidden||!srvCurrent||!srvChannel)return;
+    srvTick++;
+    serverLoadMsgs(srvTick%10===0);
+  },2500);
+}
+function serverMenu(){
+  if(!srvCurrent)return;
+  const r=srvCurrent.member_role;
+  const opts=[
+    {v:"members",label:t("srv_members_title")},
+    {v:"invite",label:t("srv_invite")}
+  ];
+  if(r==="owner"||r==="admin"){
+    opts.push({v:"chnew",label:t("srv_channel_new")});
+    if(srvChannels.length>1)opts.push({v:"chdel",label:t("srv_channel_delete")});
+    opts.push({v:"settings",label:t("srv_settings")});
+  }
+  if(r!=="owner")opts.push({v:"leave",label:t("srv_leave")});
+  if(r==="owner")opts.push({v:"delete",label:t("srv_delete")});
+  openSheet(t("srv_manage"),opts,"",v=>{
+    if(v==="members")openServerMembers();
+    else if(v==="invite")openServerInvite();
+    else if(v==="chnew")openServerChannelCreate();
+    else if(v==="chdel")openServerChannelDelete();
+    else if(v==="settings")openServerSettings();
+    else if(v==="leave")askConfirm(t("srv_leave_q"),leaveServer);
+    else if(v==="delete")askConfirm(t("srv_delete_q"),deleteServer);
+  });
+}
+async function openServerCreate(){
+  if(!user){go("register");return}
+  openFormModal(t("srv_create_title"),body=>{
+    const name=document.createElement("input");name.type="text";name.maxLength=60;name.className="glass";name.placeholder=t("srv_name_ph");body.appendChild(name);
+    const desc=document.createElement("textarea");desc.maxLength=200;desc.className="glass";desc.placeholder=t("srv_desc_ph");body.appendChild(desc);
+    const err=document.createElement("div");err.className="err";body.appendChild(err);
+    const btn=document.createElement("button");btn.type="button";btn.className="btn main";btn.textContent=t("srv_create");body.appendChild(btn);
+    btn.onclick=async()=>{
+      const nm=name.value.trim();
+      if(nm.length<2||nm.length>60){err.textContent=t("srv_need_name");return}
+      btn.disabled=true;
+      try{
+        const r=await sb.rpc("server_create",{p_name:nm,p_description:desc.value.trim()});
+        if(r.error)throw r.error;
+        closeFormModal();
+        await loadServerList();
+        if(r.data)await openServer(Number(r.data),false);
+      }catch(e){
+        const msg=((e&&e.message)||"").toLowerCase();
+        err.textContent=msg.indexOf("slow")>-1?t("dm_slow"):t("err_generic");
+        btn.disabled=false;
+      }
+    };
+    setTimeout(()=>name.focus(),150);
+  });
+}
+function openServerJoin(){
+  if(!user){go("register");return}
+  openFormModal(t("srv_join_title"),body=>{
+    const hint=document.createElement("div");hint.className="formhint";hint.textContent=t("srv_code_hint");body.appendChild(hint);
+    const code=document.createElement("input");code.type="text";code.maxLength=32;code.className="glass";code.placeholder=t("srv_code_ph");body.appendChild(code);
+    const err=document.createElement("div");err.className="err";body.appendChild(err);
+    const btn=document.createElement("button");btn.type="button";btn.className="btn main";btn.textContent=t("srv_join_btn");body.appendChild(btn);
+    btn.onclick=async()=>{
+      const c=code.value.trim();
+      if(c.length<6){err.textContent=t("srv_need_code");return}
+      btn.disabled=true;
+      const id=await joinServerCode(c,true);
+      if(!id){btn.disabled=false;err.textContent=t("srv_join_fail")}
+    };
+    setTimeout(()=>code.focus(),150);
+  });
+}
+async function joinServerCode(code,quiet){
+  if(!user||!sb)return 0;
+  try{
+    const r=await sb.rpc("server_join",{p_code:String(code||"").trim()});
+    if(r.error)throw r.error;
+    if(!quiet)toast(t("srv_joined"));
+    closeFormModal();
+    await loadServerList();
+    if(r.data){await openServer(Number(r.data),false);return Number(r.data)}
+  }catch(e){if(!quiet)toast(t("srv_join_fail"))}
+  return 0;
+}
+async function openServerInvite(){
+  if(!srvCurrent||!sb)return;
+  const srv=srvCurrent;
+  let friends=[],members=[],fresh=null;
+  try{
+    const [fr,mr,gr]=await Promise.all([
+      fetchFriends(),
+      sb.rpc("server_members",{p_server:srv.id}),
+      sb.rpc("server_get",{p_server:srv.id})
+    ]);
+    friends=fr;members=(mr&&!mr.error&&mr.data)||[];fresh=(gr&&!gr.error&&gr.data&&gr.data[0])||null;
+  }catch(e){}
+  if(fresh)srvCurrent=fresh;
+  const ids=new Set(members.map(m=>m.user_id));
+  const code=srvCurrent.invite_code;
+  openFormModal(t("srv_invite_title"),body=>{
+    const hint=document.createElement("div");hint.className="formhint";hint.textContent=t("srv_invite_hint");body.appendChild(hint);
+    if(code){
+      const lab=document.createElement("div");lab.className="formhint";lab.textContent=t("srv_invite_code");body.appendChild(lab);
+      const cd=document.createElement("div");cd.className="formcode";cd.textContent=code;body.appendChild(cd);
+      const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+      const cp=document.createElement("button");cp.type="button";cp.className="btn glass sm";cp.textContent=t("srv_copy");
+      cp.onclick=()=>copyText(code);row.appendChild(cp);
+      if(srvCurrent.member_role==="owner"||srvCurrent.member_role==="admin"){
+        const rg=document.createElement("button");rg.type="button";rg.className="btn glass sm";rg.textContent=t("srv_regenerate");
+        rg.onclick=()=>askConfirm(t("srv_regenerate_q"),()=>regenerateInvite());
+        row.appendChild(rg);
+      }
+      body.appendChild(row);
+    }
+    const list=friends.filter(f=>!ids.has(f.id));
+    if(!list.length){const p=document.createElement("p");p.className="mail";p.textContent=t("srv_friends_empty");body.appendChild(p);return}
+    const h=document.createElement("div");h.className="formhint";h.textContent=t("srv_invite");body.appendChild(h);
+    list.forEach(f=>{
+      const row=document.createElement("div");row.className="pickrow";
+      const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");row.appendChild(av);
+      const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";nm.textContent=f.nick||"?";gr.appendChild(nm);row.appendChild(gr);
+      const b=document.createElement("button");b.type="button";b.className="mini main";b.textContent=t("srv_invite");
+      b.onclick=async()=>{
+        b.disabled=true;
+        try{
+          const r=await sb.rpc("server_invite",{p_server:srv.id,p_target:f.id});
+          if(r.error)throw r.error;
+          if(r.data==="member")toast(t("srv_already_member"));else toast(t("srv_invited"));
+          b.textContent="✓";b.classList.remove("main");
+        }catch(e){
+          const msg=((e&&e.message)||"").toLowerCase();
+          toast(t(msg.indexOf("not friends")>-1?"srv_not_friend":"err_generic"));
+          b.disabled=false;
+        }
+      };
+      row.appendChild(b);body.appendChild(row);
+    });
+  });
+}
+async function openServerMembers(){
+  if(!srvCurrent||!sb)return;
+  const srv=srvCurrent;
+  let rows=[];
+  try{
+    const r=await sb.rpc("server_members",{p_server:srv.id});
+    if(r.error)throw r.error;
+    rows=r.data||[];
+  }catch(e){toast(t("err_generic"));return}
+  openFormModal(t("srv_members_title"),body=>{
+    rows.forEach(m=>{
+      const row=document.createElement("div");row.className="pickrow";
+      const av=document.createElement("div");av.className="ava";setAva(av,m.avatar,false);setRoleClass(av,m.user_role||"user");row.appendChild(av);
+      const gr=document.createElement("div");gr.className="grow";
+      const nm=document.createElement("div");nm.className="pname";nm.textContent=(m.nick||"?")+(m.user_id===user.id?" ("+t("srv_you")+")":"");
+      const sub=document.createElement("div");sub.className="gsub";sub.textContent=srvRoleLabel(m.member_role);gr.appendChild(nm);gr.appendChild(sub);row.appendChild(gr);
+      if(srv.member_role==="owner"&&m.member_role!=="owner"){
+        const tb=document.createElement("button");tb.type="button";tb.className="mini";tb.textContent=m.member_role==="admin"?t("srv_make_member"):t("srv_make_admin");
+        tb.onclick=async()=>{
+          tb.disabled=true;
+          try{
+            const nr=m.member_role==="admin"?"member":"admin";
+            const r=await sb.rpc("server_set_role",{p_server:srv.id,p_target:m.user_id,p_role:nr});
+            if(r.error)throw r.error;
+            toast(t("srv_role_changed"));closeFormModal();await openServerMembers();
+          }catch(e){toast(t("err_generic"));tb.disabled=false}
+        };
+        row.appendChild(tb);
+      }
+      if((srv.member_role==="owner"&&m.member_role!=="owner")||(srv.member_role==="admin"&&m.member_role==="member"&&m.user_id!==user.id)){
+        const kb=document.createElement("button");kb.type="button";kb.className="mini danger";kb.textContent=t("srv_kick");
+        kb.onclick=()=>askConfirm(t("srv_kick_q"),async()=>{
+          try{
+            const r=await sb.rpc("server_kick",{p_server:srv.id,p_target:m.user_id});
+            if(r.error)throw r.error;
+            toast(t("srv_kicked"));closeFormModal();await openServerMembers();
+          }catch(e){toast(t("err_generic"))}
+        });
+        row.appendChild(kb);
+      }
+      body.appendChild(row);
+    });
+  });
+}
+function openServerChannelCreate(){
+  if(!srvCurrent)return;
+  openFormModal(t("srv_channel_new"),body=>{
+    const name=document.createElement("input");name.type="text";name.maxLength=40;name.className="glass";name.placeholder=t("srv_channel_name_ph");body.appendChild(name);
+    const err=document.createElement("div");err.className="err";body.appendChild(err);
+    const btn=document.createElement("button");btn.type="button";btn.className="btn main";btn.textContent=t("srv_channel_create");body.appendChild(btn);
+    btn.onclick=async()=>{
+      const nm=name.value.trim();
+      if(!nm){err.textContent=t("srv_channel_name_ph");return}
+      btn.disabled=true;
+      try{
+        const r=await sb.rpc("server_channel_create",{p_server:srvCurrent.id,p_name:nm});
+        if(r.error)throw r.error;
+        closeFormModal();toast(t("srv_channel_created"));
+        const cr=await sb.rpc("server_channels",{p_server:srvCurrent.id});
+        srvChannels=cr.error?srvChannels:(cr.data||[]);
+        if(r.data){srvChannel=Number(r.data)}
+        renderServerHead();renderServerChannels();
+        await serverLoadMsgs(true);
+      }catch(e){err.textContent=t("err_generic");btn.disabled=false}
+    };
+    setTimeout(()=>name.focus(),150);
+  });
+}
+function openServerChannelDelete(){
+  if(!srvCurrent)return;
+  const opts=srvChannels.map(c=>({v:c.id,label:"# "+c.name}));
+  openSheet(t("srv_channel_delete"),opts,srvChannel,v=>{
+    const c=srvChannels.find(x=>String(x.id)===String(v));
+    if(!c)return;
+    askConfirm(tf("srv_channel_del_q",{name:c.name}),async()=>{
+      try{
+        const r=await sb.rpc("server_channel_delete",{p_channel:c.id});
+        if(r.error)throw r.error;
+        toast(t("srv_channel_deleted"));
+        const cr=await sb.rpc("server_channels",{p_server:srvCurrent.id});
+        srvChannels=cr.error?srvChannels:(cr.data||[]);
+        if(String(srvChannel)===String(c.id))srvChannel=srvChannels.length?srvChannels[0].id:null;
+        srvRows=[];srvLastId=0;
+        renderServerHead();renderServerChannels();await serverLoadMsgs(true);
+      }catch(e){
+        const msg=((e&&e.message)||"").toLowerCase();
+        toast(t(msg.indexOf("last")>-1?"srv_channel_last":"err_generic"));
+      }
+    });
+  });
+}
+function openServerSettings(){
+  if(!srvCurrent)return;
+  openFormModal(t("srv_edit_title"),body=>{
+    const name=document.createElement("input");name.type="text";name.maxLength=60;name.className="glass";name.placeholder=t("srv_name_ph");name.value=srvCurrent.name||"";body.appendChild(name);
+    const desc=document.createElement("textarea");desc.maxLength=200;desc.className="glass";desc.placeholder=t("srv_desc_ph");desc.value=srvCurrent.description||"";body.appendChild(desc);
+    const err=document.createElement("div");err.className="err";body.appendChild(err);
+    const btn=document.createElement("button");btn.type="button";btn.className="btn main";btn.textContent=t("srv_save");body.appendChild(btn);
+    btn.onclick=async()=>{
+      const nm=name.value.trim();
+      if(nm.length<2||nm.length>60){err.textContent=t("srv_need_name");return}
+      btn.disabled=true;
+      try{
+        const r=await sb.rpc("server_update",{p_server:srvCurrent.id,p_name:nm,p_description:desc.value.trim()});
+        if(r.error)throw r.error;
+        srvCurrent.name=nm;srvCurrent.description=desc.value.trim();
+        closeFormModal();toast(t("srv_saved"));renderServerHead();await loadServerList();
+      }catch(e){err.textContent=t("err_generic");btn.disabled=false}
+    };
+  });
+}
+async function regenerateInvite(){
+  if(!srvCurrent||!sb)return;
+  try{
+    const r=await sb.rpc("server_regenerate_invite",{p_server:srvCurrent.id});
+    if(r.error)throw r.error;
+    srvCurrent.invite_code=r.data;
+    toast(t("srv_invited"));
+    closeFormModal();await openServerInvite();
+  }catch(e){toast(t("err_generic"))}
+}
+async function leaveServer(){
+  if(!srvCurrent||!sb)return;
+  try{
+    const r=await sb.rpc("server_leave",{p_server:srvCurrent.id});
+    if(r.error)throw r.error;
+    toast(t("srv_left"));closeServer();
+  }catch(e){
+    const msg=((e&&e.message)||"").toLowerCase();
+    toast(t(msg.indexOf("owner")>-1?"srv_owner_leave":"err_generic"));
+  }
+}
+async function deleteServer(){
+  if(!srvCurrent||!sb)return;
+  try{
+    const r=await sb.rpc("server_delete",{p_server:srvCurrent.id});
+    if(r.error)throw r.error;
+    toast(t("srv_deleted"));closeServer();
+  }catch(e){toast(t("err_generic"))}
+}
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    toast(t("srv_copied"));
+  }catch(e){toast(text)}
+}
+$("srvnew").onclick=openServerCreate;
+$("srvjoinbtn").onclick=openServerJoin;
+$("srvgo").onclick=()=>go("register");
+$("srvback").onclick=closeServer;
+$("srvmore").onclick=serverMenu;
+$("srvsend").onclick=serverSend;
+$("srvin").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();serverSend()}});
+
+/* ---------- журнал действий ---------- */
+let auditRows=[],auditBusy=false;
+function auditLabel(a){
+  const k="a_"+a,v=t(k);
+  return v&&v!==k?v:a;
+}
+function auditFieldLabel(k){
+  const map={old_role:"audit_old",new_role:"audit_new",role:"audit_role",reason:"audit_reason",
+    expires_at:"audit_until",channel:"audit_channel",group:"audit_group",server:"audit_server",
+    code:"srv_invite_code",description:"srv_desc_ph",name:"audit_target",nick:"audit_user"};
+  return map[k]?t(map[k]):k;
+}
+function auditDetails(d){
+  if(!d||typeof d!=="object")return "";
+  const skip=/^(user_id|group_id|server_id|channel_id|message_id|thread_id|reply_id|warning_id|author|owner)$/;
+  const parts=[];
+  Object.keys(d).forEach(k=>{
+    if(skip.test(k))return;
+    let v=d[k];
+    if(v==null||v==="")return;
+    if(typeof v==="object")v=JSON.stringify(v);
+    parts.push(auditFieldLabel(k)+": "+v);
+  });
+  return parts.join(" · ");
+}
+function renderAudit(){
+  const box=$("alist");if(!box)return;
+  box.textContent="";
+  if(!auditRows.length){
+    const p=document.createElement("p");p.className="mail";p.textContent=t("audit_empty");box.appendChild(p);return;
+  }
+  auditRows.forEach(a=>{
+    const it=document.createElement("div");it.className="aitem";
+    const top=document.createElement("div");top.className="atop";
+    const act=document.createElement("span");act.className="aact";act.textContent=auditLabel(a.action);
+    top.appendChild(act);
+    const who=document.createElement("span");who.className="awho";
+    who.textContent=a.actor?((a.actor_nick||"?")+" · "+roleLabel(a.actor_role||"user")):t("audit_system");
+    top.appendChild(who);
+    const tm=document.createElement("span");tm.className="atime";
+    tm.textContent=new Date(a.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
+    top.appendChild(tm);
+    it.appendChild(top);
+    const bits=[];
+    if(a.target)bits.push(a.target);
+    const det=auditDetails(a.details);
+    if(det)bits.push(det);
+    if(bits.length){
+      const dd=document.createElement("div");dd.className="adet";dd.textContent=bits.join(" · ");
+      it.appendChild(dd);
+    }
+    box.appendChild(it);
+  });
+}
+async function loadAudit(){
+  if(!user||!sb||myRank()<3){toast(t("err_generic"));return}
+  if(auditBusy)return;
+  auditBusy=true;
+  const box=$("alist");
+  if(box)box.textContent=t("audit_loading");
+  try{
+    const r=await sb.rpc("audit_list",{p_limit:200,p_offset:0});
+    if(r.error)throw r.error;
+    auditRows=r.data||[];
+    renderAudit();
+  }catch(e){
+    auditRows=[];
+    if(box)box.textContent=t("err_generic");
+  }finally{auditBusy=false}
+}
+$("auditbtn").onclick=()=>{
+  if(myRank()<3)return;
+  auditOpen=true;
+  $("amodal").classList.add("show");
+  loadAudit();
+};
+$("arefresh").onclick=loadAudit;
+$("aclose").onclick=()=>{auditOpen=false;$("amodal").classList.remove("show")};
+$("amodal").onclick=e=>{if(e.target===$("amodal")){auditOpen=false;$("amodal").classList.remove("show")}};
 
 /* ---------- админ-панель ---------- */
 async function loadUsers(){
@@ -2608,6 +3995,8 @@ function nextWall(){
 $("t_lang").onclick=()=>{setLang(lang==="ru"?"en":"ru");setTimeout(updateShade,300)};
 $("t_wall").onclick=nextWall;
 $("t_chat").onclick=()=>{closeShade();go("chat")};
+$("t_groups").onclick=()=>{closeShade();dmTab="groups";groupWith=null;dmWith=null;go("dm")};
+$("t_servers").onclick=()=>{closeShade();go("servers")};
 $("t_prof").onclick=()=>{closeShade();go(user?"profile":"register")};
 $("t_admin").onclick=()=>{closeShade();go("admin")};
 $("t_out").onclick=()=>{closeShade();if(user)askConfirm(t("logout_q"),doLogout);else go("register")};
