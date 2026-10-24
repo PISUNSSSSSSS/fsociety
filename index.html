@@ -67,6 +67,9 @@ body.ready #app{opacity:1}
 #dmrel{font-size:.68rem}
 .dmt{font-size:.6rem;opacity:.4;text-align:right;margin-top:2px}
 #dmmsgs .mail{margin:auto}
+.dmimg{display:block;max-width:100%;max-height:300px;border-radius:10px;cursor:pointer;margin-bottom:4px}
+#dm_files{flex:none}
+#dm_files .fitem{text-align:left}
 .banner{width:100%;border-radius:18px;display:block;box-shadow:0 0 22px 3px rgba(255,255,255,.3)}
 .tag{padding:8px 16px;border-radius:999px;font-size:.85rem;letter-spacing:.06em}
 h2{color:#fff;margin:0;font-size:1.5rem}
@@ -263,6 +266,8 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .mact{all:unset;cursor:pointer;opacity:.5;padding:0 3px;font-size:.8rem}
 #att{flex:none;padding:9px 11px;display:flex;align-items:center;justify-content:center}
 #att svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#dmatt{flex:none;padding:9px 11px;display:flex;align-items:center;justify-content:center}
+#dmatt svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .tile .ti svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 @keyframes introBg{0%,72%{opacity:1}100%{opacity:0;visibility:hidden}}
@@ -345,7 +350,9 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
         <div class="dmwho"><div id="dmnick"></div><div id="dmrel" class="mail"></div></div>
       </div>
       <div id="dmmsgs" class="msgs"></div>
+      <div id="dm_files" class="fprev"></div>
       <div class="sendrow">
+        <button id="dmatt" class="btn glass sm" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M20 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L9.5 18a2 2 0 0 1-3-3l8-8"/></svg></button>
         <input id="dmin" type="text" maxlength="1000" class="glass" data-i18n-ph="dm_ph" autocomplete="off">
         <button id="dmsendbtn" class="btn main sm">➤</button>
       </div>
@@ -541,6 +548,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 <input id="file3" type="file" accept="image/*" hidden>
 <input id="file4" type="file" accept="image/*" hidden>
 <input id="file5" type="file" multiple hidden>
+<input id="file6" type="file" multiple hidden>
 
 <div id="banscreen"><div class="bcard">
   <h2 data-i18n="banned_title"></h2>
@@ -610,7 +618,8 @@ Object.assign(TXT.ru,{
   m_dm:"Личные",dm_title:"Мессенджер",dm_login:"Войди, чтобы писать в мессенджере",dm_ph:"Сообщение...",
   dm_empty:"Пока нет друзей. Добавь кого-нибудь в друзья, чтобы начать переписку.",dm_no_msgs:"Напиши первым!",
   dm_req_out:"заявка отправлена",dm_req_in:"хочет добавить",dm_friend:"друг",dm_slow:"Не так быстро, подожди секунду",
-  dm_need_friend:"Писать можно только друзьям и тем, кому отправлена заявка"
+  dm_need_friend:"Писать можно только друзьям и тем, кому отправлена заявка",
+  dm_photo:"Фото",dm_file:"Файл",dm_wait_upload:"Подожди, файлы ещё загружаются"
 });
 Object.assign(TXT.en,{
   f_new:"New topic",f_new_title:"New topic",f_thread_title:"Topic title",f_body_ph:"Topic text...",f_create:"Create",
@@ -638,7 +647,8 @@ Object.assign(TXT.en,{
   n_chat_reply:"{nick} replied to you in chat: {text}",
   m_dm:"DMs",dm_title:"Messenger",dm_login:"Log in to use the messenger",dm_ph:"Message...",
   dm_empty:"No friends yet. Add someone as a friend to start chatting.",dm_no_msgs:"Say hi first!",
-  dm_req_out:"request sent",dm_req_in:"wants to add you",dm_friend:"friend",dm_slow:"Not so fast, wait a second"
+  dm_req_out:"request sent",dm_req_in:"wants to add you",dm_friend:"friend",dm_slow:"Not so fast, wait a second",
+  dm_photo:"Photo",dm_file:"File",dm_wait_upload:"Wait, files are still uploading"
 });
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false]];
@@ -691,7 +701,7 @@ let chatRooms=[],chatRoom=null,chatTimer=null,chatSig="",chatBusy=false,chatStic
 let chatRows=[],chatLastId=0,chatMap=new Map(),chatReply=null,chatImg=null,chatPollTick=0;
 let forumThreadId=null,forumCache=[],forumFiles=[],forumReplyFiles=[],fileTarget="thread";
 let notif=[],notifTimer=null,uCtx=null,avaTarget=null,nOpen=false;
-let dmContacts=[],dmWith=null,dmRows=[],dmLastId=0,dmPollTimer=null,dmBadgeTimer=null,dmUnread=0;
+let dmContacts=[],dmWith=null,dmRows=[],dmLastId=0,dmPollTimer=null,dmBadgeTimer=null,dmUnread=0,dmPending=[];
 let warnCtx=null,warnDur="10080",warnByUser={};
 
 const t=k=>TXT[lang][k];
@@ -1841,7 +1851,7 @@ function loadTus(){
   });
   return window.__tusLoad;
 }
-async function uploadBig(blob,name,path,type,onProgress){
+async function uploadBig(blob,name,path,type,onProgress,bucket){
   const tus=await loadTus();
   const g=await sb.auth.getSession();
   const tok=g&&g.data&&g.data.session&&g.data.session.access_token;
@@ -1854,7 +1864,7 @@ async function uploadBig(blob,name,path,type,onProgress){
       headers:{authorization:"Bearer "+tok,"x-upsert":"false"},
       uploadDataDuringCreation:true,
       removeFingerprintOnSuccess:true,
-      metadata:{bucketName:"forum",objectName:path,contentType:type,cacheControl:"31536000"},
+      metadata:{bucketName:bucket||"forum",objectName:path,contentType:type,cacheControl:"31536000"},
       chunkSize:6*1024*1024,
       onError:e=>rej(e),
       onProgress:(b,t)=>{if(onProgress)onProgress(t?b/t:0)},
@@ -2176,7 +2186,8 @@ function updateDmBadge(n){
 }
 function dmReset(){
   stopDmPoll();
-  dmWith=null;dmContacts=[];dmRows=[];dmLastId=0;
+  dmWith=null;dmContacts=[];dmRows=[];dmLastId=0;dmPending=[];
+  dmPendingRender();
   updateDmBadge(0);
   const ch=$("dmchat"),co=$("dmcontacts");
   if(ch)ch.style.display="none";
@@ -2213,7 +2224,9 @@ function renderDmContacts(){
     const nm=document.createElement("span");nm.className="dmn2";nm.textContent=c.nick||"?";top.appendChild(nm);
     if(c.rel!=="friend"){const rl=document.createElement("span");rl.className="dmrel";rl.textContent=dmRelText(c.rel);top.appendChild(rl)}
     mid.appendChild(top);
-    const last=document.createElement("div");last.className="dmlast";last.textContent=c.last_text||t("dm_no_msgs");mid.appendChild(last);
+    const last=document.createElement("div");last.className="dmlast";
+    last.textContent=c.last_text||(c.last_att?(c.last_att.indexOf("image/")===0?t("dm_photo"):t("dm_file")):t("dm_no_msgs"));
+    mid.appendChild(last);
     b.appendChild(mid);
     if(Number(c.unread)>0){const u=document.createElement("span");u.className="dmunread";u.textContent=Number(c.unread)>9?"9+":String(Number(c.unread));b.appendChild(u)}
     b.onclick=()=>openDm(c);
@@ -2241,7 +2254,8 @@ async function dmInit(){
 }
 function openDm(c){
   dmWith={id:c.id,nick:c.nick,role:c.role,avatar:c.avatar,rel:c.rel};
-  dmRows=[];dmLastId=0;
+  dmRows=[];dmLastId=0;dmPending=[];
+  dmPendingRender();
   dmInit();
 }
 function closeDm(){
@@ -2286,13 +2300,48 @@ function renderDmMsgs(){
   dmRows.forEach(m=>{
     const mine=m.sender===user.id;
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
-    const b=document.createElement("div");b.className="mb";b.textContent=m.body;d.appendChild(b);
+    if(m.att_path){
+      const u=dmUrl(m.att_path);
+      if((m.att_type||"").indexOf("image/")===0){
+        const im=document.createElement("img");im.className="dmimg";im.src=u;im.alt=m.att_name||"";im.loading="lazy";
+        im.onclick=()=>{try{window.open(u,"_blank","noopener")}catch(e){}};
+        d.appendChild(im);
+      }else{
+        d.appendChild(fileNode({name:m.att_name||"file",size:m.att_size,type:m.att_type,url:u}));
+      }
+    }
+    if(m.body){const b=document.createElement("div");b.className="mb";b.textContent=m.body;d.appendChild(b)}
     const tm=document.createElement("div");tm.className="mtime dmt";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     d.appendChild(tm);
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
+}
+function dmUrl(path){
+  if(!path||!sb)return "";
+  try{const p=sb.storage.from("dm").getPublicUrl(path);return p&&p.data&&p.data.publicUrl||""}catch(e){return ""}
+}
+function dmPendingRender(){
+  const box=$("dm_files");
+  if(!box)return;
+  renderFiles(box,dmPending,true);
+}
+async function dmUploadFile(f,item){
+  if(f.size>MAX_FILE)throw new Error("big");
+  let blob=f,type=f.type||"application/octet-stream",name=f.name||"file";
+  if(type.indexOf("image/")===0&&f.size<=25*1024*1024){
+    try{blob=await shrinkImage(f,1400,0.78);type="image/jpeg"}catch(e){blob=f}
+  }
+  const path=user.id+"/d-"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"-"+safeName(name);
+  if(blob.size>TUS_MIN)await uploadBig(blob,name,path,type,p=>{item.pct=p;dmPendingRender()},"dm");
+  else{
+    const up=await sb.storage.from("dm").upload(path,blob,{contentType:type,cacheControl:"31536000"});
+    if(up.error)throw up.error;
+  }
+  const pub=sb.storage.from("dm").getPublicUrl(path);
+  if(!pub||!pub.data||!pub.data.publicUrl)throw new Error("url");
+  return {path,name,type,size:blob.size||f.size,url:pub.data.publicUrl};
 }
 async function dmRead(){
   if(!dmWith||!sb||cur!=="dm")return;
@@ -2303,29 +2352,60 @@ async function dmRead(){
 }
 async function dmSend(){
   if(!dmWith||!user||!sb)return;
+  if(dmPending.some(x=>x.uploading)){toast(t("dm_wait_upload"));return}
   const inp=$("dmin");const txt=inp.value.trim();
-  if(!txt)return;
+  const atts=dmPending.filter(x=>x.path);
+  if(!txt&&!atts.length)return;
   const withId=dmWith.id;
-  const tmp={id:"tmp"+Date.now(),sender:user.id,body:txt,created_at:new Date().toISOString()};
-  inp.value="";
-  dmRows.push(tmp);renderDmMsgs();
+  const payloads=atts.map((f,i)=>({p_to:withId,p_body:i===0?txt:"",p_att_path:f.path,p_att_name:f.name,p_att_type:f.type,p_att_size:Math.round(f.size||0)}));
+  if(!payloads.length)payloads.push({p_to:withId,p_body:txt});
+  inp.value="";dmPending=[];dmPendingRender();
   const btn=$("dmsendbtn");btn.disabled=true;
+  let sent=0;
   try{
-    const r=await sb.rpc("dm_send",{p_to:withId,p_body:txt});
-    if(r.error)throw r.error;
-    const k=dmRows.indexOf(tmp);if(k>=0)dmRows.splice(k,1);
+    for(const args of payloads){
+      const r=await sb.rpc("dm_send",args);
+      if(r.error)throw r.error;
+      sent++;
+    }
     await dmLoadMsgs();
+    dmRead();
   }catch(e){
-    const k=dmRows.indexOf(tmp);if(k>=0)dmRows.splice(k,1);
-    inp.value=txt;renderDmMsgs();
     const msg=((e&&e.message)||"").toLowerCase();
     toast(t(msg.indexOf("slow")>-1?"dm_slow":msg.indexOf("not allowed")>-1?"dm_need_friend":"err_generic"));
-    return;
+    if(sent===0){inp.value=txt;dmPending=atts;dmPendingRender()}
+    await dmLoadMsgs();
   }finally{btn.disabled=false}
-  dmRead();
 }
 $("dmsendbtn").onclick=dmSend;
 $("dmin").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();dmSend()}});
+$("dmatt").onclick=()=>{
+  if(!user){go("register");return}
+  if(!dmWith)return;
+  $("file6").click();
+};
+$("file6").onchange=async e=>{
+  const fs=[...e.target.files];e.target.value="";
+  if(!fs.length||!user||!sb||!dmWith)return;
+  const who=dmWith.id;
+  for(const f of fs){
+    if(dmPending.length>=3){toast(t("f_files_max"));break}
+    if(f.size>MAX_FILE){toast(t("f_file_big"));continue}
+    if(!dmWith||dmWith.id!==who)break;
+    const item={name:f.name||"file",size:f.size,type:f.type||"",url:"",uploading:true,pct:0,path:""};
+    dmPending.push(item);dmPendingRender();
+    try{
+      const r=await dmUploadFile(f,item);
+      item.path=r.path;item.name=r.name;item.type=r.type;item.size=r.size;item.url=r.url;item.uploading=false;
+    }catch(err){
+      const k=dmPending.indexOf(item);if(k>=0)dmPending.splice(k,1);
+      if(err&&err.message==="big")toast(t("f_file_big"));
+      else if(tooLargeErr(err))toast(t("f_plan_limit"));
+      else toast(t("chat_upload_fail"));
+    }
+    dmPendingRender();
+  }
+};
 
 /* ---------- админ-панель ---------- */
 async function loadUsers(){
