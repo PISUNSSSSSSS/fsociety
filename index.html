@@ -41,6 +41,7 @@ body.ready #app{opacity:1}
 .view{position:fixed;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding:calc(60px + env(safe-area-inset-top)) 14px calc(96px + env(safe-area-inset-bottom));box-sizing:border-box;opacity:0;transform:translateY(20px) scale(.98);pointer-events:none;transition:opacity .45s ease,transform .45s ease}
 .view.active{opacity:1;transform:none;pointer-events:auto}
 .box{margin:auto;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:340px}
+.authform{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
 #home .box{margin:0 auto;max-width:420px}
 #admin .box,#forum .box{max-width:440px}
 #chat .box{margin:0 auto;max-width:460px;flex:1;min-height:0;align-items:stretch}
@@ -110,6 +111,8 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .fprev{display:flex;flex-direction:column;gap:6px;width:100%}
 .fprev:empty{display:none}
 .fitem{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:12px;font-size:.78rem}
+.fitem.up{opacity:.75}
+.fitem.up .mtime{color:#7ee0a1;font-weight:600}
 .fitem img{width:40px;height:40px;object-fit:cover;border-radius:8px;flex:none}
 .fitem .fn2{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
 .fitem button{all:unset;cursor:pointer;opacity:.6;padding:0 4px}
@@ -121,6 +124,18 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .row2 .btn{flex:1}
 #th_att{flex:none;padding:9px 11px;display:flex;align-items:center;justify-content:center}
 #th_att svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#pfriends{width:100%;display:flex;flex-direction:column;gap:8px}
+.frhead{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.55;text-align:left;margin-top:2px}
+.frrow{display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:14px;width:100%;box-sizing:border-box}
+.frrow .ava,.fchip .ava{width:38px;height:38px;flex:none;border:2px solid var(--c,#888)}
+.frnick{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;font-size:.85rem}
+.frbtns{display:flex;gap:6px;flex:none}
+.frbtns button{all:unset;cursor:pointer;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.09);font-size:.95rem}
+.frbtns button:active{transform:scale(.92)}
+.fchips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.fchip{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;width:62px}
+.fchip:active{transform:scale(.95)}
+.fchip span{font-size:.68rem;max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .uacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .mini{border:none;border-radius:999px;padding:7px 12px;font-size:.8rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
 .mini.danger{background:rgba(239,68,68,.35);color:#fecaca}
@@ -298,22 +313,24 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 
   <section id="register" class="view"><div class="box">
     <h2 id="h_auth"></h2>
-    <div class="regonly">
-      <div id="prev" class="ava glass"></div>
-      <button id="choose" class="btn glass sm" data-i18n="choose"></button>
-      <input id="file" type="file" accept="image/*" hidden>
-    </div>
-    <input id="email" type="email" class="glass" data-i18n-ph="email_ph" autocomplete="email">
-    <input id="code" type="text" inputmode="numeric" maxlength="6" class="glass" data-i18n-ph="code_ph" autocomplete="one-time-code" style="display:none">
-    <input id="pass" type="password" class="glass" data-i18n-ph="pass_ph" autocomplete="current-password">
-    <div class="regonly">
-      <input id="nick" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
-    </div>
-    <div id="cf"></div>
-    <div id="err" class="err"></div>
-    <button id="go" class="btn main"></button>
-    <button id="forgot" class="link" data-i18n="forgot"></button>
-    <button id="swap" class="link"></button>
+    <form id="authform" class="authform" autocomplete="on" novalidate>
+      <div class="regonly">
+        <div id="prev" class="ava glass"></div>
+        <button id="choose" type="button" class="btn glass sm" data-i18n="choose"></button>
+        <input id="file" type="file" accept="image/*" hidden>
+      </div>
+      <input id="email" name="email" type="email" class="glass" data-i18n-ph="email_ph" autocomplete="email">
+      <input id="code" name="code" type="text" inputmode="numeric" maxlength="6" class="glass" data-i18n-ph="code_ph" autocomplete="one-time-code" style="display:none">
+      <input id="pass" name="password" type="password" class="glass" data-i18n-ph="pass_ph" autocomplete="current-password">
+      <div class="regonly">
+        <input id="nick" name="nickname" type="text" maxlength="20" class="glass" data-i18n-ph="nick_ph" autocomplete="off">
+      </div>
+      <div id="cf"></div>
+      <div id="err" class="err"></div>
+      <button id="go" type="submit" class="btn main"></button>
+    </form>
+    <button id="forgot" type="button" class="link" data-i18n="forgot"></button>
+    <button id="swap" type="button" class="link"></button>
   </div></section>
 
   <section id="profile" class="view"><div class="box">
@@ -323,6 +340,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
     <div id="pmail" class="mail"></div>
     <div id="pbio" class="bio"></div>
     <div id="pwarn"></div>
+    <div id="pfriends"></div>
     <button id="logout" class="btn glass" data-i18n="logout"></button>
   </div></section>
 
@@ -448,6 +466,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <span id="u_badge" class="badge user">USER</span>
   <div id="u_bio" class="bio"></div>
   <div id="u_meta" class="mail"></div>
+  <button id="u_friend" class="btn glass sm" style="display:none"></button>
   <div class="mbtns">
     <button id="u_warn" class="btn glass sm" data-i18n="w_warn" style="display:none"></button>
     <button id="u_setava" class="btn glass sm" data-i18n="p_set_ava" style="display:none"></button>
@@ -490,8 +509,28 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 const SUPABASE_URL="https://zdtgznbyuhpskiyyxslt.supabase.co";
 const SUPABASE_KEY="sb_publishable_TLJwwYVPeHvL2phuERKT6A_sGg0Aa44";
 const TURNSTILE_SITE_KEY="0x4AAAAAAFKAXgsl9ax7H-G_";
+const authStore={
+  getItem(k){
+    let v=null;
+    try{v=localStorage.getItem(k)}catch(e){}
+    if(!v){try{v=getCookie("fs_"+k)}catch(e){}}
+    return v;
+  },
+  setItem(k,v){
+    try{localStorage.setItem(k,v)}catch(e){}
+    try{setCookie("fs_"+k,v)}catch(e){}
+  },
+  removeItem(k){
+    try{localStorage.removeItem(k)}catch(e){}
+    try{delCookie("fs_"+k)}catch(e){}
+  }
+};
 let sb=null;
-try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
+try{
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:authStore}
+  });
+}catch(e){}
 let cfToken=null,cfId=null;
 
 const TXT={
@@ -513,8 +552,15 @@ Object.assign(TXT.ru,{
   w_given:"Предупреждение выдано",w_gone:"Предупреждение снято",w_rev_q:"Снять это предупреждение?",
   w_count:"Предупреждений: {n}",n_warn:"Тебе выдали предупреждение: {reason}",w_by:"выдал",
   w_cant:"Нельзя предупредить этого пользователя",
-  f_attach:"Прикрепить файл",f_files_max:"Максимум 3 файла",f_file_big:"Файл больше 8 МБ",
-  f_uploading:"Загружаю файл...",f_upload_fail:"Не удалось загрузить файл",f_download:"Скачать"
+  f_attach:"Прикрепить файл",f_files_max:"Максимум 3 файла",f_file_big:"Файл больше 5 ГБ",
+  f_uploading:"Загружаю файл...",f_upload_fail:"Не удалось загрузить файл",f_download:"Скачать",
+  f_plan_limit:"Supabase на бесплатном тарифе принимает файлы до 50 МБ. Для больших нужен Pro.",
+  fr_add:"Добавить в друзья",fr_out:"Заявка отправлена",fr_in:"Принять заявку",
+  fr_friends:"Удалить из друзей",fr_sent:"Заявка отправлена",fr_added:"Теперь вы друзья",
+  fr_removed:"Удалено из друзей",fr_remove_q:"Удалить из друзей?",fr_req_title:"Заявки в друзья",
+  fr_list:"Друзья",fr_accept:"Принять",fr_decline:"Отклонить",
+  n_friend:"{nick} хочет добавить тебя в друзья",n_friend_ok:"{nick} принял(а) заявку в друзья",
+  n_chat_reply:"{nick} ответил тебе в чате: {text}"
 });
 Object.assign(TXT.en,{
   f_new:"New topic",f_new_title:"New topic",f_thread_title:"Topic title",f_body_ph:"Topic text...",f_create:"Create",
@@ -531,8 +577,15 @@ Object.assign(TXT.en,{
   w_given:"Warning issued",w_gone:"Warning revoked",w_rev_q:"Revoke this warning?",
   w_count:"Warnings: {n}",n_warn:"You were warned: {reason}",w_by:"by",
   w_cant:"You cannot warn this user",
-  f_attach:"Attach file",f_files_max:"Up to 3 files",f_file_big:"File is larger than 8 MB",
-  f_uploading:"Uploading file...",f_upload_fail:"Could not upload the file",f_download:"Download"
+  f_attach:"Attach file",f_files_max:"Up to 3 files",f_file_big:"File is larger than 5 GB",
+  f_uploading:"Uploading file...",f_upload_fail:"Could not upload the file",f_download:"Download",
+  f_plan_limit:"Supabase Free plan accepts files up to 50 MB. Pro is required for larger files.",
+  fr_add:"Add friend",fr_out:"Request sent",fr_in:"Accept request",
+  fr_friends:"Remove friend",fr_sent:"Request sent",fr_added:"You are friends now",
+  fr_removed:"Removed from friends",fr_remove_q:"Remove from friends?",fr_req_title:"Friend requests",
+  fr_list:"Friends",fr_accept:"Accept",fr_decline:"Decline",
+  n_friend:"{nick} wants to add you as a friend",n_friend_ok:"{nick} accepted your friend request",
+  n_chat_reply:"{nick} replied to you in chat: {text}"
 });
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false]];
@@ -559,7 +612,14 @@ const Q=s=>document.querySelectorAll(s);
 function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function getCookie(n){const m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));return m?decodeURIComponent(m[1]):null}
-function setCookie(n,v){document.cookie=n+"="+encodeURIComponent(v)+";max-age=315360000;path=/;SameSite=Lax"}
+function setCookie(n,v){
+  try{
+    const enc=encodeURIComponent(v);
+    if(enc.length>3900)return;
+    document.cookie=n+"="+enc+";max-age=315360000;path=/;SameSite=Lax"+(location.protocol==="https:"?";Secure":"");
+  }catch(e){}
+}
+function delCookie(n){try{document.cookie=n+"=;max-age=0;path=/;SameSite=Lax"+(location.protocol==="https:"?";Secure":"")}catch(e){}}
 function deviceId(){
   let d=load("did")||getCookie("did");
   if(!d){d=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("d"+Math.random().toString(36).slice(2)+Date.now().toString(36))}
@@ -712,7 +772,7 @@ function go(name){
   dockActive();
   if(name==="admin")loadUsers();
   if(name==="forum")loadForum();
-  if(name==="profile")loadMyWarnings();
+  if(name==="profile"){loadMyWarnings();loadFriends()}
   if(name==="chat"){pauseWall();chatInit()}else{stopChat();resumeWall()}
 }
 Q("#dock button").forEach(b=>b.onclick=()=>{const g=b.dataset.go;go(g==="profile"?(user?"profile":"register"):g)});
@@ -1049,7 +1109,7 @@ async function doReset(email){
   }catch(e){setErr("err_net")}
   finally{busy(false)}
 }
-$("go").onclick=async()=>{
+async function doAuth(){
   if(!sb){setErr("err_net");return}
   const email=$("email").value.trim();
   if(!email){setErr("err_email");return}
@@ -1083,12 +1143,14 @@ $("go").onclick=async()=>{
     go("profile");
   }catch(e){setErr("err_net")}
   finally{busy(false);resetCaptcha()}
-};
+}
+$("authform").onsubmit=e=>{e.preventDefault();doAuth()};
 async function doLogout(){
   try{if(sb)await sb.auth.signOut()}catch(e){}
   user=null;chatRooms=[];chatRoom=null;chatSig="";
   stopChat();chatReset();stopNotif();
-  notif=[];renderNotifBadge();
+  notif=[];renderNotifBadge();frState={friends:[],req:[]};
+  const pf=$("pfriends");if(pf)pf.textContent="";
   clearForm();renderUser();go("home");
 }
 $("logout").onclick=()=>askConfirm(t("logout_q"),doLogout);
@@ -1370,6 +1432,12 @@ async function chatSend(){
     m.id=sentId;m.pending=false;
     addOrUpdate(m);
   }
+  if(sentId&&rep){
+    const tr=chatRows.find(x=>String(x.id)===String(rep.id));
+    if(tr&&tr.user_id&&tr.user_id!==user.id){
+      try{sb.rpc("chat_notify_reply",{p_target:tr.user_id,p_room:chatRoom,p_text:txt}).catch(()=>{})}catch(e){}
+    }
+  }
   await chatPoll();
 }
 async function chatDelete(id){
@@ -1408,6 +1476,7 @@ async function openProfile(id){
     $("u_warn").style.display=canWarn?"":"none";
     $("u_warn").onclick=()=>{if(canWarn)openWarn(p)};
     $("u_setava").style.display=myRank()>=4?"":"none";
+    initFriendBtn(p);
     $("umodal").classList.add("show");
     try{
       const wr=await sb.rpc("warnings_list",{p_user:id});
@@ -1455,6 +1524,7 @@ async function loadNotifs(silent){
     if(r.error)return;
     notif=r.data||[];
     renderNotifBadge();
+    if(cur==="profile")loadFriends();
     if(!silent&&nOpen)renderNotifs();
   }catch(e){}
 }
@@ -1472,6 +1542,9 @@ function nText(n){
   if(n.kind==="avatar")return t("n_avatar");
   if(n.kind==="ban")return t("n_ban");
   if(n.kind==="warn")return t("n_warn").replace("{reason}",p.reason||"");
+  if(n.kind==="friend")return t("n_friend").replace("{nick}",p.nick||"?");
+  if(n.kind==="friend_ok")return t("n_friend_ok").replace("{nick}",p.nick||"?");
+  if(n.kind==="chat_reply")return t("n_chat_reply").replace("{nick}",p.nick||"?").replace("{text}",p.text||"");
   return p.text||n.kind;
 }
 function renderNotifs(){
@@ -1500,6 +1573,18 @@ async function openNotif(n){
     closeNotifs();
     const id=Number(n.link.slice(6));
     if(id)openThread(id);
+  }else if(n.link&&n.link.indexOf("user:")===0){
+    closeNotifs();
+    const uid=n.link.slice(5);
+    if(uid)openProfile(uid);
+  }else if(n.link&&n.link.indexOf("chat:")===0){
+    closeNotifs();
+    const rid=Number(n.link.slice(5));
+    go("chat");
+    if(rid&&chatRoom!==rid){
+      chatRoom=rid;chatReset();renderRooms();
+      chatLoadFull();
+    }
   }
 }
 function closeNotifs(){nOpen=false;$("nmodal").classList.remove("show")}
@@ -1659,20 +1744,70 @@ $("th_send").onclick=async()=>{
 };
 
 /* ---------- файлы форума ---------- */
+const MAX_FILE=5*1024*1024*1024;
+const TUS_MIN=20*1024*1024;
+const TUS_SRC="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js";
 function fmtSize(n){
   n=Number(n)||0;
   if(n<1024)return n+" B";
   if(n<1048576)return Math.round(n/1024)+" KB";
-  return (n/1048576).toFixed(1)+" MB";
+  if(n<1073741824)return (n/1048576).toFixed(1)+" MB";
+  return (n/1073741824).toFixed(2)+" GB";
 }
 function safeName(n){return (n||"file").replace(/[^\w.\-]+/g,"_").slice(-40)}
-async function uploadForumFile(f){
-  if(f.size>8*1024*1024)throw new Error("big");
+function tooLargeErr(err){
+  try{
+    if(err&&(err.status===413||err.statusCode===413))return true;
+    if(err&&err.originalResponse&&err.originalResponse.getStatus&&err.originalResponse.getStatus()===413)return true;
+  }catch(e){}
+  return false;
+}
+function loadTus(){
+  if(window.tus)return Promise.resolve(window.tus);
+  if(window.__tusLoad)return window.__tusLoad;
+  window.__tusLoad=new Promise((res,rej)=>{
+    const s=document.createElement("script");
+    s.src=TUS_SRC;
+    s.onload=()=>window.tus?res(window.tus):rej(new Error("tus"));
+    s.onerror=()=>rej(new Error("tus"));
+    document.head.appendChild(s);
+  });
+  return window.__tusLoad;
+}
+async function uploadBig(blob,name,path,type,onProgress){
+  const tus=await loadTus();
+  const g=await sb.auth.getSession();
+  const tok=g&&g.data&&g.data.session&&g.data.session.access_token;
+  if(!tok)throw new Error("auth");
+  const file=blob instanceof File?blob:new File([blob],name,{type:type});
+  return new Promise((res,rej)=>{
+    const up=new tus.Upload(file,{
+      endpoint:SUPABASE_URL+"/storage/v1/upload/resumable",
+      retryDelays:[0,3000,6000,12000,25000,60000],
+      headers:{authorization:"Bearer "+tok,"x-upsert":"false"},
+      uploadDataDuringCreation:true,
+      removeFingerprintOnSuccess:true,
+      metadata:{bucketName:"forum",objectName:path,contentType:type,cacheControl:"31536000"},
+      chunkSize:6*1024*1024,
+      onError:e=>rej(e),
+      onProgress:(b,t)=>{if(onProgress)onProgress(t?b/t:0)},
+      onSuccess:()=>res()
+    });
+    up.start();
+  });
+}
+async function uploadForumFile(f,onProgress){
+  if(f.size>MAX_FILE)throw new Error("big");
   let blob=f,type=f.type||"application/octet-stream",name=f.name||"file";
-  if(type.indexOf("image/")===0){blob=await shrinkImage(f,1400,0.78);type="image/jpeg"}
+  if(type.indexOf("image/")===0&&f.size<=25*1024*1024){
+    try{blob=await shrinkImage(f,1400,0.78);type="image/jpeg"}catch(e){blob=f}
+  }
   const path=user.id+"/f-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)+"-"+safeName(name);
-  const up=await sb.storage.from("forum").upload(path,blob,{contentType:type,cacheControl:"31536000"});
-  if(up.error)throw up.error;
+  if(blob.size>TUS_MIN)await uploadBig(blob,name,path,type,onProgress);
+  else{
+    const up=await sb.storage.from("forum").upload(path,blob,{contentType:type,cacheControl:"31536000"});
+    if(up.error)throw up.error;
+  }
   const pub=sb.storage.from("forum").getPublicUrl(path);
   if(!pub||!pub.data||!pub.data.publicUrl)throw new Error("url");
   return {name:name,url:pub.data.publicUrl,type:type,size:blob.size||f.size};
@@ -1680,13 +1815,15 @@ async function uploadForumFile(f){
 function renderFiles(box,files,removable){
   box.textContent="";
   files.forEach((f,i)=>{
-    const it=document.createElement("div");it.className="fitem glass";
-    if((f.type||"").indexOf("image/")===0){
+    const it=document.createElement("div");it.className="fitem glass"+(f.uploading?" up":"");
+    if(!f.uploading&&(f.type||"").indexOf("image/")===0&&f.url){
       const im=document.createElement("img");im.src=f.url;im.alt="";it.appendChild(im);
     }
     const nm=document.createElement("span");nm.className="fn2";nm.textContent=f.name||"file";it.appendChild(nm);
-    const sz=document.createElement("span");sz.className="mtime";sz.textContent=fmtSize(f.size);it.appendChild(sz);
-    if(removable){
+    const sz=document.createElement("span");sz.className="mtime";
+    sz.textContent=f.uploading?(Math.round((f.pct||0)*100)+"%"):fmtSize(f.size);
+    it.appendChild(sz);
+    if(removable&&!f.uploading){
       const b=document.createElement("button");b.type="button";b.textContent="✕";
       b.onclick=()=>{files.splice(i,1);renderFiles(box,files,true)};
       it.appendChild(b);
@@ -1716,11 +1853,25 @@ $("file5").onchange=async e=>{
   const box=reply?$("th_files"):$("t_files");
   for(const f of fs){
     if(arr.length>=3){toast(t("f_files_max"));break}
+    if(f.size>MAX_FILE){toast(t("f_file_big"));continue}
+    const item={name:f.name||"file",size:f.size,type:f.type||"",url:"",uploading:true,pct:0};
+    arr.push(item);
+    renderFiles(box,arr,true);
     toast(t("f_uploading"));
-    try{arr.push(await uploadForumFile(f));renderFiles(box,arr,true)}
-    catch(err){toast(t(err&&err.message==="big"?"f_file_big":"f_upload_fail"))}
+    let last=0;
+    try{
+      const done=await uploadForumFile(f,p=>{
+        const now=Date.now();
+        if(now-last<250&&p<1)return;
+        last=now;item.pct=p;renderFiles(box,arr,true);
+      });
+      Object.assign(item,done);item.uploading=false;
+    }catch(err){
+      const k=arr.indexOf(item);if(k>=0)arr.splice(k,1);
+      toast(t(tooLargeErr(err)?"f_plan_limit":(err&&err.message==="big"?"f_file_big":"f_upload_fail")));
+    }
+    renderFiles(box,arr,true);
   }
-  renderFiles(box,arr,true);
 };
 
 /* ---------- предупреждения (варны) ---------- */
@@ -1834,6 +1985,117 @@ async function loadMyWarnings(){
       box.appendChild(e);
     });
   }catch(e){box.style.display="none"}
+}
+
+/* ---------- друзья ---------- */
+let frState={friends:[],req:[]};
+async function loadFriends(){
+  const box=$("pfriends");
+  if(!box)return;
+  if(!user||!sb){box.textContent="";box.style.display="none";return}
+  try{
+    const [a,b]=await Promise.all([sb.rpc("friends_list"),sb.rpc("friend_requests")]);
+    frState.friends=(a&&!a.error&&a.data)||[];
+    frState.req=(b&&!b.error&&b.data)||[];
+    renderFriends();
+  }catch(e){}
+}
+function renderFriends(){
+  const box=$("pfriends");
+  if(!box)return;
+  box.textContent="";
+  if(!frState.friends.length&&!frState.req.length){box.style.display="none";return}
+  box.style.display="";
+  if(frState.req.length){
+    const h=document.createElement("div");h.className="frhead";h.textContent=t("fr_req_title");
+    box.appendChild(h);
+    frState.req.forEach(r=>{
+      const row=document.createElement("div");row.className="frrow glass";
+      const av=document.createElement("div");av.className="ava";setAva(av,r.avatar,false);setRoleClass(av,r.role||"user");row.appendChild(av);
+      const nm=document.createElement("span");nm.className="frnick";nm.textContent=r.nick||"?";row.appendChild(nm);
+      const bs=document.createElement("div");bs.className="frbtns";
+      const ok=document.createElement("button");ok.type="button";ok.textContent="✓";ok.title=t("fr_accept");
+      ok.onclick=()=>answerFriend(r.id,true);
+      const no=document.createElement("button");no.type="button";no.textContent="✕";no.title=t("fr_decline");
+      no.onclick=()=>answerFriend(r.id,false);
+      bs.appendChild(ok);bs.appendChild(no);row.appendChild(bs);
+      box.appendChild(row);
+    });
+  }
+  if(frState.friends.length){
+    const h=document.createElement("div");h.className="frhead";h.textContent=t("fr_list")+" · "+frState.friends.length;
+    box.appendChild(h);
+    const chips=document.createElement("div");chips.className="fchips";
+    frState.friends.forEach(f=>{
+      const c=document.createElement("button");c.type="button";c.className="fchip";
+      const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");
+      const sp=document.createElement("span");sp.textContent=f.nick||"?";
+      c.appendChild(av);c.appendChild(sp);
+      c.onclick=()=>openProfile(f.id);
+      chips.appendChild(c);
+    });
+    box.appendChild(chips);
+  }
+}
+async function answerFriend(id,ok){
+  if(!sb)return;
+  try{
+    const r=await sb.rpc("friend_answer",{p_id:id,p_accept:ok});
+    if(r.error)throw r.error;
+    if(ok)toast(t("fr_added"));
+    await loadFriends();
+  }catch(e){toast(t("err_generic"))}
+}
+async function initFriendBtn(p){
+  const b=$("u_friend");
+  if(!b)return;
+  if(!user||!sb||!p.id||p.id===user.id){b.style.display="none";return}
+  b.style.display="";
+  b.disabled=true;b.classList.remove("main");b.textContent=t("fr_add");
+  let st="none";
+  try{
+    const r=await sb.rpc("friend_status",{p_target:p.id});
+    if(!r.error&&r.data)st=r.data;
+  }catch(e){}
+  b.disabled=false;
+  if(st==="friends"){
+    b.textContent=t("fr_friends");
+    b.onclick=()=>askConfirm(t("fr_remove_q"),async()=>{
+      try{
+        const r=await sb.rpc("friend_remove",{p_target:p.id});
+        if(r.error)throw r.error;
+        toast(t("fr_removed"));
+        await initFriendBtn(p);
+        await loadFriends();
+      }catch(e){toast(t("err_generic"))}
+    });
+  }else if(st==="out"){
+    b.textContent=t("fr_out");b.onclick=null;b.disabled=true;
+  }else if(st==="in"){
+    b.textContent=t("fr_in");b.classList.add("main");
+    b.onclick=async()=>{
+      try{
+        const rr=await sb.rpc("friend_requests");
+        const row=((rr&&rr.data)||[]).find(x=>x.user_id===p.id);
+        if(!row){toast(t("err_generic"));return}
+        const r=await sb.rpc("friend_answer",{p_id:row.id,p_accept:true});
+        if(r.error)throw r.error;
+        toast(t("fr_added"));
+        await initFriendBtn(p);
+        await loadFriends();
+      }catch(e){toast(t("err_generic"))}
+    };
+  }else{
+    b.textContent=t("fr_add");b.classList.add("main");
+    b.onclick=async()=>{
+      try{
+        const r=await sb.rpc("friend_request",{p_target:p.id});
+        if(r.error)throw r.error;
+        toast(t("fr_sent"));
+        await initFriendBtn(p);
+      }catch(e){toast(t("err_generic"))}
+    };
+  }
 }
 
 /* ---------- админ-панель ---------- */
@@ -2041,8 +2303,12 @@ window.addEventListener("load",renderCaptcha);
 async function boot(){
   try{
     if(sb){
-      const r=await sb.auth.getSession();
-      if(r.data&&r.data.session)await loadUser(r.data.session.user);
+      let r=null;
+      for(let i=0;i<2;i++){
+        try{r=await sb.auth.getSession();break}
+        catch(e){if(i===0)await wait(700)}
+      }
+      if(r&&r.data&&r.data.session)await loadUser(r.data.session.user);
     }
   }catch(e){}
   renderUser();
@@ -2054,6 +2320,21 @@ renderUser();
 applyLang();
 const w0=load("wall");
 if(w0&&WALLS.some(x=>x[0]===w0))setWall(w0);
+if(sb){
+  sb.auth.onAuthStateChange((ev,s)=>{
+    if(ev==="SIGNED_OUT"){
+      const had=!!user;
+      user=null;chatRooms=[];chatRoom=null;chatSig="";
+      stopChat();chatReset();stopNotif();
+      notif=[];renderNotifBadge();
+      frState={friends:[],req:[]};
+      const pf=$("pfriends");if(pf)pf.textContent="";
+      if(had){renderUser();if(cur!=="register")go("home")}
+    }else if((ev==="SIGNED_IN"||ev==="TOKEN_REFRESHED")&&s&&!user){
+      loadUser(s.user).then(()=>{renderUser();if(cur==="chat")chatInit()}).catch(()=>{});
+    }
+  });
+}
 boot();
 </script>
 </body>
