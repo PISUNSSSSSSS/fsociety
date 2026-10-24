@@ -68,6 +68,9 @@ body.ready #app{opacity:1}
 .dmt{font-size:.6rem;opacity:.4;text-align:right;margin-top:2px}
 #dmmsgs .mail{margin:auto}
 .dmimg{display:block;max-width:100%;max-height:300px;border-radius:10px;cursor:pointer;margin-bottom:4px}
+.dmvid{display:block;max-width:100%;max-height:340px;border-radius:10px;background:#000;margin-bottom:4px}
+.dmvidlink{display:block;font-size:.68rem;opacity:.55;color:inherit;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.dmvidlink:hover{opacity:.85}
 #dm_files{flex:none}
 #dm_files .fitem{text-align:left}
 .banner{width:100%;border-radius:18px;display:block;box-shadow:0 0 22px 3px rgba(255,255,255,.3)}
@@ -139,6 +142,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .fitem.up{opacity:.75}
 .fitem.up .mtime{color:#7ee0a1;font-weight:600}
 .fitem img{width:40px;height:40px;object-fit:cover;border-radius:8px;flex:none}
+.fitem video{width:40px;height:40px;object-fit:cover;border-radius:8px;flex:none;background:#000}
 .fitem .fn2{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
 .fitem button{all:unset;cursor:pointer;opacity:.6;padding:0 4px}
 .fattach{display:flex;gap:8px;align-items:center;margin-top:6px;padding:8px 10px;border-radius:12px;font-size:.82rem;text-decoration:none;color:inherit;width:100%;box-sizing:border-box}
@@ -619,7 +623,7 @@ Object.assign(TXT.ru,{
   dm_empty:"Пока нет друзей. Добавь кого-нибудь в друзья, чтобы начать переписку.",dm_no_msgs:"Напиши первым!",
   dm_req_out:"заявка отправлена",dm_req_in:"хочет добавить",dm_friend:"друг",dm_slow:"Не так быстро, подожди секунду",
   dm_need_friend:"Писать можно только друзьям и тем, кому отправлена заявка",
-  dm_photo:"Фото",dm_file:"Файл",dm_wait_upload:"Подожди, файлы ещё загружаются"
+  dm_photo:"Фото",dm_file:"Файл",dm_wait_upload:"Подожди, файлы ещё загружаются",dm_gif:"Гифка",dm_video:"Видео"
 });
 Object.assign(TXT.en,{
   f_new:"New topic",f_new_title:"New topic",f_thread_title:"Topic title",f_body_ph:"Topic text...",f_create:"Create",
@@ -648,7 +652,7 @@ Object.assign(TXT.en,{
   m_dm:"DMs",dm_title:"Messenger",dm_login:"Log in to use the messenger",dm_ph:"Message...",
   dm_empty:"No friends yet. Add someone as a friend to start chatting.",dm_no_msgs:"Say hi first!",
   dm_req_out:"request sent",dm_req_in:"wants to add you",dm_friend:"friend",dm_slow:"Not so fast, wait a second",
-  dm_photo:"Photo",dm_file:"File",dm_wait_upload:"Wait, files are still uploading"
+  dm_photo:"Photo",dm_file:"File",dm_wait_upload:"Wait, files are still uploading",dm_gif:"GIF",dm_video:"Video"
 });
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false]];
@@ -1876,7 +1880,7 @@ async function uploadBig(blob,name,path,type,onProgress,bucket){
 async function uploadForumFile(f,onProgress){
   if(f.size>MAX_FILE)throw new Error("big");
   let blob=f,type=f.type||"application/octet-stream",name=f.name||"file";
-  if(type.indexOf("image/")===0&&f.size<=25*1024*1024){
+  if(type.indexOf("image/")===0&&type!=="image/gif"&&f.size<=25*1024*1024){
     try{blob=await shrinkImage(f,1400,0.78);type="image/jpeg"}catch(e){blob=f}
   }
   const path=user.id+"/f-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)+"-"+safeName(name);
@@ -1895,6 +1899,8 @@ function renderFiles(box,files,removable){
     const it=document.createElement("div");it.className="fitem glass"+(f.uploading?" up":"");
     if(!f.uploading&&(f.type||"").indexOf("image/")===0&&f.url){
       const im=document.createElement("img");im.src=f.url;im.alt="";it.appendChild(im);
+    }else if(!f.uploading&&(f.type||"").toLowerCase().indexOf("video/")===0&&f.url){
+      const v=document.createElement("video");v.src=f.url;v.muted=true;v.preload="metadata";v.setAttribute("muted","");v.playsInline=true;it.appendChild(v);
     }
     const nm=document.createElement("span");nm.className="fn2";nm.textContent=f.name||"file";it.appendChild(nm);
     const sz=document.createElement("span");sz.className="mtime";
@@ -2177,6 +2183,13 @@ async function initFriendBtn(p){
 
 /* ---------- мессенджер ---------- */
 function dmRelText(r){return t(r==="friend"?"dm_friend":r==="out"?"dm_req_out":"dm_req_in")}
+function dmAttLabel(tp){
+  tp=(tp||"").toLowerCase();
+  if(tp==="image/gif")return t("dm_gif");
+  if(tp.indexOf("image/")===0)return t("dm_photo");
+  if(tp.indexOf("video/")===0)return t("dm_video");
+  return t("dm_file");
+}
 function updateDmBadge(n){
   dmUnread=Math.max(0,Number(n)||0);
   const b=$("dmbadge");
@@ -2225,7 +2238,7 @@ function renderDmContacts(){
     if(c.rel!=="friend"){const rl=document.createElement("span");rl.className="dmrel";rl.textContent=dmRelText(c.rel);top.appendChild(rl)}
     mid.appendChild(top);
     const last=document.createElement("div");last.className="dmlast";
-    last.textContent=c.last_text||(c.last_att?(c.last_att.indexOf("image/")===0?t("dm_photo"):t("dm_file")):t("dm_no_msgs"));
+    last.textContent=c.last_text||(c.last_att?dmAttLabel(c.last_att):t("dm_no_msgs"));
     mid.appendChild(last);
     b.appendChild(mid);
     if(Number(c.unread)>0){const u=document.createElement("span");u.className="dmunread";u.textContent=Number(c.unread)>9?"9+":String(Number(c.unread));b.appendChild(u)}
@@ -2302,7 +2315,17 @@ function renderDmMsgs(){
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
     if(m.att_path){
       const u=dmUrl(m.att_path);
-      if((m.att_type||"").indexOf("image/")===0){
+      const tp=(m.att_type||"").toLowerCase();
+      if(tp.indexOf("video/")===0){
+        const v=document.createElement("video");
+        v.className="dmvid";v.src=u;v.controls=true;v.playsInline=true;v.preload="metadata";
+        v.setAttribute("playsinline","");
+        d.appendChild(v);
+        const a=document.createElement("a");
+        a.className="dmvidlink";a.href=u;a.target="_blank";a.rel="noopener noreferrer";
+        a.textContent=(m.att_name||t("dm_video"))+(m.att_size?" · "+fmtSize(m.att_size):"");
+        d.appendChild(a);
+      }else if(tp.indexOf("image/")===0){
         const im=document.createElement("img");im.className="dmimg";im.src=u;im.alt=m.att_name||"";im.loading="lazy";
         im.onclick=()=>{try{window.open(u,"_blank","noopener")}catch(e){}};
         d.appendChild(im);
@@ -2330,7 +2353,7 @@ function dmPendingRender(){
 async function dmUploadFile(f,item){
   if(f.size>MAX_FILE)throw new Error("big");
   let blob=f,type=f.type||"application/octet-stream",name=f.name||"file";
-  if(type.indexOf("image/")===0&&f.size<=25*1024*1024){
+  if(type.indexOf("image/")===0&&type!=="image/gif"&&f.size<=25*1024*1024){
     try{blob=await shrinkImage(f,1400,0.78);type="image/jpeg"}catch(e){blob=f}
   }
   const path=user.id+"/d-"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"-"+safeName(name);
