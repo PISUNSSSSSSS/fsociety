@@ -107,6 +107,20 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .witem{display:flex;gap:8px;align-items:flex-start;text-align:left;padding:9px 11px;border-radius:14px;font-size:.85rem}
 .witem .wr{flex:1;word-break:break-word}
 .witem .wmeta{display:block;font-size:.72rem;opacity:.55;margin-top:2px}
+.fprev{display:flex;flex-direction:column;gap:6px;width:100%}
+.fprev:empty{display:none}
+.fitem{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:12px;font-size:.78rem}
+.fitem img{width:40px;height:40px;object-fit:cover;border-radius:8px;flex:none}
+.fitem .fn2{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+.fitem button{all:unset;cursor:pointer;opacity:.6;padding:0 4px}
+.fattach{display:flex;gap:8px;align-items:center;margin-top:6px;padding:8px 10px;border-radius:12px;font-size:.82rem;text-decoration:none;color:inherit;width:100%;box-sizing:border-box}
+.fattach svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fattach span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fimg{display:block;max-width:100%;max-height:300px;border-radius:12px;margin-top:6px}
+.row2{display:flex;gap:8px;align-items:center;width:100%}
+.row2 .btn{flex:1}
+#th_att{flex:none;padding:9px 11px;display:flex;align-items:center;justify-content:center}
+#th_att svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .uacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .mini{border:none;border-radius:999px;padding:7px 12px;font-size:.8rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
 .mini.danger{background:rgba(239,68,68,.35);color:#fecaca}
@@ -253,10 +267,15 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <section id="thread" class="view"><div class="box">
     <div id="th_head" class="thead"></div>
     <div id="th_body" class="tpost glass"></div>
+    <div id="th_atts" class="fprev"></div>
     <div id="th_replies" class="ulist"></div>
     <div id="th_form" class="tform" style="display:none">
       <textarea id="th_in" maxlength="2000" class="glass" data-i18n-ph="f_reply_ph"></textarea>
-      <button id="th_send" class="btn main sm" data-i18n="f_send"></button>
+      <div id="th_files" class="fprev"></div>
+      <div class="row2">
+        <button id="th_att" class="btn glass sm" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M20 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L9.5 18a2 2 0 0 1-3-3l8-8"/></svg></button>
+        <button id="th_send" class="btn main sm" data-i18n="f_send"></button>
+      </div>
     </div>
     <p id="th_login" class="mail" data-i18n="f_login" style="display:none"></p>
   </div></section>
@@ -405,6 +424,8 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <div class="mt" data-i18n="f_new_title"></div>
   <input id="t_title" type="text" maxlength="120" class="glass" data-i18n-ph="f_thread_title" autocomplete="off">
   <textarea id="t_body" maxlength="4000" class="glass" data-i18n-ph="f_body_ph"></textarea>
+  <div id="t_files" class="fprev"></div>
+  <button id="t_att" class="btn glass sm" data-i18n="f_attach"></button>
   <div id="t_err" class="err"></div>
   <div class="mbtns">
     <button id="t_no" class="btn glass" data-i18n="no"></button>
@@ -454,6 +475,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 
 <input id="file3" type="file" accept="image/*" hidden>
 <input id="file4" type="file" accept="image/*" hidden>
+<input id="file5" type="file" multiple hidden>
 
 <div id="banscreen"><div class="bcard">
   <h2 data-i18n="banned_title"></h2>
@@ -490,7 +512,9 @@ Object.assign(TXT.ru,{
   w_empty:"Предупреждений нет",w_until:"до",w_forever:"навсегда",w_revoked:"снято",w_revoke:"Снять",
   w_given:"Предупреждение выдано",w_gone:"Предупреждение снято",w_rev_q:"Снять это предупреждение?",
   w_count:"Предупреждений: {n}",n_warn:"Тебе выдали предупреждение: {reason}",w_by:"выдал",
-  w_cant:"Нельзя предупредить этого пользователя"
+  w_cant:"Нельзя предупредить этого пользователя",
+  f_attach:"Прикрепить файл",f_files_max:"Максимум 3 файла",f_file_big:"Файл больше 8 МБ",
+  f_uploading:"Загружаю файл...",f_upload_fail:"Не удалось загрузить файл",f_download:"Скачать"
 });
 Object.assign(TXT.en,{
   f_new:"New topic",f_new_title:"New topic",f_thread_title:"Topic title",f_body_ph:"Topic text...",f_create:"Create",
@@ -506,7 +530,9 @@ Object.assign(TXT.en,{
   w_empty:"No warnings",w_until:"until",w_forever:"forever",w_revoked:"revoked",w_revoke:"Revoke",
   w_given:"Warning issued",w_gone:"Warning revoked",w_rev_q:"Revoke this warning?",
   w_count:"Warnings: {n}",n_warn:"You were warned: {reason}",w_by:"by",
-  w_cant:"You cannot warn this user"
+  w_cant:"You cannot warn this user",
+  f_attach:"Attach file",f_files_max:"Up to 3 files",f_file_big:"File is larger than 8 MB",
+  f_uploading:"Uploading file...",f_upload_fail:"Could not upload the file",f_download:"Download"
 });
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false]];
@@ -550,7 +576,7 @@ let wallId="none",raf=null,wstate=null,ww=0,wh=0;
 let eAva,eWall,ePrevWall,pbusy=false;
 let chatRooms=[],chatRoom=null,chatTimer=null,chatSig="",chatBusy=false,chatStick=true;
 let chatRows=[],chatLastId=0,chatMap=new Map(),chatReply=null,chatImg=null,chatPollTick=0;
-let forumThreadId=null,forumCache=[];
+let forumThreadId=null,forumCache=[],forumFiles=[],forumReplyFiles=[],fileTarget="thread";
 let notif=[],notifTimer=null,uCtx=null,avaTarget=null,nOpen=false;
 let warnCtx=null,warnDur="10080",warnByUser={};
 
@@ -1525,6 +1551,7 @@ function renderForum(rows){
 $("fnew").onclick=()=>{
   if(!user){go("register");return}
   $("t_title").value="";$("t_body").value="";$("t_err").textContent="";
+  forumFiles=[];renderFiles($("t_files"),forumFiles,true);
   $("tmodal").classList.add("show");
   setTimeout(()=>$("t_title").focus(),200);
 };
@@ -1537,9 +1564,10 @@ $("t_yes").onclick=async()=>{
   if(!body){$("t_err").textContent=t("f_need_body");return}
   $("t_yes").disabled=true;
   try{
-    const r=await sb.rpc("forum_new",{p_title:title,p_body:body});
+    const r=await sb.rpc("forum_new",{p_title:title,p_body:body,p_files:forumFiles});
     if(r.error)throw r.error;
     $("tmodal").classList.remove("show");
+    forumFiles=[];renderFiles($("t_files"),forumFiles,true);
     forumCache=[];
     await loadForum();
     if(r.data)openThread(Number(r.data));
@@ -1578,6 +1606,8 @@ function renderThread(th,rows){
   }
   head.appendChild(h);head.appendChild(meta);
   $("th_body").textContent=th.body;
+  const atts=$("th_atts");atts.textContent="";
+  (th.files||[]).forEach(f=>atts.appendChild(fileNode(f)));
   box.textContent="";
   if(!rows.length){
     const p=document.createElement("p");p.className="mail";p.textContent=t("f_no_replies");box.appendChild(p);
@@ -1597,12 +1627,14 @@ function renderThread(th,rows){
     }
     const bd=document.createElement("div");bd.className="trb";bd.textContent=rp.body;
     card.appendChild(hd);card.appendChild(bd);
+    (rp.files||[]).forEach(f=>card.appendChild(fileNode(f)));
     box.appendChild(card);
   });
   const logged=!!user;
   $("th_form").style.display=logged?"":"none";
   $("th_login").style.display=logged?"none":"";
   $("th_in").value="";
+  forumReplyFiles=[];renderFiles($("th_files"),forumReplyFiles,true);
 }
 async function delForum(kind,id){
   try{
@@ -1617,12 +1649,78 @@ $("th_send").onclick=async()=>{
   if(!v||!forumThreadId||!user)return;
   $("th_send").disabled=true;
   try{
-    const r=await sb.rpc("forum_reply",{p_thread:forumThreadId,p_body:v});
+    const r=await sb.rpc("forum_reply",{p_thread:forumThreadId,p_body:v,p_files:forumReplyFiles});
     if(r.error)throw r.error;
     $("th_in").value="";
+    forumReplyFiles=[];renderFiles($("th_files"),forumReplyFiles,true);
     await openThread(forumThreadId,true);
   }catch(e){toast(t("err_generic"))}
   finally{$("th_send").disabled=false}
+};
+
+/* ---------- файлы форума ---------- */
+function fmtSize(n){
+  n=Number(n)||0;
+  if(n<1024)return n+" B";
+  if(n<1048576)return Math.round(n/1024)+" KB";
+  return (n/1048576).toFixed(1)+" MB";
+}
+function safeName(n){return (n||"file").replace(/[^\w.\-]+/g,"_").slice(-40)}
+async function uploadForumFile(f){
+  if(f.size>8*1024*1024)throw new Error("big");
+  let blob=f,type=f.type||"application/octet-stream",name=f.name||"file";
+  if(type.indexOf("image/")===0){blob=await shrinkImage(f,1400,0.78);type="image/jpeg"}
+  const path=user.id+"/f-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)+"-"+safeName(name);
+  const up=await sb.storage.from("forum").upload(path,blob,{contentType:type,cacheControl:"31536000"});
+  if(up.error)throw up.error;
+  const pub=sb.storage.from("forum").getPublicUrl(path);
+  if(!pub||!pub.data||!pub.data.publicUrl)throw new Error("url");
+  return {name:name,url:pub.data.publicUrl,type:type,size:blob.size||f.size};
+}
+function renderFiles(box,files,removable){
+  box.textContent="";
+  files.forEach((f,i)=>{
+    const it=document.createElement("div");it.className="fitem glass";
+    if((f.type||"").indexOf("image/")===0){
+      const im=document.createElement("img");im.src=f.url;im.alt="";it.appendChild(im);
+    }
+    const nm=document.createElement("span");nm.className="fn2";nm.textContent=f.name||"file";it.appendChild(nm);
+    const sz=document.createElement("span");sz.className="mtime";sz.textContent=fmtSize(f.size);it.appendChild(sz);
+    if(removable){
+      const b=document.createElement("button");b.type="button";b.textContent="✕";
+      b.onclick=()=>{files.splice(i,1);renderFiles(box,files,true)};
+      it.appendChild(b);
+    }
+    box.appendChild(it);
+  });
+}
+function fileNode(f){
+  if((f.type||"").indexOf("image/")===0){
+    const im=document.createElement("img");im.className="fimg";im.src=f.url;im.loading="lazy";im.alt=f.name||"";
+    im.onclick=()=>{try{window.open(f.url,"_blank","noopener")}catch(e){}};
+    return im;
+  }
+  const a=document.createElement("a");a.className="fattach glass";a.href=f.url;a.target="_blank";a.rel="noopener noreferrer";
+  a.innerHTML='<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+  const sp=document.createElement("span");sp.textContent=(f.name||"file")+(f.size?" · "+fmtSize(f.size):"");
+  a.appendChild(sp);
+  return a;
+}
+$("t_att").onclick=()=>{if(!user){go("register");return}fileTarget="thread";$("file5").click()};
+$("th_att").onclick=()=>{if(!user)return;fileTarget="reply";$("file5").click()};
+$("file5").onchange=async e=>{
+  const fs=[...e.target.files];e.target.value="";
+  if(!fs.length||!user||!sb)return;
+  const reply=fileTarget==="reply";
+  const arr=reply?forumReplyFiles:forumFiles;
+  const box=reply?$("th_files"):$("t_files");
+  for(const f of fs){
+    if(arr.length>=3){toast(t("f_files_max"));break}
+    toast(t("f_uploading"));
+    try{arr.push(await uploadForumFile(f));renderFiles(box,arr,true)}
+    catch(err){toast(t(err&&err.message==="big"?"f_file_big":"f_upload_fail"))}
+  }
+  renderFiles(box,arr,true);
 };
 
 /* ---------- предупреждения (варны) ---------- */
