@@ -45,6 +45,28 @@ body.ready #app{opacity:1}
 #home .box{margin:0 auto;max-width:420px}
 #admin .box,#forum .box{max-width:440px}
 #chat .box{margin:0 auto;max-width:460px;flex:1;min-height:0;align-items:stretch}
+#dm .box{margin:0 auto;max-width:460px;flex:1;min-height:0;height:100%;align-items:stretch}
+#dm h2{text-align:center;margin:0}
+.dmcontacts{display:flex;flex-direction:column;gap:8px;width:100%;flex:1;min-height:0;overflow-y:auto}
+.dmrow{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:16px;cursor:pointer;width:100%}
+.dmrow:active{transform:scale(.99)}
+.dmrow .ava{width:42px;height:42px;flex:none;border:2px solid var(--c)}
+.dmmid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;text-align:left}
+.dmtop{display:flex;align-items:center;gap:6px;min-width:0}
+.dmn2{font-size:.9rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmrel{font-size:.56rem;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:1px 6px;opacity:.65;white-space:nowrap;flex:none}
+.dmlast{font-size:.72rem;opacity:.55;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmunread{flex:none;min-width:20px;height:20px;border-radius:10px;background:#ef4444;color:#fff;font-size:.62rem;font-weight:bold;display:flex;align-items:center;justify-content:center;padding:0 5px;box-sizing:border-box}
+.dmchat{display:flex;flex-direction:column;flex:1;min-height:0;gap:8px;width:100%}
+.dmhead{display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:16px;flex:none}
+.dmhead .ava{width:36px;height:36px;flex:none;border:2px solid var(--c)}
+.dmback{all:unset;cursor:pointer;padding:4px 6px;display:flex;align-items:center}
+.dmback svg{width:18px;height:18px}
+.dmwho{display:flex;flex-direction:column;text-align:left;min-width:0}
+#dmnick{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dmrel{font-size:.68rem}
+.dmt{font-size:.6rem;opacity:.4;text-align:right;margin-top:2px}
+#dmmsgs .mail{margin:auto}
 .banner{width:100%;border-radius:18px;display:block;box-shadow:0 0 22px 3px rgba(255,255,255,.3)}
 .tag{padding:8px 16px;border-radius:999px;font-size:.85rem;letter-spacing:.06em}
 h2{color:#fff;margin:0;font-size:1.5rem}
@@ -194,6 +216,8 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 #bell svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #nbadge{position:absolute;top:-1px;right:-1px;min-width:16px;height:16px;border-radius:8px;background:#ef4444;color:#fff;font-size:.6rem;font-weight:bold;align-items:center;justify-content:center;padding:0 3px;box-sizing:border-box;display:none}
 #nbadge.show{display:flex}
+#dmbadge{position:absolute;top:2px;left:calc(50% + 7px);min-width:15px;height:15px;border-radius:8px;background:#ef4444;color:#fff;font-size:.58rem;font-weight:bold;align-items:center;justify-content:center;padding:0 3px;box-sizing:border-box;display:none}
+#dmbadge.show{display:flex}
 #umodal,#nmodal,#tmodal,#wmodal,#wlmodal{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
 #umodal.show,#nmodal.show,#tmodal.show,#wmodal.show,#wlmodal.show{opacity:1;pointer-events:auto}
 #modal{z-index:60}
@@ -311,6 +335,27 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
     </div>
   </div></section>
 
+  <section id="dm" class="view"><div class="box">
+    <h2 data-i18n="dm_title"></h2>
+    <div id="dmcontacts" class="dmcontacts"></div>
+    <div id="dmchat" class="dmchat" style="display:none">
+      <div class="dmhead glass">
+        <button id="dmback" class="dmback" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <div id="dmava" class="ava"></div>
+        <div class="dmwho"><div id="dmnick"></div><div id="dmrel" class="mail"></div></div>
+      </div>
+      <div id="dmmsgs" class="msgs"></div>
+      <div class="sendrow">
+        <input id="dmin" type="text" maxlength="1000" class="glass" data-i18n-ph="dm_ph" autocomplete="off">
+        <button id="dmsendbtn" class="btn main sm">➤</button>
+      </div>
+    </div>
+    <div id="dmlogin" class="chatlogin" style="display:none">
+      <p data-i18n="dm_login"></p>
+      <button id="dmgo" class="btn main" data-i18n="login_btn"></button>
+    </div>
+  </div></section>
+
   <section id="register" class="view"><div class="box">
     <h2 id="h_auth"></h2>
     <form id="authform" class="authform" autocomplete="on" novalidate>
@@ -357,6 +402,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <button data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span data-i18n="m_home"></span></button>
   <button data-go="forum"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M8 21h8M12 18v3"/></svg><span data-i18n="m_forum"></span></button>
   <button data-go="chat"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span data-i18n="m_chat"></span></button>
+  <button data-go="dm"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg><span data-i18n="m_dm"></span><span id="dmbadge">0</span></button>
   <button data-go="profile"><span id="me" class="dav user"></span><span data-i18n="m_profile"></span></button>
   <button data-go="admin" id="dadmin" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span data-i18n="m_admin"></span></button>
 </div>
@@ -560,7 +606,11 @@ Object.assign(TXT.ru,{
   fr_removed:"Удалено из друзей",fr_remove_q:"Удалить из друзей?",fr_req_title:"Заявки в друзья",
   fr_list:"Друзья",fr_accept:"Принять",fr_decline:"Отклонить",
   n_friend:"{nick} хочет добавить тебя в друзья",n_friend_ok:"{nick} принял(а) заявку в друзья",
-  n_chat_reply:"{nick} ответил тебе в чате: {text}"
+  n_chat_reply:"{nick} ответил тебе в чате: {text}",
+  m_dm:"Личные",dm_title:"Мессенджер",dm_login:"Войди, чтобы писать в мессенджере",dm_ph:"Сообщение...",
+  dm_empty:"Пока нет друзей. Добавь кого-нибудь в друзья, чтобы начать переписку.",dm_no_msgs:"Напиши первым!",
+  dm_req_out:"заявка отправлена",dm_req_in:"хочет добавить",dm_friend:"друг",dm_slow:"Не так быстро, подожди секунду",
+  dm_need_friend:"Писать можно только друзьям и тем, кому отправлена заявка"
 });
 Object.assign(TXT.en,{
   f_new:"New topic",f_new_title:"New topic",f_thread_title:"Topic title",f_body_ph:"Topic text...",f_create:"Create",
@@ -585,7 +635,10 @@ Object.assign(TXT.en,{
   fr_removed:"Removed from friends",fr_remove_q:"Remove from friends?",fr_req_title:"Friend requests",
   fr_list:"Friends",fr_accept:"Accept",fr_decline:"Decline",
   n_friend:"{nick} wants to add you as a friend",n_friend_ok:"{nick} accepted your friend request",
-  n_chat_reply:"{nick} replied to you in chat: {text}"
+  n_chat_reply:"{nick} replied to you in chat: {text}",
+  m_dm:"DMs",dm_title:"Messenger",dm_login:"Log in to use the messenger",dm_ph:"Message...",
+  dm_empty:"No friends yet. Add someone as a friend to start chatting.",dm_no_msgs:"Say hi first!",
+  dm_req_out:"request sent",dm_req_in:"wants to add you",dm_friend:"friend",dm_slow:"Not so fast, wait a second"
 });
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
 const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false]];
@@ -638,6 +691,7 @@ let chatRooms=[],chatRoom=null,chatTimer=null,chatSig="",chatBusy=false,chatStic
 let chatRows=[],chatLastId=0,chatMap=new Map(),chatReply=null,chatImg=null,chatPollTick=0;
 let forumThreadId=null,forumCache=[],forumFiles=[],forumReplyFiles=[],fileTarget="thread";
 let notif=[],notifTimer=null,uCtx=null,avaTarget=null,nOpen=false;
+let dmContacts=[],dmWith=null,dmRows=[],dmLastId=0,dmPollTimer=null,dmBadgeTimer=null,dmUnread=0;
 let warnCtx=null,warnDur="10080",warnByUser={};
 
 const t=k=>TXT[lang][k];
@@ -753,7 +807,7 @@ $("intro").onclick=endIntro;
 setTimeout(endIntro,4800);
 
 function dockActive(){
-  const map={home:"home",forum:"forum",thread:"forum",chat:"chat",profile:"profile",register:"profile",admin:"admin"};
+  const map={home:"home",forum:"forum",thread:"forum",chat:"chat",dm:"dm",profile:"profile",register:"profile",admin:"admin"};
   const key=map[cur];
   Q("#dock button").forEach(b=>b.classList.toggle("on",b.dataset.go===key));
   const el=document.querySelector('#dock button[data-go="'+key+'"]');
@@ -773,7 +827,9 @@ function go(name){
   if(name==="admin")loadUsers();
   if(name==="forum")loadForum();
   if(name==="profile"){loadMyWarnings();loadFriends()}
-  if(name==="chat"){pauseWall();chatInit()}else{stopChat();resumeWall()}
+  if(name==="chat"){stopDmPoll();pauseWall();chatInit()}
+  else if(name==="dm"){stopChat();pauseWall();dmInit()}
+  else{stopChat();stopDmPoll();resumeWall()}
 }
 Q("#dock button").forEach(b=>b.onclick=()=>{const g=b.dataset.go;go(g==="profile"?(user?"profile":"register"):g)});
 back.onclick=()=>{
@@ -836,6 +892,7 @@ function applyLang(){
   updateShade();
   if(cur==="admin"&&allUsers.length)renderUsers();
   if(cur==="chat")renderRooms();
+  if(cur==="dm"){if(dmWith)$("dmrel").textContent=dmRelText(dmWith.rel);renderDmContacts()}
   if(cur==="forum")renderForum(forumCache);
   if(cur==="thread"&&forumThreadId)openThread(forumThreadId,true);
   if(nOpen)renderNotifs();
@@ -1148,7 +1205,7 @@ $("authform").onsubmit=e=>{e.preventDefault();doAuth()};
 async function doLogout(){
   try{if(sb)await sb.auth.signOut()}catch(e){}
   user=null;chatRooms=[];chatRoom=null;chatSig="";
-  stopChat();chatReset();stopNotif();
+  stopChat();chatReset();stopNotif();dmReset();
   notif=[];renderNotifBadge();frState={friends:[],req:[]};
   const pf=$("pfriends");if(pf)pf.textContent="";
   clearForm();renderUser();go("home");
@@ -1513,10 +1570,20 @@ function pickAva(id){avaTarget=id;$("file4").click()}
 function startNotif(){
   if(!user)return;
   loadNotifs(true);
+  loadDmUnread();
   if(notifTimer)clearInterval(notifTimer);
   notifTimer=setInterval(()=>{if(!document.hidden&&user)loadNotifs(true)},25000);
+  if(dmBadgeTimer)clearInterval(dmBadgeTimer);
+  dmBadgeTimer=setInterval(()=>{
+    if(document.hidden||!user)return;
+    loadDmUnread();
+    if(cur==="dm"&&!dmWith)loadDmContacts();
+  },12000);
 }
-function stopNotif(){if(notifTimer){clearInterval(notifTimer);notifTimer=null}}
+function stopNotif(){
+  if(notifTimer){clearInterval(notifTimer);notifTimer=null}
+  if(dmBadgeTimer){clearInterval(dmBadgeTimer);dmBadgeTimer=null}
+}
 async function loadNotifs(silent){
   if(!user||!sb)return;
   try{
@@ -2098,6 +2165,168 @@ async function initFriendBtn(p){
   }
 }
 
+/* ---------- мессенджер ---------- */
+function dmRelText(r){return t(r==="friend"?"dm_friend":r==="out"?"dm_req_out":"dm_req_in")}
+function updateDmBadge(n){
+  dmUnread=Math.max(0,Number(n)||0);
+  const b=$("dmbadge");
+  if(!b)return;
+  b.textContent=dmUnread>9?"9+":String(dmUnread);
+  b.classList.toggle("show",dmUnread>0&&!!user);
+}
+function dmReset(){
+  stopDmPoll();
+  dmWith=null;dmContacts=[];dmRows=[];dmLastId=0;
+  updateDmBadge(0);
+  const ch=$("dmchat"),co=$("dmcontacts");
+  if(ch)ch.style.display="none";
+  if(co){co.style.display="none";co.textContent=""}
+}
+async function loadDmUnread(){
+  if(!user||!sb){updateDmBadge(0);return}
+  try{
+    const r=await sb.rpc("dm_unread");
+    if(!r.error)updateDmBadge(r.data||0);
+  }catch(e){}
+}
+async function loadDmContacts(){
+  if(!user||!sb)return;
+  try{
+    const r=await sb.rpc("dm_contacts");
+    if(r.error)throw r.error;
+    dmContacts=r.data||[];
+    renderDmContacts();
+  }catch(e){renderDmContacts()}
+}
+function renderDmContacts(){
+  const box=$("dmcontacts");
+  if(!box)return;
+  box.textContent="";
+  if(!dmContacts.length){
+    const p=document.createElement("p");p.className="mail";p.textContent=t("dm_empty");box.appendChild(p);return;
+  }
+  dmContacts.forEach(c=>{
+    const b=document.createElement("button");b.type="button";b.className="dmrow glass";
+    const av=document.createElement("div");av.className="ava";setAva(av,c.avatar,false);setRoleClass(av,c.role||"user");b.appendChild(av);
+    const mid=document.createElement("div");mid.className="dmmid";
+    const top=document.createElement("div");top.className="dmtop";
+    const nm=document.createElement("span");nm.className="dmn2";nm.textContent=c.nick||"?";top.appendChild(nm);
+    if(c.rel!=="friend"){const rl=document.createElement("span");rl.className="dmrel";rl.textContent=dmRelText(c.rel);top.appendChild(rl)}
+    mid.appendChild(top);
+    const last=document.createElement("div");last.className="dmlast";last.textContent=c.last_text||t("dm_no_msgs");mid.appendChild(last);
+    b.appendChild(mid);
+    if(Number(c.unread)>0){const u=document.createElement("span");u.className="dmunread";u.textContent=Number(c.unread)>9?"9+":String(Number(c.unread));b.appendChild(u)}
+    b.onclick=()=>openDm(c);
+    box.appendChild(b);
+  });
+}
+async function dmInit(){
+  const logged=!!user&&!!sb;
+  $("dmlogin").style.display=logged?"none":"";
+  $("dmcontacts").style.display=logged&&!dmWith?"":"none";
+  $("dmchat").style.display=logged&&dmWith?"":"none";
+  if(!logged){stopDmPoll();$("dmcontacts").textContent="";updateDmBadge(0);return}
+  if(dmWith){
+    $("dmnick").textContent=dmWith.nick||"?";
+    $("dmrel").textContent=dmRelText(dmWith.rel);
+    setAva($("dmava"),dmWith.avatar,false);setRoleClass($("dmava"),dmWith.role||"user");
+    await dmLoadMsgs();
+    if(dmWith)await dmRead();
+    if(dmWith)startDmPoll();
+  }else{
+    stopDmPoll();
+    await loadDmContacts();
+  }
+  loadDmUnread();
+}
+function openDm(c){
+  dmWith={id:c.id,nick:c.nick,role:c.role,avatar:c.avatar,rel:c.rel};
+  dmRows=[];dmLastId=0;
+  dmInit();
+}
+function closeDm(){
+  dmWith=null;stopDmPoll();
+  $("dmchat").style.display="none";
+  $("dmcontacts").style.display=user?"":"none";
+  loadDmContacts();
+}
+$("dmback").onclick=closeDm;
+$("dmgo").onclick=()=>go("register");
+function startDmPoll(){
+  stopDmPoll();
+  dmPollTimer=setInterval(()=>{
+    if(cur!=="dm"||document.hidden||!dmWith)return;
+    dmLoadMsgs().then(()=>{if(dmWith)dmRead()});
+  },2500);
+}
+function stopDmPoll(){if(dmPollTimer){clearInterval(dmPollTimer);dmPollTimer=null}}
+async function dmLoadMsgs(){
+  if(!dmWith||!sb)return;
+  const withId=dmWith.id;
+  try{
+    const r=await sb.rpc("dm_list",{p_with:withId,p_after:dmLastId});
+    if(r.error)throw r.error;
+    if(!dmWith||dmWith.id!==withId)return;
+    const rows=r.data||[];
+    if(!dmLastId){
+      dmRows=rows.slice().sort((a,b)=>Number(a.id)-Number(b.id));
+    }else{
+      rows.forEach(m=>{if(!dmRows.some(x=>String(x.id)===String(m.id)))dmRows.push(m)});
+    }
+    if(dmRows.length)dmLastId=Math.max(...dmRows.map(m=>Number(m.id)));
+    renderDmMsgs();
+  }catch(e){}
+}
+function renderDmMsgs(){
+  const box=$("dmmsgs");box.textContent="";
+  if(!dmRows.length){
+    const p=document.createElement("p");p.className="mail";p.textContent=t("dm_no_msgs");box.appendChild(p);
+    return;
+  }
+  dmRows.forEach(m=>{
+    const mine=m.sender===user.id;
+    const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
+    const b=document.createElement("div");b.className="mb";b.textContent=m.body;d.appendChild(b);
+    const tm=document.createElement("div");tm.className="mtime dmt";
+    tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
+    d.appendChild(tm);
+    box.appendChild(d);
+  });
+  box.scrollTop=box.scrollHeight;
+}
+async function dmRead(){
+  if(!dmWith||!sb||cur!=="dm")return;
+  const withId=dmWith.id;
+  try{await sb.rpc("dm_read",{p_with:withId})}catch(e){}
+  dmContacts.forEach(c=>{if(c.id===withId)c.unread=0});
+  loadDmUnread();
+}
+async function dmSend(){
+  if(!dmWith||!user||!sb)return;
+  const inp=$("dmin");const txt=inp.value.trim();
+  if(!txt)return;
+  const withId=dmWith.id;
+  const tmp={id:"tmp"+Date.now(),sender:user.id,body:txt,created_at:new Date().toISOString()};
+  inp.value="";
+  dmRows.push(tmp);renderDmMsgs();
+  const btn=$("dmsendbtn");btn.disabled=true;
+  try{
+    const r=await sb.rpc("dm_send",{p_to:withId,p_body:txt});
+    if(r.error)throw r.error;
+    const k=dmRows.indexOf(tmp);if(k>=0)dmRows.splice(k,1);
+    await dmLoadMsgs();
+  }catch(e){
+    const k=dmRows.indexOf(tmp);if(k>=0)dmRows.splice(k,1);
+    inp.value=txt;renderDmMsgs();
+    const msg=((e&&e.message)||"").toLowerCase();
+    toast(t(msg.indexOf("slow")>-1?"dm_slow":msg.indexOf("not allowed")>-1?"dm_need_friend":"err_generic"));
+    return;
+  }finally{btn.disabled=false}
+  dmRead();
+}
+$("dmsendbtn").onclick=dmSend;
+$("dmin").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();dmSend()}});
+
 /* ---------- админ-панель ---------- */
 async function loadUsers(){
   $("ulist").textContent="";
@@ -2325,13 +2554,13 @@ if(sb){
     if(ev==="SIGNED_OUT"){
       const had=!!user;
       user=null;chatRooms=[];chatRoom=null;chatSig="";
-      stopChat();chatReset();stopNotif();
+      stopChat();chatReset();stopNotif();dmReset();
       notif=[];renderNotifBadge();
       frState={friends:[],req:[]};
       const pf=$("pfriends");if(pf)pf.textContent="";
       if(had){renderUser();if(cur!=="register")go("home")}
     }else if((ev==="SIGNED_IN"||ev==="TOKEN_REFRESHED")&&s&&!user){
-      loadUser(s.user).then(()=>{renderUser();if(cur==="chat")chatInit()}).catch(()=>{});
+      loadUser(s.user).then(()=>{renderUser();if(cur==="chat")chatInit();else if(cur==="dm")dmInit()}).catch(()=>{});
     }
   });
 }
