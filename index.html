@@ -462,7 +462,10 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       </div>
       <div id="groupmsgs" class="groupmsgs"></div>
       <div id="group_tools" class="etools" data-for="groupin"></div>
+      <input id="groupPhotoFile" type="file" accept="image/*" hidden>
+      <div id="groupPhotoPreview" class="imgprev" style="display:none"><img id="groupPhotoPreviewImg" alt=""><button id="groupPhotoClear" type="button">✕</button></div>
       <div class="sendrow">
+        <button id="groupPhotoBtn" class="btn glass sm" type="button" aria-label="Photo">📷</button>
         <textarea id="groupin" rows="1" maxlength="4000" class="glass" data-i18n-ph="group_msg_ph" autocomplete="off"></textarea>
         <button id="groupsendbtn" class="btn main sm">➤</button>
       </div>
@@ -499,7 +502,10 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       <div id="srvchannels" class="srvchannels"></div>
       <div id="srvmsgs" class="msgs"></div>
       <div id="srv_tools" class="etools" data-for="srvin"></div>
+      <input id="srvPhotoFile" type="file" accept="image/*" hidden>
+      <div id="srvPhotoPreview" class="imgprev" style="display:none"><img id="srvPhotoPreviewImg" alt=""><button id="srvPhotoClear" type="button">✕</button></div>
       <div class="sendrow">
+        <button id="srvPhotoBtn" class="btn glass sm" type="button" aria-label="Photo">📷</button>
         <textarea id="srvin" rows="1" maxlength="4000" class="glass" data-i18n-ph="srv_msg_ph" autocomplete="off"></textarea>
         <button id="srvsend" class="btn main sm">➤</button>
       </div>
@@ -753,8 +759,8 @@ try{
 let cfToken=null,cfId=null;
 
 const TXT={
-  ru:{home_tag:"fsociety · наш сайт",m_home:"Главная",m_forum:"Forum",m_chat:"Чат",m_profile:"Профиль",m_admin:"Админ",f_posts:"Обсуждения",empty:"Тут еще не добавили ничего",chat_login:"Войди, чтобы читать и писать в чате",chat_empty:"Сообщений пока нет. Напиши первым!",msg_ph:"Сообщение...",msg_deleted:"сообщение удалено",msg_del_q:"Удалить это сообщение?",chat_slow:"Не так быстро, подожди секунду",s_guest:"Гость",s_lang:"Язык",s_wall:"Обои",s_out:"Выйти",s_in:"Войти",pick_role:"Выбери роль",pick_dur:"Выбери срок бана",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_ph:"Никнейм (2–20 символов)",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_captcha_srv:"Сервер не принял проверку Cloudflare",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",check_mail:"Проверь почту и подтверди email",logout:"Выйти из профиля",change_avatar:"Сменить фото",change_pass:"Сменить пароль",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",save:"Сохранить",edit_profile:"Редактировать профиль",bio_ph:"О себе (до 160 символов)",wallpaper:"Анимированные обои",w_none:"Без обоев",w_matrix:"Matrix",w_stars:"Звёзды",w_aurora:"Сияние",w_neon:"Неон",w_embers:"Искры",w_rich:"Богатый",locked_wall:"Эти обои для спонсоров и персонала",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
-  en:{home_tag:"fsociety · our site",m_home:"Home",m_forum:"Forum",m_chat:"Chat",m_profile:"Profile",m_admin:"Admin",f_posts:"Discussions",empty:"Nothing has been added here yet",chat_login:"Log in to read and write in the chat",chat_empty:"No messages yet. Be the first!",msg_ph:"Message...",msg_deleted:"message deleted",msg_del_q:"Delete this message?",chat_slow:"Not so fast, wait a second",s_guest:"Guest",s_lang:"Language",s_wall:"Wallpaper",s_out:"Log out",s_in:"Log in",pick_role:"Choose a role",pick_dur:"Choose the ban duration",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_ph:"Nickname (2–20 characters)",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_captcha_srv:"The server rejected the Cloudflare check",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",check_mail:"Check your email and confirm it",logout:"Log out",change_avatar:"Change photo",change_pass:"Change password",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",save:"Save",edit_profile:"Edit profile",bio_ph:"About you (up to 160 characters)",wallpaper:"Animated wallpapers",w_none:"No wallpaper",w_matrix:"Matrix",w_stars:"Stars",w_aurora:"Aurora",w_neon:"Neon",w_embers:"Embers",w_rich:"Rich",locked_wall:"These wallpapers are for sponsors and staff",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
+  ru:{home_tag:"fsociety",m_home:"Главная",m_forum:"Forum",m_chat:"Чат",m_profile:"Профиль",m_admin:"Админ",f_posts:"Обсуждения",empty:"Тут еще не добавили ничего",chat_login:"Войди, чтобы читать и писать в чате",chat_empty:"Сообщений пока нет. Напиши первым!",msg_ph:"Сообщение...",msg_deleted:"сообщение удалено",msg_del_q:"Удалить это сообщение?",chat_slow:"Не так быстро, подожди секунду",s_guest:"Гость",s_lang:"Язык",s_wall:"Обои",s_out:"Выйти",s_in:"Войти",pick_role:"Выбери роль",pick_dur:"Выбери срок бана",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_ph:"Никнейм (2–20 символов)",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_captcha_srv:"Сервер не принял проверку Cloudflare",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",check_mail:"Проверь почту и подтверди email",logout:"Выйти из профиля",change_avatar:"Сменить фото",change_pass:"Сменить пароль",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",save:"Сохранить",edit_profile:"Редактировать профиль",bio_ph:"О себе (до 160 символов)",wallpaper:"Анимированные обои",w_none:"Без обоев",w_matrix:"Matrix",w_stars:"Звёзды",w_aurora:"Сияние",w_neon:"Неон",w_embers:"Искры",w_rich:"Богатый",locked_wall:"Эти обои для спонсоров и персонала",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
+  en:{home_tag:"fsociety",m_home:"Home",m_forum:"Forum",m_chat:"Chat",m_profile:"Profile",m_admin:"Admin",f_posts:"Discussions",empty:"Nothing has been added here yet",chat_login:"Log in to read and write in the chat",chat_empty:"No messages yet. Be the first!",msg_ph:"Message...",msg_deleted:"message deleted",msg_del_q:"Delete this message?",chat_slow:"Not so fast, wait a second",s_guest:"Guest",s_lang:"Language",s_wall:"Wallpaper",s_out:"Log out",s_in:"Log in",pick_role:"Choose a role",pick_dur:"Choose the ban duration",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_ph:"Nickname (2–20 characters)",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_captcha_srv:"The server rejected the Cloudflare check",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",check_mail:"Check your email and confirm it",logout:"Log out",change_avatar:"Change photo",change_pass:"Change password",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",save:"Save",edit_profile:"Edit profile",bio_ph:"About you (up to 160 characters)",wallpaper:"Animated wallpapers",w_none:"No wallpaper",w_matrix:"Matrix",w_stars:"Stars",w_aurora:"Aurora",w_neon:"Neon",w_embers:"Embers",w_rich:"Rich",locked_wall:"These wallpapers are for sponsors and staff",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
 };
 Object.assign(TXT.ru,{
   f_new:"Новая тема",f_new_title:"Новая тема",f_thread_title:"Заголовок темы",f_body_ph:"Текст темы...",f_create:"Создать",
@@ -2921,6 +2927,8 @@ function renderGroupMsgs(){
     const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
     if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
     d.appendChild(body);
+    if(!m.deleted&&m.image){const im=document.createElement("img");im.className="mimg";im.src=m.image;im.alt="Photo";im.loading="lazy";im.onclick=()=>window.open(m.image,"_blank","noopener");d.appendChild(im)}
+    if(!m.deleted&&user&&m.author===user.id){const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎ "+t("edit_message");eb.onclick=()=>editRoomMessage("group",m);d.appendChild(eb)}
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
@@ -2933,17 +2941,50 @@ async function groupRead(){
   renderGroupList();
   loadDmUnread();
 }
+let groupPhoto=null,serverPhoto=null;
+function bindRoomPhoto(kind){
+  const prefix=kind==="group"?"groupPhoto":"srvPhoto";
+  $(prefix+"Btn").onclick=()=>$(prefix+"File").click();
+  $(prefix+"File").onchange=()=>{
+    const f=$(prefix+"File").files&&$(prefix+"File").files[0];if(!f)return;
+    if(!f.type.startsWith("image/")){toast(t("err_generic"));return}
+    if(f.size>12*1024*1024){toast("Максимальный размер фото — 12 МБ");return}
+    if(kind==="group")groupPhoto=f;else serverPhoto=f;
+    $(prefix+"PreviewImg").src=URL.createObjectURL(f);$(prefix+"Preview").style.display="";
+  };
+  $(prefix+"Clear").onclick=()=>{if(kind==="group")groupPhoto=null;else serverPhoto=null;$(prefix+"File").value="";$(prefix+"Preview").style.display="none";$(prefix+"PreviewImg").removeAttribute("src")};
+}
+bindRoomPhoto("group");bindRoomPhoto("server");
+async function editRoomMessage(kind,m){
+  const value=window.prompt("Изменить сообщение:",m.body||"");
+  if(value===null||value.trim()===value.trim()&&value===m.body)return;
+  const body=value.trim();if(!body){toast("Текст не может быть пустым");return}
+  try{
+    const fn=kind==="group"?"group_message_edit":"server_message_edit";
+    const r=await sb.rpc(fn,{p_id:m.id,p_body:body});
+    if(r.error)throw r.error;
+    m.body=body;
+    if(kind==="group")renderGroupMsgs();else renderServerMsgs();
+    toast(t("saved"));
+  }catch(e){toast("Редактирование требует SQL-функции "+(kind==="group"?"group_message_edit":"server_message_edit")+" в Supabase.");}
+}
 async function groupSend(){
   if(!groupWith||!user||!sb)return;
   const inp=$("groupin");
   const txt=inp.value.trim();
-  if(!txt)return;
-  const gid=groupWith.id;
+  if(!txt&&!groupPhoto)return;
+  const gid=groupWith.id;let imageUrl=null;
+  if(groupPhoto){
+    try{const f=groupPhoto;const up=await uploadForumFile(f);imageUrl=up.url}
+    catch(e){toast(t("err_generic"));return}
+  }
   inp.value="";resizeEditor(inp);
   const btn=$("groupsendbtn");btn.disabled=true;
   try{
-    const r=await sb.rpc("group_send",{p_group:gid,p_body:txt});
+    const args={p_group:gid,p_body:txt};if(imageUrl)args.p_image=imageUrl;
+    const r=await sb.rpc("group_send",args);
     if(r.error)throw r.error;
+    groupPhoto=null;$("groupPhotoFile").value="";$("groupPhotoPreview").style.display="none";
     await groupLoadMsgs();
     groupRead();
   }catch(e){
@@ -3440,6 +3481,8 @@ function renderServerMsgs(){
     const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
     if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
     d.appendChild(body);
+    if(!m.deleted&&m.image){const im=document.createElement("img");im.className="mimg";im.src=m.image;im.alt="Photo";im.loading="lazy";im.onclick=()=>window.open(m.image,"_blank","noopener");d.appendChild(im)}
+    if(!m.deleted&&user&&m.author===user.id){const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎ "+t("edit_message");eb.onclick=()=>editRoomMessage("server",m);d.appendChild(eb)}
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
@@ -3448,13 +3491,19 @@ async function serverSend(){
   if(!srvCurrent||!srvChannel||!user||!sb)return;
   const inp=$("srvin");
   const txt=inp.value.trim();
-  if(!txt)return;
-  const cid=srvChannel;
+  if(!txt&&!serverPhoto)return;
+  const cid=srvChannel;let imageUrl=null;
+  if(serverPhoto){
+    try{const f=serverPhoto;const up=await uploadForumFile(f);imageUrl=up.url}
+    catch(e){toast(t("err_generic"));return}
+  }
   inp.value="";resizeEditor(inp);
   const btn=$("srvsend");btn.disabled=true;
   try{
-    const r=await sb.rpc("server_send",{p_channel:cid,p_body:txt});
+    const args={p_channel:cid,p_body:txt};if(imageUrl)args.p_image=imageUrl;
+    const r=await sb.rpc("server_send",args);
     if(r.error)throw r.error;
+    serverPhoto=null;$("srvPhotoFile").value="";$("srvPhotoPreview").style.display="none";
     await serverLoadMsgs(false);
   }catch(e){
     const msg=((e&&e.message)||"").toLowerCase();
@@ -4067,6 +4116,7 @@ async function boot(){
   renderUser();
   if(user)await afterAuth();else await checkBan();
 }
+TXT.ru.edit_message="Изменить";TXT.en.edit_message="Edit";
 buildAI();
 setPrev(null);
 renderUser();
