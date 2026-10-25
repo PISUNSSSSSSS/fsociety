@@ -1848,6 +1848,10 @@ function msgNode(m){
     const rb=document.createElement("button");rb.type="button";rb.className="mact";rb.textContent="↩";rb.title=t("f_reply_btn");
     rb.onclick=()=>setReplying(m);
     head.appendChild(rb);
+    if(m.user_id===user.id){
+      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎";eb.title=t("edit_message");
+      eb.onclick=()=>editChatMessage(m);head.appendChild(eb);
+    }
     if(m.user_id===user.id||myRank()>=2){
       const d=document.createElement("button");d.type="button";d.className="mact";d.textContent="✕";
       d.onclick=()=>askConfirm(t("msg_del_q"),()=>chatDelete(m.id));
@@ -1981,6 +1985,19 @@ async function chatSend(){
     }
   }
   await chatPoll();
+}
+async function editChatMessage(m){
+  if(!user||m.user_id!==user.id||m.deleted)return;
+  const value=window.prompt(t("edit_message"),m.body||"");
+  if(value===null)return;
+  const body=value.trim();
+  if(body===String(m.body||""))return;
+  if(!body){toast(t("f_need_body"));return}
+  try{
+    const r=await sb.rpc("chat_edit",{p_id:m.id,p_body:body});
+    if(r.error)throw r.error;
+    m.body=body;addOrUpdate(m);toast(t("saved"));
+  }catch(e){toast("Для редактирования сообщений добавь SQL-функцию chat_edit в Supabase.")}
 }
 async function chatDelete(id){
   try{
@@ -2250,6 +2267,10 @@ function renderThread(th,rows){
   au.onclick=()=>{if(th.author)openProfile(th.author)};
   meta.appendChild(au);
   meta.appendChild(document.createTextNode(" · "+new Date(th.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"})));
+  if(user&&th.author===user.id){
+    const eb=document.createElement("button");eb.type="button";eb.className="rdel";eb.textContent="✎";eb.title=t("edit_post");
+    eb.onclick=()=>editForumPost("thread",th);meta.appendChild(eb);
+  }
   if(user&&(th.author===user.id||myRank()>=2)){
     const d=document.createElement("button");d.type="button";d.className="rdel";d.textContent="✕";d.title=t("f_del_thread");
     d.onclick=()=>askConfirm(t("f_del_thread"),()=>delForum("thread",th.id));
@@ -2271,6 +2292,10 @@ function renderThread(th,rows){
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(rp.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
     hd.appendChild(nk);hd.appendChild(tm);
+    if(user&&rp.author===user.id){
+      const eb=document.createElement("button");eb.type="button";eb.className="rdel";eb.textContent="✎";eb.title=t("edit_post");
+      eb.onclick=()=>editForumPost("reply",rp);hd.appendChild(eb);
+    }
     if(user&&(rp.author===user.id||myRank()>=2)){
       const d=document.createElement("button");d.type="button";d.className="rdel";d.textContent="✕";
       d.onclick=()=>askConfirm(t("f_del_reply"),()=>delForum("reply",rp.id));
@@ -2286,6 +2311,26 @@ function renderThread(th,rows){
   $("th_login").style.display=logged?"none":"";
   $("th_in").value="";
   forumReplyFiles=[];renderFiles($("th_files"),forumReplyFiles,true);
+}
+async function editForumPost(kind,item){
+  if(!user||!item||item.author!==user.id)return;
+  const title=kind==="thread"?window.prompt(t("edit_post_title"),item.title||""):null;
+  if(kind==="thread"&&title===null)return;
+  const body=window.prompt(t("edit_post"),item.body||"");
+  if(body===null)return;
+  const cleanBody=body.trim(),cleanTitle=kind==="thread"?title.trim():null;
+  if(!cleanBody){toast(t("f_need_body"));return}
+  if(kind==="thread"&&(cleanTitle.length<3||cleanTitle.length>120)){toast(t("f_need_title"));return}
+  if(cleanBody===String(item.body||"")&&(kind!=="thread"||cleanTitle===String(item.title||"")))return;
+  try{
+    const fn=kind==="thread"?"forum_thread_edit":"forum_reply_edit";
+    const args=kind==="thread"?{p_id:item.id,p_title:cleanTitle,p_body:cleanBody}:{p_id:item.id,p_body:cleanBody};
+    const r=await sb.rpc(fn,args);
+    if(r.error)throw r.error;
+    toast(t("saved"));
+    await openThread(forumThreadId,true);
+    forumCache=[];
+  }catch(e){toast("Для редактирования форума добавь SQL-функции forum_thread_edit и forum_reply_edit в Supabase.")}
 }
 async function delForum(kind,id){
   try{
@@ -2957,7 +3002,8 @@ function bindRoomPhoto(kind){
 bindRoomPhoto("group");bindRoomPhoto("server");
 async function editRoomMessage(kind,m){
   const value=window.prompt("Изменить сообщение:",m.body||"");
-  if(value===null||value.trim()===value.trim()&&value===m.body)return;
+  if(value===null)return;
+  if(value.trim()===String(m.body||""))return;
   const body=value.trim();if(!body){toast("Текст не может быть пустым");return}
   try{
     const fn=kind==="group"?"group_message_edit":"server_message_edit";
@@ -3956,9 +4002,11 @@ function renderUsers(){
         eb.onclick=()=>openBan("edit",u,b);acts.appendChild(eb);
         const ub=document.createElement("button");ub.className="mini";ub.textContent=t("unban_btn");
         ub.onclick=()=>askConfirm(t("unban_q").replace("{n}",u.nick),()=>unban(b.grp));acts.appendChild(ub);
-      }else{
+      }else if(mr>=3||wc>0){
         const bb=document.createElement("button");bb.className="mini danger";bb.textContent=t("ban_btn");
         bb.onclick=()=>openBan("new",u,null);acts.appendChild(bb);
+      }else{
+        const hint=document.createElement("span");hint.className="mail";hint.textContent=lang==="en"?"Issue a warning before banning":"Сначала выдай предупреждение, затем можно банить";acts.appendChild(hint);
       }
     }
     if(mr>=3&&lower){
@@ -4117,6 +4165,8 @@ async function boot(){
   if(user)await afterAuth();else await checkBan();
 }
 TXT.ru.edit_message="Изменить";TXT.en.edit_message="Edit";
+TXT.ru.edit_post="Редактировать пост";TXT.en.edit_post="Edit post";
+TXT.ru.edit_post_title="Изменить заголовок темы";TXT.en.edit_post_title="Edit topic title";
 buildAI();
 setPrev(null);
 renderUser();
