@@ -1997,7 +1997,7 @@ async function editChatMessage(m){
     const r=await sb.rpc("chat_edit",{p_id:m.id,p_body:body});
     if(r.error)throw r.error;
     m.body=body;addOrUpdate(m);toast(t("saved"));
-  }catch(e){toast("Для редактирования сообщений добавь SQL-функцию chat_edit в Supabase.")}
+  }catch(e){console.error("chat_edit failed",e);toast("Не удалось сохранить: проверь SQL-функцию chat_edit в Supabase.")}
 }
 async function chatDelete(id){
   try{
@@ -2330,7 +2330,7 @@ async function editForumPost(kind,item){
     toast(t("saved"));
     await openThread(forumThreadId,true);
     forumCache=[];
-  }catch(e){toast("Для редактирования форума добавь SQL-функции forum_thread_edit и forum_reply_edit в Supabase.")}
+  }catch(e){console.error("forum edit failed",e);toast("Не удалось сохранить пост форума: проверь SQL-функции forum_thread_edit/forum_reply_edit в Supabase.")}
 }
 async function delForum(kind,id){
   try{
@@ -3012,7 +3012,7 @@ async function editRoomMessage(kind,m){
     m.body=body;
     if(kind==="group")renderGroupMsgs();else renderServerMsgs();
     toast(t("saved"));
-  }catch(e){toast("Редактирование требует SQL-функции "+(kind==="group"?"group_message_edit":"server_message_edit")+" в Supabase.");}
+  }catch(e){console.error("room message edit failed",e);toast("Не удалось сохранить: проверь SQL-функцию "+(kind==="group"?"group_message_edit":"server_message_edit")+" в Supabase.");}
 }
 async function groupSend(){
   if(!groupWith||!user||!sb)return;
@@ -3260,12 +3260,32 @@ function renderDmMsgs(){
       }
     }
     if(m.body){const b=document.createElement("div");b.className="mb rich";setRich(b,m.body);d.appendChild(b)}
+    if(user && m.sender===user.id && m.body){
+      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎ "+t("edit_message");
+      eb.onclick=()=>editDmMessage(m);d.appendChild(eb);
+    }
     const tm=document.createElement("div");tm.className="mtime dmt";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     d.appendChild(tm);
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
+}
+async function editDmMessage(m){
+  if(!user||!m||m.sender!==user.id||!m.body||!sb)return;
+  const value=window.prompt(t("edit_message"),m.body||"");
+  if(value===null)return;
+  const body=value.trim();
+  if(!body){toast(t("f_need_body"));return}
+  if(body===String(m.body||""))return;
+  try{
+    const r=await sb.rpc("dm_message_edit",{p_id:m.id,p_body:body});
+    if(r.error)throw r.error;
+    m.body=body;renderDmMsgs();toast(t("saved"));
+  }catch(e){
+    console.error("dm_message_edit failed",e);
+    toast("Личное сообщение не изменено: в Supabase пока нет совместимой функции dm_message_edit.");
+  }
 }
 function dmUrl(path){
   if(!path||!sb)return "";
