@@ -462,10 +462,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       </div>
       <div id="groupmsgs" class="groupmsgs"></div>
       <div id="group_tools" class="etools" data-for="groupin"></div>
-      <input id="groupPhotoFile" type="file" accept="image/*" hidden>
-      <div id="groupPhotoPreview" class="imgprev" style="display:none"><img id="groupPhotoPreviewImg" alt=""><button id="groupPhotoClear" type="button">✕</button></div>
       <div class="sendrow">
-        <button id="groupPhotoBtn" class="btn glass sm" type="button" aria-label="Photo">📷</button>
         <textarea id="groupin" rows="1" maxlength="4000" class="glass" data-i18n-ph="group_msg_ph" autocomplete="off"></textarea>
         <button id="groupsendbtn" class="btn main sm">➤</button>
       </div>
@@ -502,10 +499,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       <div id="srvchannels" class="srvchannels"></div>
       <div id="srvmsgs" class="msgs"></div>
       <div id="srv_tools" class="etools" data-for="srvin"></div>
-      <input id="srvPhotoFile" type="file" accept="image/*" hidden>
-      <div id="srvPhotoPreview" class="imgprev" style="display:none"><img id="srvPhotoPreviewImg" alt=""><button id="srvPhotoClear" type="button">✕</button></div>
       <div class="sendrow">
-        <button id="srvPhotoBtn" class="btn glass sm" type="button" aria-label="Photo">📷</button>
         <textarea id="srvin" rows="1" maxlength="4000" class="glass" data-i18n-ph="srv_msg_ph" autocomplete="off"></textarea>
         <button id="srvsend" class="btn main sm">➤</button>
       </div>
@@ -548,7 +542,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <section id="admin" class="view"><div class="box">
     <h2 data-i18n="admin_panel"></h2>
     <p id="utotal" class="mail"></p>
-    <div class="abar"><button id="auditbtn" class="btn glass sm" data-i18n="audit_title"></button></div>
+    <div class="abar"><button id="auditbtn" class="btn glass sm" data-i18n="audit_title" style="display:none"></button></div>
     <input id="usearch" type="text" class="glass" data-i18n-ph="search_ph" autocomplete="off">
     <div id="ulist" class="ulist"></div>
   </div></section>
@@ -759,12 +753,12 @@ try{
 let cfToken=null,cfId=null;
 
 const TXT={
-  ru:{home_tag:"fsociety",m_home:"Главная",m_forum:"Forum",m_chat:"Чат",m_profile:"Профиль",m_admin:"Админ",f_posts:"Обсуждения",empty:"Тут еще не добавили ничего",chat_login:"Войди, чтобы читать и писать в чате",chat_empty:"Сообщений пока нет. Напиши первым!",msg_ph:"Сообщение...",msg_deleted:"сообщение удалено",msg_del_q:"Удалить это сообщение?",chat_slow:"Не так быстро, подожди секунду",s_guest:"Гость",s_lang:"Язык",s_wall:"Обои",s_out:"Выйти",s_in:"Войти",pick_role:"Выбери роль",pick_dur:"Выбери срок бана",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_ph:"Никнейм (2–20 символов)",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_captcha_srv:"Сервер не принял проверку Cloudflare",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",check_mail:"Проверь почту и подтверди email",logout:"Выйти из профиля",change_avatar:"Сменить фото",change_pass:"Сменить пароль",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",save:"Сохранить",edit_profile:"Редактировать профиль",bio_ph:"О себе (до 160 символов)",wallpaper:"Анимированные обои",w_none:"Без обоев",w_matrix:"Matrix",w_stars:"Звёзды",w_aurora:"Сияние",w_neon:"Неон",w_embers:"Искры",w_rich:"Богатый",locked_wall:"Эти обои для спонсоров и персонала",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
-  en:{home_tag:"fsociety",m_home:"Home",m_forum:"Forum",m_chat:"Chat",m_profile:"Profile",m_admin:"Admin",f_posts:"Discussions",empty:"Nothing has been added here yet",chat_login:"Log in to read and write in the chat",chat_empty:"No messages yet. Be the first!",msg_ph:"Message...",msg_deleted:"message deleted",msg_del_q:"Delete this message?",chat_slow:"Not so fast, wait a second",s_guest:"Guest",s_lang:"Language",s_wall:"Wallpaper",s_out:"Log out",s_in:"Log in",pick_role:"Choose a role",pick_dur:"Choose the ban duration",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_ph:"Nickname (2–20 characters)",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_captcha_srv:"The server rejected the Cloudflare check",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",check_mail:"Check your email and confirm it",logout:"Log out",change_avatar:"Change photo",change_pass:"Change password",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",save:"Save",edit_profile:"Edit profile",bio_ph:"About you (up to 160 characters)",wallpaper:"Animated wallpapers",w_none:"No wallpaper",w_matrix:"Matrix",w_stars:"Stars",w_aurora:"Aurora",w_neon:"Neon",w_embers:"Embers",w_rich:"Rich",locked_wall:"These wallpapers are for sponsors and staff",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
+  ru:{home_tag:"fsociety · наш сайт",m_home:"Главная",m_forum:"Forum",m_chat:"Чат",m_profile:"Профиль",m_admin:"Админ",f_posts:"Обсуждения",empty:"Тут еще не добавили ничего",chat_login:"Войди, чтобы читать и писать в чате",chat_empty:"Сообщений пока нет. Напиши первым!",msg_ph:"Сообщение...",msg_deleted:"сообщение удалено",msg_del_q:"Удалить это сообщение?",chat_slow:"Не так быстро, подожди секунду",s_guest:"Гость",s_lang:"Язык",s_wall:"Обои",s_out:"Выйти",s_in:"Войти",pick_role:"Выбери роль",pick_dur:"Выбери срок бана",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_ph:"Никнейм (2–20 символов)",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_captcha_srv:"Сервер не принял проверку Cloudflare",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",check_mail:"Проверь почту и подтверди email",logout:"Выйти из профиля",change_avatar:"Сменить фото",change_pass:"Сменить пароль",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",save:"Сохранить",edit_profile:"Редактировать профиль",bio_ph:"О себе (до 160 символов)",wallpaper:"Анимированные обои",w_none:"Без обоев",w_matrix:"Matrix",w_stars:"Звёзды",w_aurora:"Сияние",w_neon:"Неон",w_embers:"Искры",w_rich:"Богатый",locked_wall:"Эти обои для спонсоров и персонала",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
+  en:{home_tag:"fsociety · our site",m_home:"Home",m_forum:"Forum",m_chat:"Chat",m_profile:"Profile",m_admin:"Admin",f_posts:"Discussions",empty:"Nothing has been added here yet",chat_login:"Log in to read and write in the chat",chat_empty:"No messages yet. Be the first!",msg_ph:"Message...",msg_deleted:"message deleted",msg_del_q:"Delete this message?",chat_slow:"Not so fast, wait a second",s_guest:"Guest",s_lang:"Language",s_wall:"Wallpaper",s_out:"Log out",s_in:"Log in",pick_role:"Choose a role",pick_dur:"Choose the ban duration",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_ph:"Nickname (2–20 characters)",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_captcha_srv:"The server rejected the Cloudflare check",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",check_mail:"Check your email and confirm it",logout:"Log out",change_avatar:"Change photo",change_pass:"Change password",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",save:"Save",edit_profile:"Edit profile",bio_ph:"About you (up to 160 characters)",wallpaper:"Animated wallpapers",w_none:"No wallpaper",w_matrix:"Matrix",w_stars:"Stars",w_aurora:"Aurora",w_neon:"Neon",w_embers:"Embers",w_rich:"Rich",locked_wall:"These wallpapers are for sponsors and staff",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
 };
 Object.assign(TXT.ru,{
   f_new:"Новая тема",f_new_title:"Новая тема",f_thread_title:"Заголовок темы",f_body_ph:"Текст темы...",f_create:"Создать",
-  f_reply_ph:"Написать ответ...",f_send:"Отправить",f_empty:"Пока нет тем. Создай первую!",f_replies:"ответов",f_no_replies:"Ответов пока нет",
+  f_reply_ph:"Написать ответ...",f_send:"Отправить",f_empty:"Пока нет тем. Создай первую!",f_replies:"ответов",f_replies_one:"ответ",f_replies_few:"ответа",f_replies_many:"ответов",f_no_replies:"Ответов пока нет",
   f_login:"Войди, чтобы читать и писать на форуме",f_need_title:"Заголовок: от 3 до 120 символов",f_need_body:"Напиши текст темы",
   f_del_thread:"Удалить тему?",f_del_reply:"Удалить ответ?",f_reply_btn:"Ответить",
   n_title:"Уведомления",n_empty:"Пока ничего нового",n_read_all:"Прочитать все",n_forum_reply:"{nick} ответил в теме «{title}»",
@@ -794,7 +788,7 @@ Object.assign(TXT.ru,{
 });
 Object.assign(TXT.en,{
   f_new:"New topic",f_new_title:"New topic",f_thread_title:"Topic title",f_body_ph:"Topic text...",f_create:"Create",
-  f_reply_ph:"Write a reply...",f_send:"Send",f_empty:"No topics yet. Create the first one!",f_replies:"replies",f_no_replies:"No replies yet",
+  f_reply_ph:"Write a reply...",f_send:"Send",f_empty:"No topics yet. Create the first one!",f_replies:"replies",f_replies_one:"reply",f_replies_few:"replies",f_replies_many:"replies",f_no_replies:"No replies yet",
   f_login:"Log in to read and write on the forum",f_need_title:"Title: 3 to 120 characters",f_need_body:"Write the topic text",
   f_del_thread:"Delete this topic?",f_del_reply:"Delete this reply?",f_reply_btn:"Reply",
   n_title:"Notifications",n_empty:"Nothing new yet",n_read_all:"Mark all read",n_forum_reply:"{nick} replied in \"{title}\"",
@@ -819,6 +813,7 @@ Object.assign(TXT.en,{
   m_dm:"DMs",dm_title:"Messenger",dm_login:"Log in to use the messenger",dm_ph:"Message...",
   dm_empty:"No friends yet. Add someone as a friend to start chatting.",dm_no_msgs:"Say hi first!",
   dm_req_out:"request sent",dm_req_in:"wants to add you",dm_friend:"friend",dm_slow:"Not so fast, wait a second",
+  dm_need_friend:"You can only message friends and people who received your request",
   dm_photo:"Photo",dm_file:"File",dm_wait_upload:"Wait, files are still uploading",dm_gif:"GIF",dm_video:"Video"
 });
 Object.assign(TXT.ru,{
@@ -826,7 +821,7 @@ Object.assign(TXT.ru,{
   dm_tab_dm:"Личные",dm_tab_groups:"Группы",
   group_new:"Создать группу",group_create_title:"Новая группа",group_name_ph:"Название группы (2–60)",
   group_create_hint:"Отметь друзей, которых сразу добавим в группу.",group_create:"Создать",
-  group_empty:"Групп пока нет. Создай свою!",group_members:"участников",group_owner:"владелец",group_member:"участник",
+  group_empty:"Групп пока нет. Создай свою!",group_members:"участников",group_members_one:"участник",group_members_few:"участника",group_members_many:"участников",group_owner:"владелец",group_member:"участник",
   group_invite:"Пригласить",group_invite_title:"Пригласить друзей",
   group_invite_hint:"Друг сразу попадёт в группу и получит уведомление.",
   group_invited:"Приглашение отправлено",group_already:"Уже в группе",group_not_friend:"Можно приглашать только друзей",
@@ -844,7 +839,7 @@ Object.assign(TXT.ru,{
   srv_join_title:"Войти на сервер",srv_code_ph:"Код приглашения",srv_join_btn:"Войти",
   srv_join_q:"Войти на этот сервер?",srv_joined:"Ты на сервере",srv_join_fail:"Не удалось войти: проверь код",
   srv_need_name:"Название: от 2 до 60 символов",srv_need_code:"Введи код приглашения",
-  srv_member_count:"{n} участников",srv_channel_count:"{n} каналов",srv_owner:"владелец",srv_admin:"админ",
+  srv_member_count:"{n} участников",srv_channel_count:"{n} каналов",srv_members_one:"участник",srv_members_few:"участника",srv_members_many:"участников",srv_channels_one:"канал",srv_channels_few:"канала",srv_channels_many:"каналов",srv_owner:"владелец",srv_admin:"админ",
   srv_member:"участник",srv_you:"ты",srv_msg_ph:"Сообщение в канал...",srv_empty_msgs:"Сообщений пока нет. Напиши первым!",
   srv_manage:"Управление",srv_invite:"Пригласить друзей",srv_invite_title:"Пригласить друзей",
   srv_invite_hint:"Друг получит уведомление со ссылкой на сервер.",srv_invite_code:"Код приглашения",
@@ -886,7 +881,7 @@ Object.assign(TXT.en,{
   dm_tab_dm:"Direct",dm_tab_groups:"Groups",
   group_new:"Create group",group_create_title:"New group",group_name_ph:"Group name (2–60)",
   group_create_hint:"Pick friends to add to the group right away.",group_create:"Create",
-  group_empty:"No groups yet. Create your own!",group_members:"members",group_owner:"owner",group_member:"member",
+  group_empty:"No groups yet. Create your own!",group_members:"members",group_members_one:"member",group_members_few:"members",group_members_many:"members",group_owner:"owner",group_member:"member",
   group_invite:"Invite",group_invite_title:"Invite friends",
   group_invite_hint:"A friend joins the group immediately and gets a notification.",
   group_invited:"Invitation sent",group_already:"Already in the group",group_not_friend:"You can only invite friends",
@@ -904,7 +899,7 @@ Object.assign(TXT.en,{
   srv_join_title:"Join a server",srv_code_ph:"Invite code",srv_join_btn:"Join",
   srv_join_q:"Join this server?",srv_joined:"You joined the server",srv_join_fail:"Could not join: check the code",
   srv_need_name:"Name: 2 to 60 characters",srv_need_code:"Enter an invite code",
-  srv_member_count:"{n} members",srv_channel_count:"{n} channels",srv_owner:"owner",srv_admin:"admin",
+  srv_member_count:"{n} members",srv_channel_count:"{n} channels",srv_members_one:"member",srv_members_few:"members",srv_members_many:"members",srv_channels_one:"channel",srv_channels_few:"channels",srv_channels_many:"channels",srv_owner:"owner",srv_admin:"admin",
   srv_member:"member",srv_you:"you",srv_msg_ph:"Message the channel...",srv_empty_msgs:"No messages yet. Be the first!",
   srv_manage:"Manage",srv_invite:"Invite friends",srv_invite_title:"Invite friends",
   srv_invite_hint:"Your friend gets a notification with a link to the server.",srv_invite_code:"Invite code",
@@ -1000,6 +995,15 @@ let auditOpen=false,edSel={};
 
 const t=k=>TXT[lang][k];
 const tf=(k,vars)=>{let s=t(k)||k;Object.keys(vars||{}).forEach(a=>{s=s.split("{"+a+"}").join(vars[a])});return s};
+function countWord(n,base){
+  n=Math.abs(Number(n)||0);
+  if(lang!=="ru")return n===1?t(base+"_one"):t(base+"_many");
+  const a=n%100,b=a%10;
+  if(a>10&&a<20)return t(base+"_many");
+  if(b===1)return t(base+"_one");
+  if(b>=2&&b<=4)return t(base+"_few");
+  return t(base+"_many");
+}
 const rk=r=>RANK[r]||0;
 function roleLabel(r){r=r||"user";if(r==="coowner")return lang==="en"?"CO-OWNER":"СОВЛАДЕЛЕЦ";return String(r).toUpperCase()}
 const myRank=()=>user?rk(user.role):0;
@@ -1848,10 +1852,6 @@ function msgNode(m){
     const rb=document.createElement("button");rb.type="button";rb.className="mact";rb.textContent="↩";rb.title=t("f_reply_btn");
     rb.onclick=()=>setReplying(m);
     head.appendChild(rb);
-    if(m.user_id===user.id){
-      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎";eb.title=t("edit_message");
-      eb.onclick=()=>editChatMessage(m);head.appendChild(eb);
-    }
     if(m.user_id===user.id||myRank()>=2){
       const d=document.createElement("button");d.type="button";d.className="mact";d.textContent="✕";
       d.onclick=()=>askConfirm(t("msg_del_q"),()=>chatDelete(m.id));
@@ -1985,19 +1985,6 @@ async function chatSend(){
     }
   }
   await chatPoll();
-}
-async function editChatMessage(m){
-  if(!user||m.user_id!==user.id||m.deleted)return;
-  const value=window.prompt(t("edit_message"),m.body||"");
-  if(value===null)return;
-  const body=value.trim();
-  if(body===String(m.body||""))return;
-  if(!body){toast(t("f_need_body"));return}
-  try{
-    const r=await sb.rpc("chat_edit",{p_id:m.id,p_body:body});
-    if(r.error)throw r.error;
-    m.body=body;addOrUpdate(m);toast(t("saved"));
-  }catch(e){console.error("chat_edit failed",e);toast("Не удалось сохранить: проверь SQL-функцию chat_edit в Supabase.")}
 }
 async function chatDelete(id){
   try{
@@ -2166,6 +2153,7 @@ async function openNotif(n){
   }else if(n.link&&n.link.indexOf("server_code:")===0){
     closeNotifs();
     const code=n.link.slice(12);
+    serverReset();
     go("servers");
     if(code)askConfirm(t("srv_join_q"),()=>joinServerCode(code,false));
   }
@@ -2210,7 +2198,7 @@ function renderForum(rows){
     const fn=document.createElement("span");fn.className="fn "+(th.role||"user");fn.textContent=th.nick||"?";
     fm.appendChild(fn);
     fm.appendChild(document.createTextNode("· "+new Date(th.created_at).toLocaleDateString(locale())));
-    fm.appendChild(document.createTextNode("· "+th.replies+" "+t("f_replies")));
+    fm.appendChild(document.createTextNode("· "+th.replies+" "+countWord(th.replies,"f_replies")));
     b.appendChild(tt);b.appendChild(fm);
     b.onclick=()=>openThread(Number(th.id));
     box.appendChild(b);
@@ -2267,10 +2255,6 @@ function renderThread(th,rows){
   au.onclick=()=>{if(th.author)openProfile(th.author)};
   meta.appendChild(au);
   meta.appendChild(document.createTextNode(" · "+new Date(th.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"})));
-  if(user&&th.author===user.id){
-    const eb=document.createElement("button");eb.type="button";eb.className="rdel";eb.textContent="✎";eb.title=t("edit_post");
-    eb.onclick=()=>editForumPost("thread",th);meta.appendChild(eb);
-  }
   if(user&&(th.author===user.id||myRank()>=2)){
     const d=document.createElement("button");d.type="button";d.className="rdel";d.textContent="✕";d.title=t("f_del_thread");
     d.onclick=()=>askConfirm(t("f_del_thread"),()=>delForum("thread",th.id));
@@ -2292,10 +2276,6 @@ function renderThread(th,rows){
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(rp.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
     hd.appendChild(nk);hd.appendChild(tm);
-    if(user&&rp.author===user.id){
-      const eb=document.createElement("button");eb.type="button";eb.className="rdel";eb.textContent="✎";eb.title=t("edit_post");
-      eb.onclick=()=>editForumPost("reply",rp);hd.appendChild(eb);
-    }
     if(user&&(rp.author===user.id||myRank()>=2)){
       const d=document.createElement("button");d.type="button";d.className="rdel";d.textContent="✕";
       d.onclick=()=>askConfirm(t("f_del_reply"),()=>delForum("reply",rp.id));
@@ -2311,26 +2291,6 @@ function renderThread(th,rows){
   $("th_login").style.display=logged?"none":"";
   $("th_in").value="";
   forumReplyFiles=[];renderFiles($("th_files"),forumReplyFiles,true);
-}
-async function editForumPost(kind,item){
-  if(!user||!item||item.author!==user.id)return;
-  const title=kind==="thread"?window.prompt(t("edit_post_title"),item.title||""):null;
-  if(kind==="thread"&&title===null)return;
-  const body=window.prompt(t("edit_post"),item.body||"");
-  if(body===null)return;
-  const cleanBody=body.trim(),cleanTitle=kind==="thread"?title.trim():null;
-  if(!cleanBody){toast(t("f_need_body"));return}
-  if(kind==="thread"&&(cleanTitle.length<3||cleanTitle.length>120)){toast(t("f_need_title"));return}
-  if(cleanBody===String(item.body||"")&&(kind!=="thread"||cleanTitle===String(item.title||"")))return;
-  try{
-    const fn=kind==="thread"?"forum_thread_edit":"forum_reply_edit";
-    const args=kind==="thread"?{p_id:item.id,p_title:cleanTitle,p_body:cleanBody}:{p_id:item.id,p_body:cleanBody};
-    const r=await sb.rpc(fn,args);
-    if(r.error)throw r.error;
-    toast(t("saved"));
-    await openThread(forumThreadId,true);
-    forumCache=[];
-  }catch(e){console.error("forum edit failed",e);toast("Не удалось сохранить пост форума: проверь SQL-функции forum_thread_edit/forum_reply_edit в Supabase.")}
 }
 async function delForum(kind,id){
   try{
@@ -2894,7 +2854,7 @@ function renderGroupList(){
     mid.appendChild(top);
     const last=document.createElement("div");last.className="dmlast";
     const cnt=Number(g.members)||0;
-    last.textContent=(g.last_text?mdPlain(g.last_text):t("group_empty_msgs"))+" · "+cnt+" "+t("group_members");
+    last.textContent=(g.last_text?mdPlain(g.last_text):t("group_empty_msgs"))+" · "+cnt+" "+countWord(cnt,"group_members");
     mid.appendChild(last);
     b.appendChild(mid);
     if(Number(g.unread)>0){const u=document.createElement("span");u.className="dmunread";u.textContent=Number(g.unread)>9?"9+":String(Number(g.unread));b.appendChild(u)}
@@ -2926,7 +2886,7 @@ function renderGroupHead(){
   if(!groupWith)return;
   $("groupname").textContent=groupWith.name||"?";
   const cnt=Number(groupWith.members)||0;
-  $("grouprel").textContent=cnt+" "+t("group_members")+" · "+(groupWith.member_role==="owner"?t("group_owner"):t("group_member"));
+  $("grouprel").textContent=cnt+" "+countWord(cnt,"group_members")+" · "+(groupWith.member_role==="owner"?t("group_owner"):t("group_member"));
   $("groupava").textContent=initialOf(groupWith.name);
 }
 async function groupLoadMsgs(){
@@ -2972,8 +2932,6 @@ function renderGroupMsgs(){
     const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
     if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
     d.appendChild(body);
-    if(!m.deleted&&m.image){const im=document.createElement("img");im.className="mimg";im.src=m.image;im.alt="Photo";im.loading="lazy";im.onclick=()=>window.open(m.image,"_blank","noopener");d.appendChild(im)}
-    if(!m.deleted&&user&&m.author===user.id){const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎ "+t("edit_message");eb.onclick=()=>editRoomMessage("group",m);d.appendChild(eb)}
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
@@ -2986,51 +2944,17 @@ async function groupRead(){
   renderGroupList();
   loadDmUnread();
 }
-let groupPhoto=null,serverPhoto=null;
-function bindRoomPhoto(kind){
-  const prefix=kind==="group"?"groupPhoto":"srvPhoto";
-  $(prefix+"Btn").onclick=()=>$(prefix+"File").click();
-  $(prefix+"File").onchange=()=>{
-    const f=$(prefix+"File").files&&$(prefix+"File").files[0];if(!f)return;
-    if(!f.type.startsWith("image/")){toast(t("err_generic"));return}
-    if(f.size>12*1024*1024){toast("Максимальный размер фото — 12 МБ");return}
-    if(kind==="group")groupPhoto=f;else serverPhoto=f;
-    $(prefix+"PreviewImg").src=URL.createObjectURL(f);$(prefix+"Preview").style.display="";
-  };
-  $(prefix+"Clear").onclick=()=>{if(kind==="group")groupPhoto=null;else serverPhoto=null;$(prefix+"File").value="";$(prefix+"Preview").style.display="none";$(prefix+"PreviewImg").removeAttribute("src")};
-}
-bindRoomPhoto("group");bindRoomPhoto("server");
-async function editRoomMessage(kind,m){
-  const value=window.prompt("Изменить сообщение:",m.body||"");
-  if(value===null)return;
-  if(value.trim()===String(m.body||""))return;
-  const body=value.trim();if(!body){toast("Текст не может быть пустым");return}
-  try{
-    const fn=kind==="group"?"group_message_edit":"server_message_edit";
-    const r=await sb.rpc(fn,{p_id:m.id,p_body:body});
-    if(r.error)throw r.error;
-    m.body=body;
-    if(kind==="group")renderGroupMsgs();else renderServerMsgs();
-    toast(t("saved"));
-  }catch(e){console.error("room message edit failed",e);toast("Не удалось сохранить: проверь SQL-функцию "+(kind==="group"?"group_message_edit":"server_message_edit")+" в Supabase.");}
-}
 async function groupSend(){
   if(!groupWith||!user||!sb)return;
   const inp=$("groupin");
   const txt=inp.value.trim();
-  if(!txt&&!groupPhoto)return;
-  const gid=groupWith.id;let imageUrl=null;
-  if(groupPhoto){
-    try{const f=groupPhoto;const up=await uploadForumFile(f);imageUrl=up.url}
-    catch(e){toast(t("err_generic"));return}
-  }
+  if(!txt)return;
+  const gid=groupWith.id;
   inp.value="";resizeEditor(inp);
   const btn=$("groupsendbtn");btn.disabled=true;
   try{
-    const args={p_group:gid,p_body:txt};if(imageUrl)args.p_image=imageUrl;
-    const r=await sb.rpc("group_send",args);
+    const r=await sb.rpc("group_send",{p_group:gid,p_body:txt});
     if(r.error)throw r.error;
-    groupPhoto=null;$("groupPhotoFile").value="";$("groupPhotoPreview").style.display="none";
     await groupLoadMsgs();
     groupRead();
   }catch(e){
@@ -3117,7 +3041,10 @@ async function openGroupMembers(){
           try{
             const r=await sb.rpc("group_kick",{p_group:g.id,p_target:m.user_id});
             if(r.error)throw r.error;
-            toast(t("group_kicked"));closeFormModal();await openGroupMembers();
+            toast(t("group_kicked"));
+            groupWith.members=Math.max(1,(Number(groupWith.members)||1)-1);
+            renderGroupHead();
+            closeFormModal();await openGroupMembers();
           }catch(e){toast(t("err_generic"))}
         });
         row.appendChild(kb);
@@ -3152,7 +3079,11 @@ async function openGroupInvite(){
           const r=await sb.rpc("group_invite",{p_group:g.id,p_target:f.id});
           if(r.error)throw r.error;
           if(r.data==="member")toast(t("group_already"));
-          else toast(t("group_invited"));
+          else{
+            toast(t("group_invited"));
+            groupWith.members=(Number(groupWith.members)||0)+1;
+            renderGroupHead();
+          }
           b.textContent="✓";b.classList.remove("main");
         }catch(e){
           const msg=((e&&e.message)||"").toLowerCase();
@@ -3260,32 +3191,12 @@ function renderDmMsgs(){
       }
     }
     if(m.body){const b=document.createElement("div");b.className="mb rich";setRich(b,m.body);d.appendChild(b)}
-    if(user && m.sender===user.id && m.body){
-      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎ "+t("edit_message");
-      eb.onclick=()=>editDmMessage(m);d.appendChild(eb);
-    }
     const tm=document.createElement("div");tm.className="mtime dmt";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     d.appendChild(tm);
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
-}
-async function editDmMessage(m){
-  if(!user||!m||m.sender!==user.id||!m.body||!sb)return;
-  const value=window.prompt(t("edit_message"),m.body||"");
-  if(value===null)return;
-  const body=value.trim();
-  if(!body){toast(t("f_need_body"));return}
-  if(body===String(m.body||""))return;
-  try{
-    const r=await sb.rpc("dm_message_edit",{p_id:m.id,p_body:body});
-    if(r.error)throw r.error;
-    m.body=body;renderDmMsgs();toast(t("saved"));
-  }catch(e){
-    console.error("dm_message_edit failed",e);
-    toast("Личное сообщение не изменено: в Supabase пока нет совместимой функции dm_message_edit.");
-  }
 }
 function dmUrl(path){
   if(!path||!sb)return "";
@@ -3438,7 +3349,7 @@ function renderServerList(){
     const nm=document.createElement("div");nm.className="srvname";nm.textContent=s.name||"?";
     const meta=document.createElement("div");meta.className="srvmeta";
     const cnt=Number(s.members)||0,chc=Number(s.channels)||0;
-    meta.textContent=tf("srv_member_count",{n:cnt})+" · "+tf("srv_channel_count",{n:chc})+" · "+srvRoleLabel(s.member_role);
+    meta.textContent=cnt+" "+countWord(cnt,"srv_members")+" · "+chc+" "+countWord(chc,"srv_channels")+" · "+srvRoleLabel(s.member_role);
     mid.appendChild(nm);mid.appendChild(meta);b.appendChild(mid);
     b.onclick=()=>openServer(s.id,false);
     box.appendChild(b);
@@ -3465,7 +3376,12 @@ async function openServer(id,keep){
     renderServerChannels();
     await serverLoadMsgs(true);
     startServerPoll();
-  }catch(e){toast(t("err_generic"))}
+  }catch(e){
+    srvCurrent=null;srvChannels=[];srvChannel=null;srvRows=[];srvLastId=0;
+    showServer();
+    await loadServerList();
+    toast(t("err_generic"));
+  }
 }
 function closeServer(){
   stopServerPoll();
@@ -3478,7 +3394,7 @@ function renderServerHead(){
   const cnt=Number(srvCurrent.members)||0,chc=srvChannels.length;
   $("srvicon").textContent=initialOf(srvCurrent.name);
   $("srvname").textContent=srvCurrent.name||"?";
-  $("srvmeta").textContent=tf("srv_member_count",{n:cnt})+" · "+srvRoleLabel(srvCurrent.member_role);
+  $("srvmeta").textContent=cnt+" "+countWord(cnt,"srv_members")+" · "+srvRoleLabel(srvCurrent.member_role);
   $("srv_tools").style.display=srvChannel?"":"none";
   $("srvin").style.display=srvChannel?"":"none";
   $("srvsend").style.display=srvChannel?"":"none";
@@ -3547,8 +3463,6 @@ function renderServerMsgs(){
     const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
     if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
     d.appendChild(body);
-    if(!m.deleted&&m.image){const im=document.createElement("img");im.className="mimg";im.src=m.image;im.alt="Photo";im.loading="lazy";im.onclick=()=>window.open(m.image,"_blank","noopener");d.appendChild(im)}
-    if(!m.deleted&&user&&m.author===user.id){const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎ "+t("edit_message");eb.onclick=()=>editRoomMessage("server",m);d.appendChild(eb)}
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
@@ -3557,19 +3471,13 @@ async function serverSend(){
   if(!srvCurrent||!srvChannel||!user||!sb)return;
   const inp=$("srvin");
   const txt=inp.value.trim();
-  if(!txt&&!serverPhoto)return;
-  const cid=srvChannel;let imageUrl=null;
-  if(serverPhoto){
-    try{const f=serverPhoto;const up=await uploadForumFile(f);imageUrl=up.url}
-    catch(e){toast(t("err_generic"));return}
-  }
+  if(!txt)return;
+  const cid=srvChannel;
   inp.value="";resizeEditor(inp);
   const btn=$("srvsend");btn.disabled=true;
   try{
-    const args={p_channel:cid,p_body:txt};if(imageUrl)args.p_image=imageUrl;
-    const r=await sb.rpc("server_send",args);
+    const r=await sb.rpc("server_send",{p_channel:cid,p_body:txt});
     if(r.error)throw r.error;
-    serverPhoto=null;$("srvPhotoFile").value="";$("srvPhotoPreview").style.display="none";
     await serverLoadMsgs(false);
   }catch(e){
     const msg=((e&&e.message)||"").toLowerCase();
@@ -3763,7 +3671,12 @@ async function openServerMembers(){
           try{
             const r=await sb.rpc("server_kick",{p_server:srv.id,p_target:m.user_id});
             if(r.error)throw r.error;
-            toast(t("srv_kicked"));closeFormModal();await openServerMembers();
+            toast(t("srv_kicked"));
+            if(srvCurrent&&String(srvCurrent.id)===String(srv.id)){
+              srvCurrent.members=Math.max(1,(Number(srvCurrent.members)||1)-1);
+              renderServerHead();
+            }
+            closeFormModal();await openServerMembers();
           }catch(e){toast(t("err_generic"))}
         });
         row.appendChild(kb);
@@ -3845,7 +3758,7 @@ async function regenerateInvite(){
     const r=await sb.rpc("server_regenerate_invite",{p_server:srvCurrent.id});
     if(r.error)throw r.error;
     srvCurrent.invite_code=r.data;
-    toast(t("srv_invited"));
+    toast(t("srv_regenerated"));
     closeFormModal();await openServerInvite();
   }catch(e){toast(t("err_generic"))}
 }
@@ -3903,6 +3816,8 @@ function auditDetails(d){
     let v=d[k];
     if(v==null||v==="")return;
     if(typeof v==="object")v=JSON.stringify(v);
+    else if(k==="old_role"||k==="new_role")v=roleLabel(v);
+    else if(k==="role")v=(v==="owner"||v==="admin"||v==="member")?srvRoleLabel(v):roleLabel(v);
     parts.push(auditFieldLabel(k)+": "+v);
   });
   return parts.join(" · ");
@@ -4022,11 +3937,9 @@ function renderUsers(){
         eb.onclick=()=>openBan("edit",u,b);acts.appendChild(eb);
         const ub=document.createElement("button");ub.className="mini";ub.textContent=t("unban_btn");
         ub.onclick=()=>askConfirm(t("unban_q").replace("{n}",u.nick),()=>unban(b.grp));acts.appendChild(ub);
-      }else if(mr>=3||wc>0){
+      }else{
         const bb=document.createElement("button");bb.className="mini danger";bb.textContent=t("ban_btn");
         bb.onclick=()=>openBan("new",u,null);acts.appendChild(bb);
-      }else{
-        const hint=document.createElement("span");hint.className="mail";hint.textContent=lang==="en"?"Issue a warning before banning":"Сначала выдай предупреждение, затем можно банить";acts.appendChild(hint);
       }
     }
     if(mr>=3&&lower){
@@ -4184,9 +4097,6 @@ async function boot(){
   renderUser();
   if(user)await afterAuth();else await checkBan();
 }
-TXT.ru.edit_message="Изменить";TXT.en.edit_message="Edit";
-TXT.ru.edit_post="Редактировать пост";TXT.en.edit_post="Edit post";
-TXT.ru.edit_post_title="Изменить заголовок темы";TXT.en.edit_post_title="Edit topic title";
 buildAI();
 setPrev(null);
 renderUser();
