@@ -11,7 +11,7 @@
 *{-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:radial-gradient(circle at 50% 30%,#161616,#000 70%);color:#e5e5e5;font-family:system-ui,-apple-system,sans-serif;text-align:center}
-.user{--c:#4ade80}.sponsor{--c:#facc15}.moderator{--c:#38bdf8}.admin{--c:#f59e0b}.coowner{--c:#22c55e}.owner{--c:#ef4444}
+.user{--c:#4ade80}.sponsor{--c:#facc15}.moderator{--c:#38bdf8}.admin{--c:#f59e0b}.coowner{--c:#ef4444}.owner{--c:#ef4444}
 #wall{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .glass{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 4px 18px rgba(0,0,0,.45)}
 #back,#langbtn{position:fixed;top:calc(10px + env(safe-area-inset-top));width:40px;height:40px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;color:#f5f5f5;cursor:pointer;z-index:6;font-size:.78rem;font-weight:bold}
@@ -169,8 +169,11 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .mini{border:none;border-radius:999px;padding:7px 12px;font-size:.8rem;cursor:pointer;color:#f5f5f5;background:rgba(255,255,255,.14)}
 .mini.danger{background:rgba(239,68,68,.35);color:#fecaca}
 .baninfo{color:#fca5a5;font-size:.8rem;word-break:break-word}
-#modal,#bmodal,#pmodal,#emodal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
-#modal.show,#bmodal.show,#pmodal.show,#emodal.show{opacity:1;pointer-events:auto}
+#modal,#bmodal,#pmodal,#emodal,#edmodal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
+#modal.show,#bmodal.show,#pmodal.show,#emodal.show,#edmodal.show{opacity:1;pointer-events:auto}
+#edmodal{z-index:30}
+#ed_body{min-height:90px;max-height:320px}
+.medit{opacity:.45;font-size:.66rem;white-space:nowrap}
 .mcard{margin:auto;width:100%;max-width:320px;box-sizing:border-box;padding:18px;border-radius:22px;display:flex;flex-direction:column;gap:10px;background:#141414;border:1px solid rgba(255,255,255,.2)}
 .mt{font-weight:bold;font-size:1.05rem;word-break:break-word}
 .erow{display:flex;align-items:center;gap:12px;justify-content:center}
@@ -227,6 +230,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 #dmbadge.show{display:flex}
 #umodal,#nmodal,#tmodal,#wmodal,#wlmodal{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.65);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;opacity:0;pointer-events:none;transition:opacity .25s ease}
 #umodal.show,#nmodal.show,#tmodal.show,#wmodal.show,#wlmodal.show{opacity:1;pointer-events:auto}
+.mfoot{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:2px}
 #modal{z-index:60}
 #u_ava{width:88px;height:88px;border:2px solid var(--c);margin:0 auto}
 .nlist{display:flex;flex-direction:column;gap:6px;max-height:48vh;overflow-y:auto;width:100%;text-align:left}
@@ -611,6 +615,18 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   </div>
 </div></div>
 
+<div id="edmodal"><div class="mcard">
+  <div id="ed_title" class="mt"></div>
+  <input id="ed_titlein" type="text" maxlength="120" class="glass" data-i18n-ph="f_thread_title" autocomplete="off">
+  <div id="ed_tools" class="etools" data-for="ed_body"></div>
+  <textarea id="ed_body" maxlength="12000" class="glass" data-i18n-ph="msg_ph"></textarea>
+  <div id="ed_err" class="err"></div>
+  <div class="mbtns">
+    <button id="ed_no" class="btn glass" data-i18n="no"></button>
+    <button id="ed_yes" class="btn main" data-i18n="save"></button>
+  </div>
+</div></div>
+
 <div id="formmodal"><div class="mcard">
   <div id="fm_title" class="mt"></div>
   <div id="fm_body"></div>
@@ -861,6 +877,8 @@ Object.assign(TXT.ru,{
   ed_bold:"Жирный",ed_italic:"Курсив",ed_strike:"Зачёркнутый",ed_code:"Код",ed_quote:"Цитата",
   ed_spoiler:"Спойлер",ed_link:"Ссылка",ed_link_url:"Адрес ссылки",ed_link_text:"Текст ссылки",
   ed_hint:"**жирный**, *курсив*, `код`, > цитата, ||спойлер||",
+  edit:"Редактировать",edit_msg:"Редактировать сообщение",edit_thread:"Редактировать тему",edited:"изменено",
+  edit_empty:"Текст не может быть пустым",edit_long:"Текст слишком длинный",err_coowner_exists:"Совладелец уже есть. Сначала снимите роль с текущего.",
   audit_title:"Журнал действий",audit_refresh:"Обновить",audit_empty:"Записей пока нет",audit_loading:"Загружаю...",
   audit_actor:"Кто",audit_action:"Действие",audit_target:"Объект",audit_system:"система",
   audit_old:"Было",audit_new:"Стало",audit_reason:"Причина",audit_until:"До",audit_role:"Роль",
@@ -921,6 +939,8 @@ Object.assign(TXT.en,{
   ed_bold:"Bold",ed_italic:"Italic",ed_strike:"Strikethrough",ed_code:"Code",ed_quote:"Quote",
   ed_spoiler:"Spoiler",ed_link:"Link",ed_link_url:"Link URL",ed_link_text:"Link text",
   ed_hint:"**bold**, *italic*, `code`, > quote, ||spoiler||",
+  edit:"Edit",edit_msg:"Edit message",edit_thread:"Edit topic",edited:"edited",
+  edit_empty:"The text cannot be empty",edit_long:"The text is too long",err_coowner_exists:"A co-owner already exists. Remove the current one first.",
   audit_title:"Activity log",audit_refresh:"Refresh",audit_empty:"No entries yet",audit_loading:"Loading...",
   audit_actor:"Who",audit_action:"Action",audit_target:"Target",audit_system:"system",
   audit_old:"Was",audit_new:"Now",audit_reason:"Reason",audit_until:"Until",audit_role:"Role",
@@ -986,10 +1006,10 @@ let eAva,eWall,ePrevWall,pbusy=false;
 let chatRooms=[],chatRoom=null,chatTimer=null,chatSig="",chatBusy=false,chatStick=true;
 let chatRows=[],chatLastId=0,chatMap=new Map(),chatReply=null,chatImg=null,chatPollTick=0;
 let forumThreadId=null,forumCache=[],forumFiles=[],forumReplyFiles=[],fileTarget="thread";
-let notif=[],notifTimer=null,uCtx=null,avaTarget=null,nOpen=false;
-let dmContacts=[],dmWith=null,dmRows=[],dmLastId=0,dmPollTimer=null,dmBadgeTimer=null,dmUnread=0,dmPending=[];
+let notif=[],notifTimer=null,uCtx=null,avaTarget=null,nOpen=false,editCtx=null;
+let dmContacts=[],dmWith=null,dmRows=[],dmLastId=0,dmPollTimer=null,dmBadgeTimer=null,dmUnread=0,dmPending=[],dmTick=0;
 let warnCtx=null,warnDur="10080",warnByUser={};
-let dmTab="dm",groupList=[],groupWith=null,groupRows=[],groupLastId=0,groupTimer=null,groupBusy=false;
+let dmTab="dm",groupList=[],groupWith=null,groupRows=[],groupLastId=0,groupTimer=null,groupBusy=false,groupTick=0;
 let srvList=[],srvCurrent=null,srvChannels=[],srvChannel=null,srvRows=[],srvLastId=0,srvTimer=null,srvBusy=false,srvTick=0;
 let auditOpen=false,edSel={};
 
@@ -1005,6 +1025,7 @@ function countWord(n,base){
   return t(base+"_many");
 }
 const rk=r=>RANK[r]||0;
+const ownerLike=r=>r==="owner"||r==="coowner";
 function roleLabel(r){r=r||"user";if(r==="coowner")return lang==="en"?"CO-OWNER":"СОВЛАДЕЛЕЦ";return String(r).toUpperCase()}
 const myRank=()=>user?rk(user.role):0;
 const isStaff=()=>myRank()>=2;
@@ -1266,9 +1287,84 @@ function setAva(el,src,spin){
   }else{el.innerHTML=USER_ICON}
 }
 function setRoleClass(el,role){ROLEC.forEach(c=>el.classList.remove(c));el.classList.add(role)}
+function editedTag(iso){
+  if(!iso)return null;
+  const s=document.createElement("span");
+  s.className="medit";s.textContent="· "+t("edited");
+  try{s.title=new Date(iso).toLocaleString(locale())}catch(e){}
+  return s;
+}
+function openMsgEdit(kind,id,body,title){
+  if(!user||!sb)return;
+  editCtx={kind:kind,id:id};
+  const isThread=kind==="thread";
+  $("ed_title").textContent=t(isThread?"edit_thread":"edit_msg");
+  $("ed_titlein").style.display=isThread?"":"none";
+  $("ed_titlein").value=isThread?(title||""):"";
+  $("ed_body").value=body||"";
+  $("ed_body").maxLength={chat:2000,dm:4000,thread:12000,reply:8000,group:4000,server:4000}[kind]||12000;
+  $("ed_body").placeholder=isThread?t("f_body_ph"):t("msg_ph");
+  $("ed_err").textContent="";
+  $("ed_yes").disabled=false;
+  resizeEditor($("ed_body"));
+  buildEditorTools();
+  $("edmodal").classList.add("show");
+  setTimeout(()=>{try{(isThread?$("ed_titlein"):$("ed_body")).focus()}catch(e){}},150);
+}
+function closeMsgEdit(){$("edmodal").classList.remove("show");editCtx=null}
+$("ed_no").onclick=closeMsgEdit;
+$("edmodal").onclick=e=>{if(e.target===$("edmodal"))closeMsgEdit()};
+$("ed_yes").onclick=async()=>{
+  if(!editCtx||!sb)return;
+  const kind=editCtx.kind,id=editCtx.id;
+  const body=$("ed_body").value.trim();
+  const title=$("ed_titlein").value.trim();
+  if(kind==="thread"&&(title.length<3||title.length>120)){$("ed_err").textContent=t("f_need_title");return}
+  if(kind!=="chat"&&kind!=="dm"&&!body){$("ed_err").textContent=t("edit_empty");return}
+  $("ed_yes").disabled=true;
+  try{
+    let r;
+    if(kind==="chat")r=await sb.rpc("chat_edit",{p_id:id,p_body:body});
+    else if(kind==="dm")r=await sb.rpc("dm_edit",{p_id:id,p_body:body});
+    else if(kind==="thread"||kind==="reply")r=await sb.rpc("forum_edit",{p_kind:kind,p_id:id,p_title:title,p_body:body});
+    else if(kind==="group")r=await sb.rpc("group_message_edit",{p_id:id,p_body:body});
+    else if(kind==="server")r=await sb.rpc("server_message_edit",{p_id:id,p_body:body});
+    else return;
+    if(r.error)throw r.error;
+    const now=new Date().toISOString();
+    if(kind==="chat"){
+      const m=chatRows.find(x=>String(x.id)===String(id));
+      if(m){m.body=body;m.edited_at=now;addOrUpdate(m)}
+    }else if(kind==="dm"){
+      const m=dmRows.find(x=>String(x.id)===String(id));
+      if(m){m.body=body;m.edited_at=now;renderDmMsgs()}
+    }else if(kind==="group"){
+      const m=groupRows.find(x=>String(x.id)===String(id));
+      if(m){m.body=body;m.edited_at=now;renderGroupMsgs()}
+    }else if(kind==="server"){
+      const m=srvRows.find(x=>String(x.id)===String(id));
+      if(m){m.body=body;m.edited_at=now;renderServerMsgs()}
+    }else{
+      forumCache=[];
+    }
+    closeMsgEdit();
+    toast(t("saved"));
+    if((kind==="thread"||kind==="reply")&&forumThreadId)await openThread(forumThreadId,true);
+  }catch(e){
+    const msg=((e&&e.message)||"").toLowerCase();
+    $("ed_err").textContent=t(
+      msg.indexOf("coowner")>-1?"err_coowner_exists":
+      msg.indexOf("bad title")>-1?"f_need_title":
+      msg.indexOf("long")>-1?"edit_long":
+      (msg.indexOf("empty")>-1||msg.indexOf("bad body")>-1||msg.indexOf("bad message")>-1)?"edit_empty":
+      "err_generic"
+    );
+    $("ed_yes").disabled=false;
+  }
+};
 function renderUser(){
   const role=user?user.role:"user";
-  const spin=role==="owner";
+  const spin=ownerLike(role);
   setAva($("me"),user&&user.avatar,spin);
   setAva($("pava"),user&&user.avatar,spin);
   setRoleClass($("me"),role);
@@ -1359,7 +1455,7 @@ function openEdit(){
   eAva=undefined;eWall=wallId;ePrevWall=wallId;
   $("enick").value=user.nick;
   $("ebio").value=user.bio||"";
-  setAva($("eava"),user.avatar,user.role==="owner");
+  setAva($("eava"),user.avatar,ownerLike(user.role));
   $("eerr").textContent="";
   buildWallGrid();
   $("emodal").classList.add("show");
@@ -1790,7 +1886,7 @@ async function chatSyncFlags(){
     if(room!==chatRoom)return;
     (r.data||[]).forEach(m=>{
       const old=chatRows.find(x=>String(x.id)===String(m.id));
-      if(old&&(!!old.deleted!==!!m.deleted||old.body!==m.body))addOrUpdate(m);
+      if(old&&(!!old.deleted!==!!m.deleted||old.body!==m.body||old.edited_at!==m.edited_at))addOrUpdate(m);
     });
   }catch(e){}
 }
@@ -1848,10 +1944,16 @@ function msgNode(m){
   const tm=document.createElement("span");tm.className="mtime";
   tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
   head.appendChild(tm);
+  const et=editedTag(m.edited_at);if(et)head.appendChild(et);
   if(!m.deleted&&user&&!m.pending){
     const rb=document.createElement("button");rb.type="button";rb.className="mact";rb.textContent="↩";rb.title=t("f_reply_btn");
     rb.onclick=()=>setReplying(m);
     head.appendChild(rb);
+    if(m.user_id===user.id){
+      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎";eb.title=t("edit");
+      eb.onclick=()=>openMsgEdit("chat",m.id,m.body);
+      head.appendChild(eb);
+    }
     if(m.user_id===user.id||myRank()>=2){
       const d=document.createElement("button");d.type="button";d.className="mact";d.textContent="✕";
       d.onclick=()=>askConfirm(t("msg_del_q"),()=>chatDelete(m.id));
@@ -2010,7 +2112,7 @@ async function openProfile(id){
     const p=(r.data||[])[0];
     if(!p){toast(t("err_generic"));return}
     uCtx=p;
-    setAva($("u_ava"),p.avatar,p.role==="owner");
+    setAva($("u_ava"),p.avatar,ownerLike(p.role));
     setRoleClass($("u_ava"),p.role||"user");
     $("u_nick").textContent=p.nick||"?";
     $("u_badge").textContent=roleLabel(p.role||"user");
@@ -2048,7 +2150,7 @@ $("file4").onchange=async e=>{
     const r=await sb.rpc("admin_set_avatar",{p_target:avaTarget,p_avatar:data});
     if(r.error)throw r.error;
     toast(t("ava_changed"));
-    if(uCtx&&uCtx.id===avaTarget){uCtx.avatar=data;setAva($("u_ava"),data,uCtx.role==="owner")}
+    if(uCtx&&uCtx.id===avaTarget){uCtx.avatar=data;setAva($("u_ava"),data,ownerLike(uCtx.role))}
     if(user&&user.id===avaTarget){user.avatar=data;renderUser()}
     if(cur==="admin")loadUsers();
   }catch(err){toast(t("err_generic"))}
@@ -2255,6 +2357,12 @@ function renderThread(th,rows){
   au.onclick=()=>{if(th.author)openProfile(th.author)};
   meta.appendChild(au);
   meta.appendChild(document.createTextNode(" · "+new Date(th.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"})));
+  const et=editedTag(th.edited_at);if(et)meta.appendChild(et);
+  if(user&&th.author===user.id){
+    const e=document.createElement("button");e.type="button";e.className="rdel";e.textContent="✎";e.title=t("edit_thread");
+    e.onclick=()=>openMsgEdit("thread",th.id,th.body,th.title);
+    meta.appendChild(e);
+  }
   if(user&&(th.author===user.id||myRank()>=2)){
     const d=document.createElement("button");d.type="button";d.className="rdel";d.textContent="✕";d.title=t("f_del_thread");
     d.onclick=()=>askConfirm(t("f_del_thread"),()=>delForum("thread",th.id));
@@ -2276,6 +2384,12 @@ function renderThread(th,rows){
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(rp.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
     hd.appendChild(nk);hd.appendChild(tm);
+    const et=editedTag(rp.edited_at);if(et)hd.appendChild(et);
+    if(user&&rp.author===user.id){
+      const e=document.createElement("button");e.type="button";e.className="rdel";e.textContent="✎";e.title=t("edit");
+      e.onclick=()=>openMsgEdit("reply",rp.id,rp.body);
+      hd.appendChild(e);
+    }
     if(user&&(rp.author===user.id||myRank()>=2)){
       const d=document.createElement("button");d.type="button";d.className="rdel";d.textContent="✕";
       d.onclick=()=>askConfirm(t("f_del_reply"),()=>delForum("reply",rp.id));
@@ -2793,7 +2907,7 @@ async function dmInit(){
 function openDm(c){
   dmTab="dm";groupWith=null;stopGroupPoll();
   dmWith={id:c.id,nick:c.nick,role:c.role,avatar:c.avatar,rel:c.rel};
-  dmRows=[];dmLastId=0;dmPending=[];
+  dmRows=[];dmLastId=0;dmPending=[];dmTick=0;
   dmPendingRender();
   dmInit();
 }
@@ -2865,7 +2979,7 @@ function renderGroupList(){
 async function openGroup(g){
   dmTab="groups";
   groupWith=Object.assign({},g);
-  groupRows=[];groupLastId=0;
+  groupRows=[];groupLastId=0;groupTick=0;
   dmShow();
   renderGroupHead();
   await groupLoadMsgs();
@@ -2889,17 +3003,23 @@ function renderGroupHead(){
   $("grouprel").textContent=cnt+" "+countWord(cnt,"group_members")+" · "+(groupWith.member_role==="owner"?t("group_owner"):t("group_member"));
   $("groupava").textContent=initialOf(groupWith.name);
 }
-async function groupLoadMsgs(){
+async function groupLoadMsgs(full){
   if(!groupWith||!sb)return;
   const gid=groupWith.id;
   groupBusy=true;
   try{
-    const r=await sb.rpc("group_messages",{p_group:gid,p_after:groupLastId,p_limit:100});
+    const r=await sb.rpc("group_messages",{p_group:gid,p_after:full?0:groupLastId,p_limit:100});
     if(r.error)throw r.error;
     if(!groupWith||groupWith.id!==gid)return;
     const rows=r.data||[];
     if(!groupLastId)groupRows=rows.slice();
-    else rows.forEach(m=>{if(!groupRows.some(x=>String(x.id)===String(m.id)))groupRows.push(m)});
+    else if(full){
+      rows.forEach(m=>{
+        const i=groupRows.findIndex(x=>String(x.id)===String(m.id));
+        if(i>=0)groupRows[i]=m;else groupRows.push(m);
+      });
+      groupRows.sort((a,b)=>Number(a.id)-Number(b.id));
+    }else rows.forEach(m=>{if(!groupRows.some(x=>String(x.id)===String(m.id)))groupRows.push(m)});
     if(groupRows.length)groupLastId=Math.max(...groupRows.map(m=>Number(m.id)));
     renderGroupMsgs();
   }catch(e){}
@@ -2923,6 +3043,12 @@ function renderGroupMsgs(){
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     head.appendChild(tm);
+    const et=editedTag(m.edited_at);if(et)head.appendChild(et);
+    if(!m.deleted&&user&&m.author===user.id){
+      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎";eb.title=t("edit");
+      eb.onclick=()=>openMsgEdit("group",m.id,m.body);
+      head.appendChild(eb);
+    }
     if(!m.deleted&&user&&(m.author===user.id||groupWith.owner===user.id||myRank()>=2)){
       const db=document.createElement("button");db.type="button";db.className="mact";db.textContent="✕";
       db.onclick=()=>askConfirm(t("msg_del_q"),()=>groupDelete(m.id));
@@ -2976,7 +3102,8 @@ function startGroupPoll(){
   stopGroupPoll();
   groupTimer=setInterval(()=>{
     if(cur!=="dm"||dmTab!=="groups"||document.hidden||!groupWith)return;
-    groupLoadMsgs().then(()=>{if(groupWith)groupRead()});
+    groupTick++;
+    groupLoadMsgs(groupTick%10===0).then(()=>{if(groupWith)groupRead()});
   },2500);
 }
 $("groupback").onclick=closeGroup;
@@ -3140,20 +3267,27 @@ function startDmPoll(){
   stopDmPoll();
   dmPollTimer=setInterval(()=>{
     if(cur!=="dm"||document.hidden||!dmWith)return;
-    dmLoadMsgs().then(()=>{if(dmWith)dmRead()});
+    dmTick++;
+    dmLoadMsgs(dmTick%5===0).then(()=>{if(dmWith)dmRead()});
   },2500);
 }
 function stopDmPoll(){if(dmPollTimer){clearInterval(dmPollTimer);dmPollTimer=null}}
-async function dmLoadMsgs(){
+async function dmLoadMsgs(full){
   if(!dmWith||!sb)return;
   const withId=dmWith.id;
   try{
-    const r=await sb.rpc("dm_list",{p_with:withId,p_after:dmLastId});
+    const r=await sb.rpc("dm_list",{p_with:withId,p_after:full?0:dmLastId});
     if(r.error)throw r.error;
     if(!dmWith||dmWith.id!==withId)return;
     const rows=r.data||[];
     if(!dmLastId){
       dmRows=rows.slice().sort((a,b)=>Number(a.id)-Number(b.id));
+    }else if(full){
+      rows.forEach(m=>{
+        const i=dmRows.findIndex(x=>String(x.id)===String(m.id));
+        if(i>=0)dmRows[i]=m;else dmRows.push(m);
+      });
+      dmRows.sort((a,b)=>Number(a.id)-Number(b.id));
     }else{
       rows.forEach(m=>{if(!dmRows.some(x=>String(x.id)===String(m.id)))dmRows.push(m)});
     }
@@ -3191,9 +3325,17 @@ function renderDmMsgs(){
       }
     }
     if(m.body){const b=document.createElement("div");b.className="mb rich";setRich(b,m.body);d.appendChild(b)}
+    const foot=document.createElement("div");foot.className="mfoot";
+    const et=editedTag(m.edited_at);if(et)foot.appendChild(et);
     const tm=document.createElement("div");tm.className="mtime dmt";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
-    d.appendChild(tm);
+    foot.appendChild(tm);
+    if(mine){
+      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎";eb.title=t("edit");
+      eb.onclick=()=>openMsgEdit("dm",m.id,m.body);
+      foot.appendChild(eb);
+    }
+    d.appendChild(foot);
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
@@ -3422,15 +3564,20 @@ async function switchServerChannel(id){
 async function serverLoadMsgs(full){
   if(!srvCurrent||!srvChannel||!sb)return;
   const sid=srvCurrent.id,cid=srvChannel;
-  if(full){srvRows=[];srvLastId=0}
   srvBusy=true;
   try{
-    const r=await sb.rpc("server_messages",{p_channel:cid,p_after:srvLastId,p_limit:100});
+    const r=await sb.rpc("server_messages",{p_channel:cid,p_after:full?0:srvLastId,p_limit:100});
     if(r.error)throw r.error;
     if(!srvCurrent||String(srvCurrent.id)!==String(sid)||String(srvChannel)!==String(cid))return;
     const rows=r.data||[];
-    if(full)srvRows=rows.slice();
-    else rows.forEach(m=>{if(!srvRows.some(x=>String(x.id)===String(m.id)))srvRows.push(m)});
+    if(!srvLastId)srvRows=rows.slice();
+    else if(full){
+      rows.forEach(m=>{
+        const i=srvRows.findIndex(x=>String(x.id)===String(m.id));
+        if(i>=0)srvRows[i]=m;else srvRows.push(m);
+      });
+      srvRows.sort((a,b)=>Number(a.id)-Number(b.id));
+    }else rows.forEach(m=>{if(!srvRows.some(x=>String(x.id)===String(m.id)))srvRows.push(m)});
     if(srvRows.length)srvLastId=Math.max(...srvRows.map(m=>Number(m.id)));
     renderServerMsgs();
   }catch(e){}
@@ -3454,6 +3601,12 @@ function renderServerMsgs(){
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     head.appendChild(tm);
+    const et=editedTag(m.edited_at);if(et)head.appendChild(et);
+    if(!m.deleted&&user&&m.author===user.id){
+      const eb=document.createElement("button");eb.type="button";eb.className="mact";eb.textContent="✎";eb.title=t("edit");
+      eb.onclick=()=>openMsgEdit("server",m.id,m.body);
+      head.appendChild(eb);
+    }
     if(!m.deleted&&user&&(m.author===user.id||srvCurrent.member_role==="owner"||srvCurrent.member_role==="admin"||myRank()>=2)){
       const db=document.createElement("button");db.type="button";db.className="mact";db.textContent="✕";
       db.onclick=()=>askConfirm(t("msg_del_q"),()=>serverDeleteMsg(m.id));
@@ -3702,6 +3855,7 @@ function openServerChannelCreate(){
         const cr=await sb.rpc("server_channels",{p_server:srvCurrent.id});
         srvChannels=cr.error?srvChannels:(cr.data||[]);
         if(r.data){srvChannel=Number(r.data)}
+        srvRows=[];srvLastId=0;srvTick=0;
         renderServerHead();renderServerChannels();
         await serverLoadMsgs(true);
       }catch(e){err.textContent=t("err_generic");btn.disabled=false}
@@ -3893,6 +4047,11 @@ async function loadUsers(){
     renderUsers();
   }catch(e){$("utotal").textContent=t("err_generic")}
 }
+function assignableRoles(){
+  let list=ROLES.filter(r=>rk(r)<myRank());
+  if(myRank()>=5&&allUsers.some(x=>x.role==="coowner"))list=list.filter(r=>r!=="coowner");
+  return list;
+}
 function renderUsers(){
   const q=$("usearch").value.trim().toLowerCase();
   const list=$("ulist");list.textContent="";
@@ -3929,7 +4088,7 @@ function renderUsers(){
       if(mr>=3){
         const rb=document.createElement("button");rb.className="mini";
         rb.textContent=roleLabel(u.role)+" ▾";
-        rb.onclick=()=>openSheet(t("pick_role"),ROLES.filter(r=>rk(r)<mr).map(r=>({v:r,label:roleLabel(r)})),u.role,v=>{if(v!==u.role)setRole(u.id,v)});
+        rb.onclick=()=>openSheet(t("pick_role"),assignableRoles().map(r=>({v:r,label:roleLabel(r)})),u.role,v=>{if(v!==u.role)setRole(u.id,v)});
         acts.appendChild(rb);
       }
       if(b){
@@ -3960,7 +4119,11 @@ async function rpcDone(name,args){
     const r=await sb.rpc(name,args);
     if(r.error)throw r.error;
     toast(t("saved"));loadUsers();
-  }catch(e){toast(t("err_generic"));loadUsers()}
+  }catch(e){
+    const msg=((e&&e.message)||"").toLowerCase();
+    toast(t(msg.indexOf("coowner")>-1?"err_coowner_exists":"err_generic"));
+    loadUsers();
+  }
 }
 const setRole=(id,role)=>rpcDone("admin_set_role",{target:id,new_role:role});
 const delUser=id=>rpcDone("admin_delete_user",{target:id});
@@ -4000,7 +4163,7 @@ $("bmodal").onclick=e=>{if(e.target===$("bmodal"))$("bno").onclick()};
 /* ---------- шторка (как в iOS/MIUI): свайп вниз от верхнего края ---------- */
 function updateShade(){
   const u=user;
-  setAva($("sh_ava"),u&&u.avatar,u&&u.role==="owner");
+  setAva($("sh_ava"),u&&u.avatar,u&&ownerLike(u.role));
   setRoleClass($("sh_ava"),u?u.role:"user");
   $("sh_nick").textContent=u?u.nick:t("s_guest");
   $("sh_role").textContent=u?roleLabel(u.role):"";
