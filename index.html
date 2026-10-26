@@ -355,6 +355,18 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .pickrow .pname{font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pickrow .mini{flex:none}
 
+/* ---------- «Богач», аватарки групп/серверов, медиа ---------- */
+.richname{position:relative;display:inline-block;overflow:hidden;vertical-align:bottom;max-width:100%;padding:0 4px;border-radius:6px;background:linear-gradient(90deg,#b45309,#fde68a,#f59e0b,#fde68a,#b45309);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-weight:800;animation:richshine 3s linear infinite;text-shadow:none}
+.richname .rnm{position:relative;z-index:1}
+.richname .rmoney{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.richname .rmoney i{position:absolute;top:-11px;font-style:normal;font-size:9px;line-height:1;color:#fbbf24;-webkit-text-fill-color:#fbbf24;font-weight:900;animation:richfall linear infinite;text-shadow:0 0 5px rgba(250,204,21,.8)}
+@keyframes richfall{0%{transform:translateY(-9px) rotate(0);opacity:0}20%{opacity:1}100%{transform:translateY(26px) rotate(200deg);opacity:0}}
+@keyframes richshine{to{background-position:250% 0}}
+.gicon img,.srvicon img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
+#groupatt,#srvatt{flex:none;padding:9px 11px;display:flex;align-items:center;justify-content:center}
+#groupatt svg,#srvatt svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wopt{position:relative;overflow:hidden}
+.wopt .wdot{position:absolute;left:4px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--wd,#888);box-shadow:0 0 6px var(--wd,#888)}
 @media(max-width:380px){
   #dock button{font-size:.58rem}
   #dock button>svg{width:20px;height:20px}
@@ -465,8 +477,10 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
         <button id="groupmore" class="mini" aria-label="Menu">⋯</button>
       </div>
       <div id="groupmsgs" class="groupmsgs"></div>
+      <div id="group_files" class="fprev"></div>
       <div id="group_tools" class="etools" data-for="groupin"></div>
       <div class="sendrow">
+        <button id="groupatt" class="btn glass sm" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M20 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L9.5 18a2 2 0 0 1-3-3l8-8"/></svg></button>
         <textarea id="groupin" rows="1" maxlength="4000" class="glass" data-i18n-ph="group_msg_ph" autocomplete="off"></textarea>
         <button id="groupsendbtn" class="btn main sm">➤</button>
       </div>
@@ -502,8 +516,10 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       </div>
       <div id="srvchannels" class="srvchannels"></div>
       <div id="srvmsgs" class="msgs"></div>
+      <div id="srv_files" class="fprev"></div>
       <div id="srv_tools" class="etools" data-for="srvin"></div>
       <div class="sendrow">
+        <button id="srvatt" class="btn glass sm" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M20 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L9.5 18a2 2 0 0 1-3-3l8-8"/></svg></button>
         <textarea id="srvin" rows="1" maxlength="4000" class="glass" data-i18n-ph="srv_msg_ph" autocomplete="off"></textarea>
         <button id="srvsend" class="btn main sm">➤</button>
       </div>
@@ -595,6 +611,9 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <textarea id="ebio" maxlength="160" class="glass" data-i18n-ph="bio_ph"></textarea>
   <div class="lab" data-i18n="wallpaper"></div>
   <div id="wgrid" class="wgrid"></div>
+  <button id="ewallup" class="btn glass sm" data-i18n="wall_upload"></button>
+  <label id="erichw" class="chk" style="display:none"><input id="erich" type="checkbox"><span data-i18n="rich_mode"></span></label>
+  <div id="erichhint" class="formhint" style="display:none" data-i18n="rich_hint"></div>
   <button id="epass" class="btn glass sm" data-i18n="change_pass"></button>
   <div id="eerr" class="err"></div>
   <div class="mbtns">
@@ -730,6 +749,11 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 <input id="file4" type="file" accept="image/*" hidden>
 <input id="file5" type="file" multiple hidden>
 <input id="file6" type="file" multiple hidden>
+<input id="file7" type="file" multiple hidden>
+<input id="file8" type="file" multiple hidden>
+<input id="file9" type="file" accept="image/*" hidden>
+<input id="file10" type="file" accept="image/*" hidden>
+<input id="file11" type="file" accept="image/*" hidden>
 
 <div id="banscreen"><div class="bcard">
   <h2 data-i18n="banned_title"></h2>
@@ -956,8 +980,36 @@ Object.assign(TXT.en,{
   a_server_message_delete:"Server message deleted",
   n_group_invite:"{nick} invited you to group {name}",n_server_invite:"{nick} invited you to server {name}"
 });
+Object.assign(TXT.ru,{
+  w_ocean:"Океан",w_galaxy:"Галактика",w_sakura:"Сакура",w_rain:"Дождь",
+  w_fireworks:"Фейерверк",w_money:"Деньги",w_custom:"Свои обои",
+  wall_upload:"Загрузить свои обои",wall_uploading:"Загружаю обои...",wall_upload_fail:"Не удалось загрузить обои",
+  wall_need_photo:"Сначала загрузи свои обои",wall_saved:"Обои обновлены",
+  rich_mode:"Режим «Богач»",rich_hint:"Золотое имя с падающими деньгами. Доступно со статуса «Спонсор».",
+  rich_only:"Доступно со статуса «Спонсор»",
+  group_avatar:"Сменить аватарку группы",avatar_change:"Сменить аватарку",avatar_remove:"Убрать аватарку",avatar_saved:"Аватарка обновлена",
+  srv_avatar:"Аватарка сервера",media_wait_upload:"Подожди, файлы ещё загружаются",
+  media_upload_fail:"Не удалось загрузить файл"
+});
+Object.assign(TXT.en,{
+  w_ocean:"Ocean",w_galaxy:"Galaxy",w_sakura:"Sakura",w_rain:"Rain",
+  w_fireworks:"Fireworks",w_money:"Money",w_custom:"My wallpaper",
+  wall_upload:"Upload my wallpaper",wall_uploading:"Uploading wallpaper...",wall_upload_fail:"Could not upload the wallpaper",
+  wall_need_photo:"Upload your wallpaper first",wall_saved:"Wallpaper updated",
+  rich_mode:"Rich mode",rich_hint:"A golden name with falling money. Available from Sponsor status.",
+  rich_only:"Available from Sponsor status",
+  group_avatar:"Change group avatar",avatar_change:"Change avatar",avatar_remove:"Remove avatar",avatar_saved:"Avatar updated",
+  srv_avatar:"Server avatar",media_wait_upload:"Wait, files are still uploading",
+  media_upload_fail:"Could not upload the file"
+});
 const DURS=[["10","d10"],["60","d60"],["1440","d1440"],["10080","d10080"],["43200","d43200"],["perm","dperm"],["custom","dcustom"]];
-const WALLS=[["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],["neon","w_neon",false],["embers","w_embers",false],["rich","w_rich",false]];
+const WALLS=[
+  ["none","w_none",true],["matrix","w_matrix",true],["stars","w_stars",true],["aurora","w_aurora",true],
+  ["ocean","w_ocean",true],["galaxy","w_galaxy",true],["sakura","w_sakura",true],["rain","w_rain",true],
+  ["neon","w_neon",false],["embers","w_embers",false],["fireworks","w_fireworks",false],
+  ["rich","w_rich",false],["money","w_money",false],["custom","w_custom",true]
+];
+const WALL_DOT={none:"#333",matrix:"#22c55e",stars:"#e5e5e5",aurora:"#38bdf8",ocean:"#0284c7",galaxy:"#8b5cf6",sakura:"#f472b6",rain:"#64748b",neon:"#a855f7",embers:"#fb923c",fireworks:"#facc15",rich:"#22c55e",money:"#f59e0b",custom:"#f97316"};
 const RANK={user:0,sponsor:1,moderator:2,admin:3,coowner:4,owner:5};
 const ROLES=["user","sponsor","moderator","admin","coowner"];
 const ROLEC=["user","sponsor","moderator","admin","coowner","owner"];
@@ -1001,7 +1053,7 @@ let user=null,pending=null,mode="reg",cur="home";
 let allUsers=[],bansByUser={};
 let confirmCb=null,banCtx=null,banDur="1440",toastTimer=null;
 let errKey=null,errRaw="";
-let wallId="none",raf=null,wstate=null,ww=0,wh=0;
+let wallId="none",raf=null,wstate=null,ww=0,wh=0,wallPath=null,wallImage=null,wallImagePath="";
 let eAva,eWall,ePrevWall,pbusy=false;
 let chatRooms=[],chatRoom=null,chatTimer=null,chatSig="",chatBusy=false,chatStick=true;
 let chatRows=[],chatLastId=0,chatMap=new Map(),chatReply=null,chatImg=null,chatPollTick=0;
@@ -1012,6 +1064,8 @@ let warnCtx=null,warnDur="10080",warnByUser={};
 let dmTab="dm",groupList=[],groupWith=null,groupRows=[],groupLastId=0,groupTimer=null,groupBusy=false,groupTick=0;
 let srvList=[],srvCurrent=null,srvChannels=[],srvChannel=null,srvRows=[],srvLastId=0,srvTimer=null,srvBusy=false,srvTick=0;
 let auditOpen=false,edSel={};
+let groupPending=[],srvPending=[],groupAvaTarget=null,srvAvaTarget=null,srvAvaDraft=undefined,srvAvaPreview=null;
+let richIds=new Set(),richTimer=null;
 
 const t=k=>TXT[lang][k];
 const tf=(k,vars)=>{let s=t(k)||k;Object.keys(vars||{}).forEach(a=>{s=s.split("{"+a+"}").join(vars[a])});return s};
@@ -1124,13 +1178,165 @@ DRAW.rich=(c,w,h,tm,s)=>{
   vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(1,"rgba(0,0,0,.62)");
   c.fillStyle=vg;c.fillRect(0,0,w,h);
 };
+INIT.ocean=()=>({b:Array.from({length:48},()=>({x:Math.random()*ww,y:Math.random()*wh,r:Math.random()*2.4+.6,v:Math.random()*.55+.18,ph:Math.random()*6.28}))});
+DRAW.ocean=(c,w,h,tm,s)=>{
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#021b2f");bg.addColorStop(.58,"#03324f");bg.addColorStop(1,"#010a12");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  for(let k=0;k<3;k++){
+    c.beginPath();
+    const base=h*(.62+k*.09);
+    for(let x=0;x<=w;x+=12){
+      const y=base+Math.sin(x/135+tm/1500+k*1.7)*11+Math.sin(x/47+tm/900+k)*3;
+      if(x===0)c.moveTo(x,y);else c.lineTo(x,y);
+    }
+    c.strokeStyle="rgba(56,189,248,"+(.10+k*.055)+")";c.lineWidth=1.4;c.stroke();
+  }
+  for(let k=0;k<3;k++){
+    const x=w*(.18+k*.32+.03*Math.sin(tm/6000+k));
+    const rg=c.createRadialGradient(x,0,0,x,h*.7,h*.7);
+    rg.addColorStop(0,"rgba(125,211,252,.055)");rg.addColorStop(1,"rgba(0,0,0,0)");
+    c.fillStyle=rg;c.fillRect(0,0,w,h);
+  }
+  s.b.forEach(p=>{
+    p.y-=p.v;p.x+=Math.sin(tm/1700+p.ph)*.22;
+    if(p.y<-6){p.y=h+6;p.x=Math.random()*w}
+    c.fillStyle="rgba(186,230,253,"+(.10+p.r/8)+")";
+    c.beginPath();c.arc(p.x,p.y,p.r,0,6.3);c.fill();
+  });
+};
+INIT.galaxy=()=>({st:Array.from({length:170},()=>({a:Math.random()*6.28,r:Math.pow(Math.random(),.65),d:Math.random()*1.4+.35,z:Math.random(),tw:Math.random()*6.28}))});
+DRAW.galaxy=(c,w,h,tm,s)=>{
+  const cx=w*.5,cy=h*.45;
+  const bg=c.createRadialGradient(cx,cy,0,cx,cy,Math.max(w,h)*.8);
+  bg.addColorStop(0,"#241c52");bg.addColorStop(.42,"#0c0824");bg.addColorStop(1,"#010104");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  [[.38,.42,"168,85,247"],[.62,.55,"56,189,248"],[.48,.3,"244,114,182"]].forEach((g,i)=>{
+    const x=w*(g[0]+.03*Math.sin(tm/9000+i)),y=h*(g[1]+.03*Math.cos(tm/11000+i));
+    const rg=c.createRadialGradient(x,y,0,x,y,Math.max(w,h)*.33);
+    rg.addColorStop(0,"rgba("+g[2]+",.11)");rg.addColorStop(1,"rgba(0,0,0,0)");
+    c.fillStyle=rg;c.fillRect(0,0,w,h);
+  });
+  s.st.forEach(st=>{
+    const ang=st.a+tm/(21000*st.d);
+    const rad=Math.min(w,h)*.62*st.r;
+    const x=cx+Math.cos(ang)*rad,y=cy+Math.sin(ang)*rad*.62;
+    const tw=.35+.65*Math.abs(Math.sin(tm/950+st.tw));
+    c.fillStyle="rgba(255,255,255,"+(tw*(.3+st.z*.7))+")";
+    c.fillRect(x,y,st.d,st.d);
+  });
+};
+INIT.sakura=()=>({p:Array.from({length:58},()=>({x:Math.random()*ww,y:Math.random()*wh,s:Math.random()*3+2,v:Math.random()*.8+.35,a:Math.random()*6.28,sw:Math.random()*.9+.3,rot:Math.random()*6.28}))});
+DRAW.sakura=(c,w,h,tm,s)=>{
+  const bg=c.createLinearGradient(0,0,w,h);
+  bg.addColorStop(0,"#1b0a17");bg.addColorStop(.5,"#2a0d21");bg.addColorStop(1,"#100610");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  const gl=c.createRadialGradient(w*.72,h*.2,0,w*.72,h*.2,w*.55);
+  gl.addColorStop(0,"rgba(244,114,182,.10)");gl.addColorStop(1,"rgba(0,0,0,0)");
+  c.fillStyle=gl;c.fillRect(0,0,w,h);
+  s.p.forEach(p=>{
+    p.y+=p.v;p.x+=Math.sin(tm/1500+p.a)*p.sw;p.rot+=.012;
+    if(p.y>h+10){p.y=-10;p.x=Math.random()*w}
+    c.save();c.translate(p.x,p.y);c.rotate(p.rot);
+    c.fillStyle="rgba(244,114,182,"+(.3+p.s/12)+")";
+    c.beginPath();c.ellipse(0,0,p.s,p.s*.52,0,0,6.3);c.fill();
+    c.restore();
+  });
+};
+INIT.rain=()=>({d:Array.from({length:120},()=>({x:Math.random()*ww,y:Math.random()*wh,l:Math.random()*18+8,v:Math.random()*8+6,a:Math.random()*.32+.1}))});
+DRAW.rain=(c,w,h,tm,s)=>{
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#04080f");bg.addColorStop(1,"#0a1420");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  const flash=Math.pow(Math.max(0,Math.sin(tm/8200-1.2)),26);
+  if(flash>.01){c.fillStyle="rgba(191,219,254,"+(flash*.16)+")";c.fillRect(0,0,w,h)}
+  s.d.forEach(d=>{
+    d.y+=d.v;d.x-=d.v*.18;
+    if(d.y>h){d.y=-12;d.x=Math.random()*(w+40)}
+    if(d.x<-12)d.x=w+12;
+    c.strokeStyle="rgba(148,163,184,"+d.a+")";c.lineWidth=1;
+    c.beginPath();c.moveTo(d.x,d.y);c.lineTo(d.x+d.l*.18,d.y+d.l);c.stroke();
+  });
+};
+INIT.fireworks=()=>({p:[],next:0});
+DRAW.fireworks=(c,w,h,tm,s)=>{
+  c.fillStyle="rgba(2,3,10,.24)";c.fillRect(0,0,w,h);
+  if(tm>s.next){
+    const x=w*(.12+Math.random()*.76),y=h*(.12+Math.random()*.5);
+    const cols=["250,204,21","244,114,182","56,189,248","74,222,128","251,146,60"];
+    const col=cols[Math.floor(Math.random()*cols.length)];
+    for(let i=0;i<32;i++){
+      const a=Math.random()*6.283,v=Math.random()*2.7+1.1;
+      s.p.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:1,r:Math.random()*1.7+.6,col:col});
+    }
+    s.next=tm+850+Math.random()*1100;
+  }
+  c.globalCompositeOperation="lighter";
+  s.p.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=.035;p.vx*=.992;p.vy*=.992;p.life-=.011;
+    if(p.life<=0)return;
+    c.fillStyle="rgba("+p.col+","+Math.max(0,p.life)+")";
+    c.beginPath();c.arc(p.x,p.y,p.r*p.life,0,6.3);c.fill();
+  });
+  s.p=s.p.filter(p=>p.life>0);
+  c.globalCompositeOperation="source-over";
+};
+INIT.money=()=>({p:Array.from({length:36},()=>({x:Math.random()*ww,y:Math.random()*wh,v:Math.random()*1.3+.55,r:Math.random()*6.28,sw:Math.random()*1.1+.35,s:Math.random()*.35+.68}))});
+DRAW.money=(c,w,h,tm,s)=>{
+  const bg=c.createLinearGradient(0,0,w,h);
+  bg.addColorStop(0,"#04140b");bg.addColorStop(.5,"#0a2e18");bg.addColorStop(1,"#020805");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  const gl=c.createRadialGradient(w*.5,h*.25,0,w*.5,h*.25,w*.7);
+  gl.addColorStop(0,"rgba(250,204,21,.10)");gl.addColorStop(1,"rgba(0,0,0,0)");
+  c.fillStyle=gl;c.fillRect(0,0,w,h);
+  s.p.forEach(p=>{
+    p.y+=p.v;p.x+=Math.sin(tm/1200+p.r)*p.sw;p.r+=.02;
+    if(p.y>h+24){p.y=-24;p.x=Math.random()*w}
+    c.save();c.translate(p.x,p.y);c.rotate(Math.sin(p.r)*.55);c.scale(p.s,p.s);
+    c.fillStyle="rgba(250,204,21,.88)";c.fillRect(-9,-5,18,10);
+    c.strokeStyle="rgba(180,83,9,.65)";c.lineWidth=1;c.strokeRect(-9,-5,18,10);
+    c.fillStyle="rgba(3,21,12,.92)";c.font="bold 8px system-ui";c.textAlign="center";c.textBaseline="middle";
+    c.fillText("$",0,0);
+    c.restore();
+  });
+};
+function mediaUrl(path,bucket){
+  if(!path||!sb)return "";
+  try{const p=sb.storage.from(bucket||"media").getPublicUrl(path);return p&&p.data&&p.data.publicUrl||""}catch(e){return ""}
+}
+function loadWallImage(path){
+  if(!path)return null;
+  if(wallImagePath===path&&wallImage)return wallImage;
+  wallImagePath=path;
+  wallImage=new Image();
+  wallImage.onload=()=>{if(wallId==="custom")startWall()};
+  wallImage.src=mediaUrl(path,"media");
+  return wallImage;
+}
+DRAW.custom=(c,w,h,tm,s)=>{
+  c.fillStyle="#050505";c.fillRect(0,0,w,h);
+  const im=s&&s.img;
+  if(im&&im.complete&&im.naturalWidth){
+    const sc=Math.max(w/im.naturalWidth,h/im.naturalHeight);
+    const dw=im.naturalWidth*sc,dh=im.naturalHeight*sc;
+    c.drawImage(im,(w-dw)/2,(h-dh)/2,dw,dh);
+  }else{
+    const g=c.createLinearGradient(0,0,w,h);
+    g.addColorStop(0,"#111827");g.addColorStop(1,"#020617");
+    c.fillStyle=g;c.fillRect(0,0,w,h);
+  }
+  const sh=c.createLinearGradient(0,0,0,h);
+  sh.addColorStop(0,"rgba(0,0,0,.45)");sh.addColorStop(.35,"rgba(0,0,0,0)");sh.addColorStop(1,"rgba(0,0,0,.55)");
+  c.fillStyle=sh;c.fillRect(0,0,w,h);
+};
 function startWall(){
   cancelAnimationFrame(raf);
   const c=$("wall"),ctx=c.getContext("2d");
   ww=c.width=window.innerWidth;wh=c.height=window.innerHeight;
   ctx.clearRect(0,0,ww,wh);
   if(wallId==="none"||!DRAW[wallId])return;
-  wstate=INIT[wallId]?INIT[wallId]():null;
+  if(wallId==="custom")wstate={img:loadWallImage(wallPath)};
+  else wstate=INIT[wallId]?INIT[wallId]():null;
   let last=0;
   const loop=ts=>{
     raf=requestAnimationFrame(loop);
@@ -1187,10 +1393,10 @@ function go(name){
   if(name==="admin")loadUsers();
   if(name==="forum")loadForum();
   if(name==="profile"){loadMyWarnings();loadFriends()}
-  if(name==="chat"){pauseWall();chatInit()}
-  else if(name==="dm"){pauseWall();dmInit()}
-  else if(name==="servers"){pauseWall();serverInit()}
-  else resumeWall();
+  if(name==="chat")chatInit();
+  else if(name==="dm")dmInit();
+  else if(name==="servers")serverInit();
+  resumeWall();
 }
 Q("#dock button").forEach(b=>b.onclick=()=>{const g=b.dataset.go;go(g==="profile"?(user?"profile":"register"):g)});
 back.onclick=()=>{
@@ -1287,6 +1493,38 @@ function setAva(el,src,spin){
   }else{el.innerHTML=USER_ICON}
 }
 function setRoleClass(el,role){ROLEC.forEach(c=>el.classList.remove(c));el.classList.add(role)}
+function isRich(id){return !!id&&richIds.has(String(id))}
+function richName(el,id,nick){
+  if(!el)return el;
+  el.textContent="";
+  el.classList.remove("richname");
+  const tx=document.createElement("span");
+  tx.className="rnm";tx.textContent=nick||"?";
+  el.appendChild(tx);
+  if(!isRich(id))return el;
+  el.classList.add("richname");
+  const rain=document.createElement("span");
+  rain.className="rmoney";
+  for(let i=0;i<7;i++){
+    const s=document.createElement("i");
+    s.textContent=i%2?"$":"💵";
+    s.style.left=(4+i*14)+"%";
+    s.style.animationDelay=(-(i*0.37)%2.4)+"s";
+    s.style.animationDuration=(2.1+(i%3)*0.45)+"s";
+    rain.appendChild(s);
+  }
+  el.appendChild(rain);
+  return el;
+}
+async function loadRichUsers(){
+  if(!user||!sb)return;
+  try{
+    const r=await sb.rpc("rich_users");
+    if(r.error)return;
+    richIds=new Set((r.data||[]).map(x=>String(x.user_id)));
+    if(user)renderUser();
+  }catch(e){}
+}
 function editedTag(iso){
   if(!iso)return null;
   const s=document.createElement("span");
@@ -1371,7 +1609,7 @@ function renderUser(){
   setRoleClass($("pava"),role);
   $("badge").textContent=roleLabel(role);
   $("badge").className="badge "+role;
-  $("pnick").textContent=user?user.nick:"";
+  if(user)richName($("pnick"),user.id,user.nick);else $("pnick").textContent="";
   $("psid").textContent=(user&&user.sid)?"ID: "+user.sid:"";
   $("pmail").textContent=user?user.email:"";
   $("pbio").textContent=(user&&user.bio)?user.bio:"";
@@ -1386,7 +1624,7 @@ async function loadUser(u){
   const meta=u.user_metadata||{};
   let p=null;
   try{
-    const r=await sb.from("profiles").select("short_id,nick,avatar,role,bio,wallpaper").eq("id",u.id).maybeSingle();
+    const r=await sb.from("profiles").select("short_id,nick,avatar,role,bio,wallpaper,wall_custom,rich_fx").eq("id",u.id).maybeSingle();
     p=r.data;
   }catch(e){}
   user={
@@ -1395,13 +1633,18 @@ async function loadUser(u){
     avatar:(p&&p.avatar)||null,
     sid:p?p.short_id:null,
     role:(p&&p.role)||"user",
-    bio:(p&&p.bio)||null
+    bio:(p&&p.bio)||null,
+    wallCustom:(p&&p.wall_custom)||null,
+    richFx:!!(p&&p.rich_fx)
   };
+  if(p&&p.rich_fx)richIds.add(String(u.id));else richIds.delete(String(u.id));
   chatRooms=[];chatRoom=null;chatSig="";
   chatRows=[];chatLastId=0;chatMap=new Map();
+  wallPath=user.wallCustom||null;
   if(p&&p.wallpaper){
     const w=WALLS.find(x=>x[0]===p.wallpaper);
-    if(w&&(w[2]||rk(user.role)>=1)&&p.wallpaper!==wallId)setWall(p.wallpaper);
+    const customOk=p.wallpaper!=="custom"||wallPath;
+    if(w&&(w[2]||rk(user.role)>=1)&&customOk&&(p.wallpaper!==wallId||p.wallpaper==="custom"))setWall(p.wallpaper);
   }
 }
 function clearForm(){
@@ -1439,13 +1682,19 @@ $("file").onchange=async e=>{
 function buildWallGrid(){
   const g=$("wgrid");g.textContent="";
   WALLS.forEach(w=>{
+    const id=w[0];
     const ok=w[2]||myRank()>=1;
+    const custom=id==="custom";
+    const customized=!!(user&&user.wallCustom);
     const b=document.createElement("button");
-    b.className="wopt"+(eWall===w[0]?" on":"")+(ok?"":" lock");
-    b.textContent=(ok?"":"🔒 ")+t(w[1]);
+    b.className="wopt"+(eWall===id?" on":"")+(ok?"":" lock");
+    b.style.setProperty("--wd",WALL_DOT[id]||"#888");
+    const dot=document.createElement("i");dot.className="wdot";b.appendChild(dot);
+    b.appendChild(document.createTextNode((ok?"":"🔒 ")+(custom&&!customized?"+ ":"")+t(w[1])));
     b.onclick=()=>{
       if(!ok){toast(t("locked_wall"));return}
-      eWall=w[0];setWall(w[0]);buildWallGrid();
+      if(custom&&!customized){$("file11").click();return}
+      eWall=id;setWall(id);buildWallGrid();
     };
     g.appendChild(b);
   });
@@ -1458,6 +1707,10 @@ function openEdit(){
   setAva($("eava"),user.avatar,ownerLike(user.role));
   $("eerr").textContent="";
   buildWallGrid();
+  const canRich=myRank()>=1;
+  $("erichw").style.display=canRich?"":"none";
+  $("erichhint").style.display=canRich?"":"none";
+  $("erich").checked=canRich&&!!user.richFx;
   $("emodal").classList.add("show");
 }
 function closeEdit(revert){
@@ -1473,16 +1726,42 @@ $("file2").onchange=async e=>{
   if(!f)return;
   try{eAva=await cropToData(f);setAva($("eava"),eAva,false)}catch(err){$("eerr").textContent=t("err_generic")}
 };
+$("ewallup").onclick=()=>{
+  if(!user){go("register");return}
+  $("file11").click();
+};
+$("file11").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";
+  if(!f||!user||!sb)return;
+  const btn=$("ewallup");btn.disabled=true;
+  toast(t("wall_uploading"));
+  try{
+    const item={name:f.name||"wallpaper",size:f.size,type:f.type||"",pct:0};
+    const r=await uploadMediaFile(f,item,"wall",()=>{});
+    user.wallCustom=r.path;wallPath=r.path;
+    eWall="custom";setWall("custom");buildWallGrid();
+    toast(t("wall_saved"));
+  }catch(err){toast(t("wall_upload_fail"))}
+  finally{btn.disabled=false}
+};
 $("epass").onclick=()=>openPass();
 $("eyes").onclick=async()=>{
   if(!user||!sb||pbusy)return;
   const nick=$("enick").value.trim();
   const bio=$("ebio").value.trim();
   if(nick.length<2||nick.length>20){$("eerr").textContent=t("err_nick");return}
+  if(eWall==="custom"&&!user.wallCustom){$("eerr").textContent=t("wall_need_photo");return}
   const patch={nick:nick,bio:bio||null,wallpaper:eWall};
+  if(eWall==="custom")patch.wall_custom=user.wallCustom;
   if(eAva!==undefined)patch.avatar=eAva;
   pbusy=true;
   try{
+    if(myRank()>=1){
+      const rr=await sb.rpc("set_rich_fx",{p_on:$("erich").checked});
+      if(rr.error){$("eerr").textContent=t("err_generic");return}
+      user.richFx=!!$("erich").checked;
+      if(user.richFx)richIds.add(String(user.id));else richIds.delete(String(user.id));
+    }
     const r=await sb.from("profiles").update(patch).eq("id",user.id);
     if(r.error){
       const c=r.error.code||"";
@@ -1491,6 +1770,7 @@ $("eyes").onclick=async()=>{
     }
     user.nick=nick;user.bio=bio||null;
     if(eAva!==undefined)user.avatar=eAva;
+    if(eWall==="custom")wallPath=user.wallCustom;
     renderUser();
     closeEdit(false);
     toast(t("saved"));
@@ -1935,7 +2215,7 @@ function msgNode(m){
     row.appendChild(rp);
   }
   const head=document.createElement("div");head.className="mh";
-  const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";nk.textContent=m.nick||"?";
+  const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id,m.nick);
   nk.onclick=()=>{if(m.user_id)openProfile(m.user_id)};
   head.appendChild(nk);
   if(role!=="user"){
@@ -2112,9 +2392,10 @@ async function openProfile(id){
     const p=(r.data||[])[0];
     if(!p){toast(t("err_generic"));return}
     uCtx=p;
+    if(p.rich_fx)richIds.add(String(p.id));else richIds.delete(String(p.id));
     setAva($("u_ava"),p.avatar,ownerLike(p.role));
     setRoleClass($("u_ava"),p.role||"user");
-    $("u_nick").textContent=p.nick||"?";
+    richName($("u_nick"),p.id,p.nick);
     $("u_badge").textContent=roleLabel(p.role||"user");
     $("u_badge").className="badge "+(p.role||"user");
     $("u_bio").textContent=p.bio||"";
@@ -2161,6 +2442,9 @@ function pickAva(id){avaTarget=id;$("file4").click()}
 function startNotif(){
   if(!user)return;
   loadNotifs(true);
+  loadRichUsers();
+  if(richTimer)clearInterval(richTimer);
+  richTimer=setInterval(()=>{if(!document.hidden&&user)loadRichUsers()},45000);
   loadDmUnread();
   if(notifTimer)clearInterval(notifTimer);
   notifTimer=setInterval(()=>{if(!document.hidden&&user)loadNotifs(true)},25000);
@@ -2175,6 +2459,7 @@ function startNotif(){
 function stopNotif(){
   if(notifTimer){clearInterval(notifTimer);notifTimer=null}
   if(dmBadgeTimer){clearInterval(dmBadgeTimer);dmBadgeTimer=null}
+  if(richTimer){clearInterval(richTimer);richTimer=null}
 }
 async function loadNotifs(silent){
   if(!user||!sb)return;
@@ -2297,7 +2582,7 @@ function renderForum(rows){
     const b=document.createElement("button");b.type="button";b.className="flink glass";
     const tt=document.createElement("div");tt.className="ft";tt.textContent=th.title;
     const fm=document.createElement("div");fm.className="fm";
-    const fn=document.createElement("span");fn.className="fn "+(th.role||"user");fn.textContent=th.nick||"?";
+    const fn=document.createElement("span");fn.className="fn "+(th.role||"user");richName(fn,th.author,th.nick);
     fm.appendChild(fn);
     fm.appendChild(document.createTextNode("· "+new Date(th.created_at).toLocaleDateString(locale())));
     fm.appendChild(document.createTextNode("· "+th.replies+" "+countWord(th.replies,"f_replies")));
@@ -2353,7 +2638,7 @@ function renderThread(th,rows){
   head.textContent="";
   const h=document.createElement("h2");h.textContent=th.title;
   const meta=document.createElement("div");meta.className="fm";
-  const au=document.createElement("button");au.type="button";au.className="trn "+(th.role||"user");au.textContent=th.nick||"?";
+  const au=document.createElement("button");au.type="button";au.className="trn "+(th.role||"user");richName(au,th.author,th.nick);
   au.onclick=()=>{if(th.author)openProfile(th.author)};
   meta.appendChild(au);
   meta.appendChild(document.createTextNode(" · "+new Date(th.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"})));
@@ -2379,7 +2664,7 @@ function renderThread(th,rows){
   rows.forEach(rp=>{
     const card=document.createElement("div");card.className="tr glass";
     const hd=document.createElement("div");hd.className="trh";
-    const nk=document.createElement("button");nk.type="button";nk.className="trn "+(rp.role||"user");nk.textContent=rp.nick||"?";
+    const nk=document.createElement("button");nk.type="button";nk.className="trn "+(rp.role||"user");richName(nk,rp.author,rp.nick);
     nk.onclick=()=>{if(rp.author)openProfile(rp.author)};
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(rp.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
@@ -2497,6 +2782,23 @@ async function uploadForumFile(f,onProgress){
   if(!pub||!pub.data||!pub.data.publicUrl)throw new Error("url");
   return {name:name,url:pub.data.publicUrl,type:type,size:blob.size||f.size};
 }
+async function uploadMediaFile(f,item,prefix,refresh){
+  if(f.size>MAX_FILE)throw new Error("big");
+  let blob=f,type=f.type||"application/octet-stream",name=f.name||"file";
+  if(type.indexOf("image/")===0&&type!=="image/gif"&&f.size<=25*1024*1024){
+    try{blob=await shrinkImage(f,1600,0.8);type="image/jpeg"}catch(e){blob=f}
+  }
+  const path=user.id+"/"+(prefix||"m")+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"-"+safeName(name);
+  if(blob.size>TUS_MIN){
+    await uploadBig(blob,name,path,type,p=>{item.pct=p;if(refresh)refresh()},"media");
+  }else{
+    const up=await sb.storage.from("media").upload(path,blob,{contentType:type,cacheControl:"31536000"});
+    if(up.error)throw up.error;
+  }
+  const pub=sb.storage.from("media").getPublicUrl(path);
+  if(!pub||!pub.data||!pub.data.publicUrl)throw new Error("url");
+  return {path:path,name:name,type:type,size:blob.size||f.size,url:pub.data.publicUrl};
+}
 function renderFiles(box,files,removable){
   box.textContent="";
   files.forEach((f,i)=>{
@@ -2529,6 +2831,30 @@ function fileNode(f){
   const sp=document.createElement("span");sp.textContent=(f.name||"file")+(f.size?" · "+fmtSize(f.size):"");
   a.appendChild(sp);
   return a;
+}
+function msgAttNode(m){
+  if(!m||!m.att_path)return null;
+  const u=mediaUrl(m.att_path,"media");
+  const tp=(m.att_type||"").toLowerCase();
+  if(tp.indexOf("video/")===0){
+    const wrap=document.createElement("div");
+    const v=document.createElement("video");
+    v.className="dmvid";v.src=u;v.controls=true;v.playsInline=true;v.preload="metadata";
+    v.setAttribute("playsinline","");
+    wrap.appendChild(v);
+    const a=document.createElement("a");
+    a.className="dmvidlink";a.href=u;a.target="_blank";a.rel="noopener noreferrer";
+    a.textContent=(m.att_name||t("dm_video"))+(m.att_size?" · "+fmtSize(m.att_size):"");
+    wrap.appendChild(a);
+    return wrap;
+  }
+  if(tp.indexOf("image/")===0){
+    const im=document.createElement("img");
+    im.className="dmimg";im.src=u;im.alt=m.att_name||"";im.loading="lazy";
+    im.onclick=()=>{try{window.open(u,"_blank","noopener")}catch(e){}};
+    return im;
+  }
+  return fileNode({name:m.att_name||"file",size:m.att_size,type:m.att_type,url:u});
 }
 $("t_att").onclick=()=>{if(!user){go("register");return}fileTarget="thread";$("file5").click()};
 $("th_att").onclick=()=>{if(!user)return;fileTarget="reply";$("file5").click()};
@@ -2699,7 +3025,7 @@ function renderFriends(){
     frState.req.forEach(r=>{
       const row=document.createElement("div");row.className="frrow glass";
       const av=document.createElement("div");av.className="ava";setAva(av,r.avatar,false);setRoleClass(av,r.role||"user");row.appendChild(av);
-      const nm=document.createElement("span");nm.className="frnick";nm.textContent=r.nick||"?";row.appendChild(nm);
+      const nm=document.createElement("span");nm.className="frnick";richName(nm,r.id,r.nick);row.appendChild(nm);
       const bs=document.createElement("div");bs.className="frbtns";
       const ok=document.createElement("button");ok.type="button";ok.textContent="✓";ok.title=t("fr_accept");
       ok.onclick=()=>answerFriend(r.id,true);
@@ -2716,7 +3042,7 @@ function renderFriends(){
     frState.friends.forEach(f=>{
       const c=document.createElement("button");c.type="button";c.className="fchip";
       const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");
-      const sp=document.createElement("span");sp.textContent=f.nick||"?";
+      const sp=document.createElement("span");richName(sp,f.id,f.nick);
       c.appendChild(av);c.appendChild(sp);
       c.onclick=()=>openProfile(f.id);
       chips.appendChild(c);
@@ -2847,7 +3173,7 @@ function renderDmContacts(){
     const av=document.createElement("div");av.className="ava";setAva(av,c.avatar,false);setRoleClass(av,c.role||"user");b.appendChild(av);
     const mid=document.createElement("div");mid.className="dmmid";
     const top=document.createElement("div");top.className="dmtop";
-    const nm=document.createElement("span");nm.className="dmn2";nm.textContent=c.nick||"?";top.appendChild(nm);
+    const nm=document.createElement("span");nm.className="dmn2";richName(nm,c.id,c.nick);top.appendChild(nm);
     if(c.rel!=="friend"){const rl=document.createElement("span");rl.className="dmrel";rl.textContent=dmRelText(c.rel);top.appendChild(rl)}
     mid.appendChild(top);
     const last=document.createElement("div");last.className="dmlast";
@@ -2891,7 +3217,7 @@ async function dmInit(){
   }else{
     stopGroupPoll();
     if(dmWith){
-      $("dmnick").textContent=dmWith.nick||"?";
+      richName($("dmnick"),dmWith.id,dmWith.nick);
       $("dmrel").textContent=dmRelText(dmWith.rel);
       setAva($("dmava"),dmWith.avatar,false);setRoleClass($("dmava"),dmWith.role||"user");
       await dmLoadMsgs();
@@ -2934,6 +3260,7 @@ function stopGroupPoll(){if(groupTimer){clearInterval(groupTimer);groupTimer=nul
 function groupReset(){
   stopGroupPoll();
   groupWith=null;groupList=[];groupRows=[];groupLastId=0;
+  groupPending=[];groupPendingRender();
   const gl=$("grouplist"),gc=$("groupchat");
   if(gl){gl.style.display="none";gl.textContent=""}
   if(gc)gc.style.display="none";
@@ -2941,6 +3268,29 @@ function groupReset(){
 function initialOf(name){
   const s=String(name||"?").trim();
   return (s?s.charAt(0):"?").toUpperCase();
+}
+function setGroupIcon(el,avatar,name){
+  if(!el)return;
+  el.textContent="";
+  if(avatar){
+    const im=document.createElement("img");im.alt="";im.src=avatar;el.appendChild(im);
+  }else el.textContent=initialOf(name);
+}
+function setSrvIcon(el,avatar,name){
+  if(!el)return;
+  el.textContent="";
+  if(avatar){
+    const im=document.createElement("img");im.alt="";im.src=avatar;el.appendChild(im);
+  }else el.textContent=initialOf(name);
+}
+function setGroupAvaLocal(id,avatar){
+  const g=groupList.find(x=>String(x.id)===String(id));
+  if(g)g.avatar=avatar;
+  if(groupWith&&String(groupWith.id)===String(id)){
+    groupWith.avatar=avatar;
+    renderGroupHead();
+  }
+  renderGroupList();
 }
 async function loadGroupList(){
   if(!user||!sb)return;
@@ -2960,7 +3310,7 @@ function renderGroupList(){
   }
   groupList.forEach(g=>{
     const b=document.createElement("button");b.type="button";b.className="grouprow glass";
-    const ic=document.createElement("div");ic.className="gicon";ic.textContent=initialOf(g.name);b.appendChild(ic);
+    const ic=document.createElement("div");ic.className="gicon";setGroupIcon(ic,g.avatar,g.name);b.appendChild(ic);
     const mid=document.createElement("div");mid.className="dmmid";
     const top=document.createElement("div");top.className="dmtop";
     const nm=document.createElement("span");nm.className="dmn2";nm.textContent=g.name||"?";top.appendChild(nm);
@@ -2980,6 +3330,7 @@ async function openGroup(g){
   dmTab="groups";
   groupWith=Object.assign({},g);
   groupRows=[];groupLastId=0;groupTick=0;
+  groupPending=[];groupPendingRender();
   dmShow();
   renderGroupHead();
   await groupLoadMsgs();
@@ -2993,6 +3344,7 @@ async function openGroupById(id){
 }
 function closeGroup(){
   groupWith=null;stopGroupPoll();groupRows=[];groupLastId=0;
+  groupPending=[];groupPendingRender();
   dmShow();
   loadGroupList();
 }
@@ -3001,7 +3353,7 @@ function renderGroupHead(){
   $("groupname").textContent=groupWith.name||"?";
   const cnt=Number(groupWith.members)||0;
   $("grouprel").textContent=cnt+" "+countWord(cnt,"group_members")+" · "+(groupWith.member_role==="owner"?t("group_owner"):t("group_member"));
-  $("groupava").textContent=initialOf(groupWith.name);
+  setGroupIcon($("groupava"),groupWith.avatar,groupWith.name);
 }
 async function groupLoadMsgs(full){
   if(!groupWith||!sb)return;
@@ -3035,7 +3387,7 @@ function renderGroupMsgs(){
     const mine=m.author===user.id;
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
     const head=document.createElement("div");head.className="mh";
-    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";nk.textContent=m.nick||"?";
+    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick);
     nk.onclick=()=>{if(m.author)openProfile(m.author)};
     head.appendChild(nk);
     if(m.author===groupWith.owner){const tg=document.createElement("span");tg.className="mtag";tg.textContent=t("group_owner");head.appendChild(tg)}
@@ -3055,9 +3407,12 @@ function renderGroupMsgs(){
       head.appendChild(db);
     }
     d.appendChild(head);
-    const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
-    if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
-    d.appendChild(body);
+    const att=msgAttNode(m);if(att)d.appendChild(att);
+    if(m.deleted||m.body){
+      const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
+      if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
+      d.appendChild(body);
+    }
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
@@ -3070,23 +3425,38 @@ async function groupRead(){
   renderGroupList();
   loadDmUnread();
 }
+function groupPendingRender(){
+  const box=$("group_files");if(box)renderFiles(box,groupPending,true);
+}
 async function groupSend(){
   if(!groupWith||!user||!sb)return;
+  if(groupPending.some(x=>x.uploading)){toast(t("media_wait_upload"));return}
   const inp=$("groupin");
   const txt=inp.value.trim();
-  if(!txt)return;
+  const atts=groupPending.filter(x=>x.path);
+  if(!txt&&!atts.length)return;
   const gid=groupWith.id;
+  const payloads=atts.length?atts.map((f,i)=>({
+    p_group:gid,p_body:i===0?txt:"",
+    p_att_path:f.path,p_att_name:f.name,p_att_type:f.type,p_att_size:Math.round(f.size||0)
+  })):[{p_group:gid,p_body:txt,p_att_path:null,p_att_name:null,p_att_type:null,p_att_size:null}];
   inp.value="";resizeEditor(inp);
+  groupPending=[];groupPendingRender();
   const btn=$("groupsendbtn");btn.disabled=true;
+  let sent=0;
   try{
-    const r=await sb.rpc("group_send",{p_group:gid,p_body:txt});
-    if(r.error)throw r.error;
+    for(const args of payloads){
+      const r=await sb.rpc("group_send",args);
+      if(r.error)throw r.error;
+      sent++;
+    }
     await groupLoadMsgs();
     groupRead();
   }catch(e){
     const msg=((e&&e.message)||"").toLowerCase();
-    toast(t(msg.indexOf("slow")>-1?"group_slow":"err_generic"));
-    inp.value=txt;resizeEditor(inp);
+    toast(t(msg.indexOf("slow")>-1?"group_slow":msg.indexOf("big")>-1?"f_file_big":"err_generic"));
+    if(sent===0){inp.value=txt;resizeEditor(inp);groupPending=atts;groupPendingRender()}
+    await groupLoadMsgs();
   }finally{btn.disabled=false}
 }
 async function groupDelete(id){
@@ -3094,7 +3464,7 @@ async function groupDelete(id){
     const r=await sb.rpc("group_message_delete",{p_id:id});
     if(r.error)throw r.error;
     const m=groupRows.find(x=>String(x.id)===String(id));
-    if(m){m.deleted=true;m.body=""}
+    if(m){m.deleted=true;m.body="";m.att_path=null}
     renderGroupMsgs();
   }catch(e){toast(t("err_generic"))}
 }
@@ -3111,6 +3481,42 @@ $("groupmore").onclick=groupMenu;
 $("groupnew").onclick=openGroupCreate;
 $("groupsendbtn").onclick=groupSend;
 $("groupin").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();groupSend()}});
+$("groupatt").onclick=()=>{
+  if(!user){go("register");return}
+  if(groupWith)$("file7").click();
+};
+$("file7").onchange=async e=>{
+  const fs=[...e.target.files];e.target.value="";
+  if(!fs.length||!user||!sb||!groupWith)return;
+  const gid=groupWith.id;
+  for(const f of fs){
+    if(groupPending.length>=3){toast(t("f_files_max"));break}
+    if(f.size>MAX_FILE){toast(t("f_file_big"));continue}
+    if(!groupWith||String(groupWith.id)!==String(gid))break;
+    const item={name:f.name||"file",size:f.size,type:f.type||"",url:"",uploading:true,pct:0,path:""};
+    groupPending.push(item);groupPendingRender();
+    try{
+      const r=await uploadMediaFile(f,item,"g",groupPendingRender);
+      Object.assign(item,r);item.uploading=false;item.pct=1;
+    }catch(err){
+      const k=groupPending.indexOf(item);if(k>=0)groupPending.splice(k,1);
+      toast(t(err&&err.message==="big"?"f_file_big":tooLargeErr(err)?"f_plan_limit":"media_upload_fail"));
+    }
+    groupPendingRender();
+  }
+};
+$("file9").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";
+  const gid=groupAvaTarget;
+  if(!f||!gid||!sb)return;
+  try{
+    const data=await cropToData(f);
+    const r=await sb.rpc("group_set_avatar",{p_group:gid,p_avatar:data});
+    if(r.error)throw r.error;
+    setGroupAvaLocal(gid,data);
+    toast(t("avatar_saved"));
+  }catch(err){toast(t("err_generic"))}
+};
 async function fetchFriends(){
   if(!user||!sb)return [];
   try{
@@ -3125,10 +3531,23 @@ function groupMenu(){
     {v:"invite",label:t("group_invite")},
     {v:"leave",label:t("group_leave")}
   ];
-  if(groupWith.owner===user.id)opts.push({v:"delete",label:t("group_delete")});
+  if(groupWith.owner===user.id){
+    opts.push({v:"avatar",label:t("group_avatar")});
+    if(groupWith.avatar)opts.push({v:"avatar_del",label:t("avatar_remove")});
+    opts.push({v:"delete",label:t("group_delete")});
+  }
   openSheet(t("group_menu"),opts,"",v=>{
     if(v==="members")openGroupMembers();
     else if(v==="invite")openGroupInvite();
+    else if(v==="avatar"){groupAvaTarget=groupWith.id;$("file9").click()}
+    else if(v==="avatar_del")askConfirm(t("avatar_remove")+"?",async()=>{
+      try{
+        const r=await sb.rpc("group_set_avatar",{p_group:groupWith.id,p_avatar:null});
+        if(r.error)throw r.error;
+        setGroupAvaLocal(groupWith.id,null);
+        toast(t("avatar_saved"));
+      }catch(e){toast(t("err_generic"))}
+    });
     else if(v==="leave")askConfirm(t("group_leave_q"),async()=>{
       try{
         const r=await sb.rpc("group_leave",{p_group:groupWith.id});
@@ -3159,7 +3578,7 @@ async function openGroupMembers(){
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,m.avatar,false);setRoleClass(av,m.user_role||"user");row.appendChild(av);
       const gr=document.createElement("div");gr.className="grow";
-      const nm=document.createElement("div");nm.className="pname";nm.textContent=(m.nick||"?")+(m.user_id===user.id?" ("+t("group_you")+")":"");
+      const nm=document.createElement("div");nm.className="pname";richName(nm,m.user_id,(m.nick||"?")+(m.user_id===user.id?" ("+t("group_you")+")":""));
       const sub=document.createElement("div");sub.className="gsub";sub.textContent=m.member_role==="owner"?t("group_owner"):t("group_member");
       gr.appendChild(nm);gr.appendChild(sub);row.appendChild(gr);
       if(g.owner===user.id&&m.member_role!=="owner"){
@@ -3198,7 +3617,7 @@ async function openGroupInvite(){
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");row.appendChild(av);
       const gr=document.createElement("div");gr.className="grow";
-      const nm=document.createElement("div");nm.className="pname";nm.textContent=f.nick||"?";gr.appendChild(nm);row.appendChild(gr);
+      const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick);gr.appendChild(nm);row.appendChild(gr);
       const b=document.createElement("button");b.type="button";b.className="mini main";b.textContent=t("group_invite");
       b.onclick=async()=>{
         b.disabled=true;
@@ -3236,7 +3655,7 @@ async function openGroupCreate(){
         const cb=document.createElement("input");cb.type="checkbox";cb.value=f.id;
         cb.onchange=()=>{cb.checked?picked.add(f.id):picked.delete(f.id)};
         const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");
-        const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";nm.textContent=f.nick||"?";
+        const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick);
         gr.appendChild(nm);
         row.appendChild(cb);row.appendChild(av);row.appendChild(gr);wrap.appendChild(row);
       });
@@ -3446,6 +3865,7 @@ function stopServerPoll(){if(srvTimer){clearInterval(srvTimer);srvTimer=null}}
 function serverReset(){
   stopServerPoll();
   srvList=[];srvCurrent=null;srvChannels=[];srvChannel=null;srvRows=[];srvLastId=0;srvTick=0;
+  srvPending=[];srvPendingRender();
   const home=$("srvhome"),chat=$("srvchat"),list=$("srvlist");
   if(home)home.style.display="";
   if(chat)chat.style.display="none";
@@ -3486,7 +3906,7 @@ function renderServerList(){
   }
   srvList.forEach(s=>{
     const b=document.createElement("button");b.type="button";b.className="srvcard glass";
-    const ic=document.createElement("div");ic.className="srvicon";ic.textContent=initialOf(s.name);b.appendChild(ic);
+    const ic=document.createElement("div");ic.className="srvicon";setSrvIcon(ic,s.avatar,s.name);b.appendChild(ic);
     const mid=document.createElement("div");mid.className="srvmid";
     const nm=document.createElement("div");nm.className="srvname";nm.textContent=s.name||"?";
     const meta=document.createElement("div");meta.className="srvmeta";
@@ -3500,6 +3920,7 @@ function renderServerList(){
 async function openServer(id,keep){
   if(!id||!sb)return;
   stopServerPoll();
+  srvPending=[];srvPendingRender();
   try{
     const res=await Promise.all([
       sb.rpc("server_get",{p_server:id}),
@@ -3528,18 +3949,20 @@ async function openServer(id,keep){
 function closeServer(){
   stopServerPoll();
   srvCurrent=null;srvChannels=[];srvChannel=null;srvRows=[];srvLastId=0;srvTick=0;
+  srvPending=[];srvPendingRender();
   showServer();
   loadServerList();
 }
 function renderServerHead(){
   if(!srvCurrent)return;
   const cnt=Number(srvCurrent.members)||0,chc=srvChannels.length;
-  $("srvicon").textContent=initialOf(srvCurrent.name);
+  setSrvIcon($("srvicon"),srvCurrent.avatar,srvCurrent.name);
   $("srvname").textContent=srvCurrent.name||"?";
   $("srvmeta").textContent=cnt+" "+countWord(cnt,"srv_members")+" · "+srvRoleLabel(srvCurrent.member_role);
   $("srv_tools").style.display=srvChannel?"":"none";
   $("srvin").style.display=srvChannel?"":"none";
   $("srvsend").style.display=srvChannel?"":"none";
+  $("srvatt").style.display=srvChannel?"":"none";
 }
 function renderServerChannels(){
   const box=$("srvchannels");if(!box)return;
@@ -3558,6 +3981,7 @@ function renderServerChannels(){
 async function switchServerChannel(id){
   if(String(srvChannel)===String(id))return;
   srvChannel=id;srvRows=[];srvLastId=0;srvTick=0;
+  srvPending=[];srvPendingRender();
   renderServerChannels();
   await serverLoadMsgs(true);
 }
@@ -3593,7 +4017,7 @@ function renderServerMsgs(){
     const mine=m.author===user.id;
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
     const head=document.createElement("div");head.className="mh";
-    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";nk.textContent=m.nick||"?";
+    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick);
     nk.onclick=()=>{if(m.author)openProfile(m.author)};
     head.appendChild(nk);
     if(m.role&&m.role!=="user"){const tg=document.createElement("span");tg.className="mtag";tg.textContent=roleLabel(m.role);head.appendChild(tg)}
@@ -3613,29 +4037,47 @@ function renderServerMsgs(){
       head.appendChild(db);
     }
     d.appendChild(head);
-    const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
-    if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
-    d.appendChild(body);
+    const att=msgAttNode(m);if(att)d.appendChild(att);
+    if(m.deleted||m.body){
+      const body=document.createElement("div");body.className="mb rich"+(m.deleted?" del":"");
+      if(m.deleted)body.textContent=t("msg_deleted");else setRich(body,m.body);
+      d.appendChild(body);
+    }
     box.appendChild(d);
   });
   box.scrollTop=box.scrollHeight;
 }
+function srvPendingRender(){
+  const box=$("srv_files");if(box)renderFiles(box,srvPending,true);
+}
 async function serverSend(){
   if(!srvCurrent||!srvChannel||!user||!sb)return;
+  if(srvPending.some(x=>x.uploading)){toast(t("media_wait_upload"));return}
   const inp=$("srvin");
   const txt=inp.value.trim();
-  if(!txt)return;
+  const atts=srvPending.filter(x=>x.path);
+  if(!txt&&!atts.length)return;
   const cid=srvChannel;
+  const payloads=atts.length?atts.map((f,i)=>({
+    p_channel:cid,p_body:i===0?txt:"",
+    p_att_path:f.path,p_att_name:f.name,p_att_type:f.type,p_att_size:Math.round(f.size||0)
+  })):[{p_channel:cid,p_body:txt,p_att_path:null,p_att_name:null,p_att_type:null,p_att_size:null}];
   inp.value="";resizeEditor(inp);
+  srvPending=[];srvPendingRender();
   const btn=$("srvsend");btn.disabled=true;
+  let sent=0;
   try{
-    const r=await sb.rpc("server_send",{p_channel:cid,p_body:txt});
-    if(r.error)throw r.error;
+    for(const args of payloads){
+      const r=await sb.rpc("server_send",args);
+      if(r.error)throw r.error;
+      sent++;
+    }
     await serverLoadMsgs(false);
   }catch(e){
     const msg=((e&&e.message)||"").toLowerCase();
-    toast(t(msg.indexOf("slow")>-1?"chat_slow":"err_generic"));
-    inp.value=txt;resizeEditor(inp);
+    toast(t(msg.indexOf("slow")>-1?"chat_slow":msg.indexOf("big")>-1?"f_file_big":"err_generic"));
+    if(sent===0){inp.value=txt;resizeEditor(inp);srvPending=atts;srvPendingRender()}
+    await serverLoadMsgs(false);
   }finally{btn.disabled=false}
 }
 async function serverDeleteMsg(id){
@@ -3643,7 +4085,7 @@ async function serverDeleteMsg(id){
     const r=await sb.rpc("server_message_delete",{p_id:id});
     if(r.error)throw r.error;
     const m=srvRows.find(x=>String(x.id)===String(id));
-    if(m){m.deleted=true;m.body=""}
+    if(m){m.deleted=true;m.body="";m.att_path=null}
     renderServerMsgs();
   }catch(e){toast(t("err_generic"))}
 }
@@ -3770,7 +4212,7 @@ async function openServerInvite(){
     list.forEach(f=>{
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");row.appendChild(av);
-      const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";nm.textContent=f.nick||"?";gr.appendChild(nm);row.appendChild(gr);
+      const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick);gr.appendChild(nm);row.appendChild(gr);
       const b=document.createElement("button");b.type="button";b.className="mini main";b.textContent=t("srv_invite");
       b.onclick=async()=>{
         b.disabled=true;
@@ -3803,7 +4245,7 @@ async function openServerMembers(){
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,m.avatar,false);setRoleClass(av,m.user_role||"user");row.appendChild(av);
       const gr=document.createElement("div");gr.className="grow";
-      const nm=document.createElement("div");nm.className="pname";nm.textContent=(m.nick||"?")+(m.user_id===user.id?" ("+t("srv_you")+")":"");
+      const nm=document.createElement("div");nm.className="pname";richName(nm,m.user_id,(m.nick||"?")+(m.user_id===user.id?" ("+t("srv_you")+")":""));
       const sub=document.createElement("div");sub.className="gsub";sub.textContent=srvRoleLabel(m.member_role);gr.appendChild(nm);gr.appendChild(sub);row.appendChild(gr);
       if(srv.member_role==="owner"&&m.member_role!=="owner"){
         const tb=document.createElement("button");tb.type="button";tb.className="mini";tb.textContent=m.member_role==="admin"?t("srv_make_member"):t("srv_make_admin");
@@ -3888,7 +4330,29 @@ function openServerChannelDelete(){
 }
 function openServerSettings(){
   if(!srvCurrent)return;
+  srvAvaDraft=undefined;srvAvaPreview=null;srvAvaTarget=srvCurrent.id;
+  const sid=srvCurrent.id;
   openFormModal(t("srv_edit_title"),body=>{
+    const avarow=document.createElement("div");avarow.className="pickrow";avarow.style.gap="10px";
+    const ap=document.createElement("div");ap.className="ava";
+    ap.style.cssText="width:52px;height:52px;flex:none;border:2px solid rgba(255,255,255,.35)";
+    setSrvIcon(ap,srvCurrent.avatar,srvCurrent.name);
+    srvAvaPreview=ap;
+    const acol=document.createElement("div");acol.className="grow";
+    acol.style.cssText="display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:0";
+    const lab=document.createElement("div");lab.className="formhint";lab.textContent=t("srv_avatar");
+    const chbtn=document.createElement("button");chbtn.type="button";chbtn.className="mini";chbtn.textContent=t("avatar_change");
+    chbtn.onclick=()=>{srvAvaTarget=sid;$("file10").click()};
+    acol.appendChild(lab);acol.appendChild(chbtn);
+    if(srvCurrent.avatar){
+      const rmb=document.createElement("button");rmb.type="button";rmb.className="mini danger";rmb.textContent=t("avatar_remove");
+      rmb.onclick=()=>{
+        srvAvaDraft=null;
+        if(srvAvaPreview)setSrvIcon(srvAvaPreview,null,srvCurrent.name);
+      };
+      acol.appendChild(rmb);
+    }
+    avarow.appendChild(ap);avarow.appendChild(acol);body.appendChild(avarow);
     const name=document.createElement("input");name.type="text";name.maxLength=60;name.className="glass";name.placeholder=t("srv_name_ph");name.value=srvCurrent.name||"";body.appendChild(name);
     const desc=document.createElement("textarea");desc.maxLength=200;desc.className="glass";desc.placeholder=t("srv_desc_ph");desc.value=srvCurrent.description||"";body.appendChild(desc);
     const err=document.createElement("div");err.className="err";body.appendChild(err);
@@ -3898,9 +4362,21 @@ function openServerSettings(){
       if(nm.length<2||nm.length>60){err.textContent=t("srv_need_name");return}
       btn.disabled=true;
       try{
-        const r=await sb.rpc("server_update",{p_server:srvCurrent.id,p_name:nm,p_description:desc.value.trim()});
+        if(srvAvaDraft!==undefined){
+          const ar=await sb.rpc("server_set_avatar",{p_server:sid,p_avatar:srvAvaDraft});
+          if(ar.error)throw ar.error;
+          if(srvCurrent&&String(srvCurrent.id)===String(sid)){
+            srvCurrent.avatar=srvAvaDraft;
+            const sl=srvList.find(x=>String(x.id)===String(sid));
+            if(sl)sl.avatar=srvAvaDraft;
+            renderServerHead();
+          }
+        }
+        const r=await sb.rpc("server_update",{p_server:sid,p_name:nm,p_description:desc.value.trim()});
         if(r.error)throw r.error;
         srvCurrent.name=nm;srvCurrent.description=desc.value.trim();
+        const sl=srvList.find(x=>String(x.id)===String(sid));
+        if(sl){sl.name=nm;sl.description=desc.value.trim()}
         closeFormModal();toast(t("srv_saved"));renderServerHead();await loadServerList();
       }catch(e){err.textContent=t("err_generic");btn.disabled=false}
     };
@@ -3948,6 +4424,42 @@ $("srvback").onclick=closeServer;
 $("srvmore").onclick=serverMenu;
 $("srvsend").onclick=serverSend;
 $("srvin").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();serverSend()}});
+$("srvatt").onclick=()=>{
+  if(!user){go("register");return}
+  if(srvCurrent&&srvChannel)$("file8").click();
+};
+$("file8").onchange=async e=>{
+  const fs=[...e.target.files];e.target.value="";
+  if(!fs.length||!user||!sb||!srvCurrent||!srvChannel)return;
+  const sid=srvCurrent.id,cid=srvChannel;
+  for(const f of fs){
+    if(srvPending.length>=3){toast(t("f_files_max"));break}
+    if(f.size>MAX_FILE){toast(t("f_file_big"));continue}
+    if(!srvCurrent||String(srvCurrent.id)!==String(sid)||String(srvChannel)!==String(cid))break;
+    const item={name:f.name||"file",size:f.size,type:f.type||"",url:"",uploading:true,pct:0,path:""};
+    srvPending.push(item);srvPendingRender();
+    try{
+      const r=await uploadMediaFile(f,item,"s",srvPendingRender);
+      Object.assign(item,r);item.uploading=false;item.pct=1;
+    }catch(err){
+      const k=srvPending.indexOf(item);if(k>=0)srvPending.splice(k,1);
+      toast(t(err&&err.message==="big"?"f_file_big":tooLargeErr(err)?"f_plan_limit":"media_upload_fail"));
+    }
+    srvPendingRender();
+  }
+};
+$("file10").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";
+  const sid=srvAvaTarget;
+  if(!f||!sid||!sb)return;
+  try{
+    const data=await cropToData(f);
+    srvAvaDraft=data;
+    if(srvCurrent&&String(srvCurrent.id)===String(sid)&&srvAvaPreview&&srvAvaPreview.isConnected){
+      setSrvIcon(srvAvaPreview,data,srvCurrent.name||"");
+    }
+  }catch(err){toast(t("err_generic"))}
+};
 
 /* ---------- журнал действий ---------- */
 let auditRows=[],auditBusy=false;
@@ -4062,7 +4574,7 @@ function renderUsers(){
   rows.forEach(u=>{
     const card=document.createElement("div");card.className="ucard glass";
     const top=document.createElement("div");top.className="urow";
-    const name=document.createElement("button");name.type="button";name.className="uopen";name.textContent="#"+u.short_id+" "+u.nick;
+    const name=document.createElement("button");name.type="button";name.className="uopen";richName(name,u.id,"#"+u.short_id+" "+u.nick);
     name.onclick=()=>openProfile(u.id);
     const bd=document.createElement("span");bd.className="badge "+u.role;bd.textContent=roleLabel(u.role);
     top.appendChild(name);top.appendChild(bd);
@@ -4165,7 +4677,7 @@ function updateShade(){
   const u=user;
   setAva($("sh_ava"),u&&u.avatar,u&&ownerLike(u.role));
   setRoleClass($("sh_ava"),u?u.role:"user");
-  $("sh_nick").textContent=u?u.nick:t("s_guest");
+  if(u)richName($("sh_nick"),u.id,u.nick);else $("sh_nick").textContent=t("s_guest");
   $("sh_role").textContent=u?roleLabel(u.role):"";
   $("t_lang_l").textContent=t("s_lang")+": "+lang.toUpperCase();
   const w=WALLS.find(x=>x[0]===wallId);
@@ -4178,7 +4690,7 @@ function closeShade(){$("shade").classList.remove("open")}
 $("grab").onclick=()=>{$("shade").classList.contains("open")?closeShade():openShade()};
 $("sbg").onclick=closeShade;
 function nextWall(){
-  const ok=WALLS.filter(w=>w[2]||myRank()>=1).map(w=>w[0]);
+  const ok=WALLS.filter(w=>(w[2]||myRank()>=1)&&(w[0]!=="custom"||(user&&user.wallCustom))).map(w=>w[0]);
   const i=ok.indexOf(wallId);
   const id=ok[(i+1)%ok.length];
   setWall(id);
