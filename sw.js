@@ -1,10 +1,12 @@
 /* fsociety PLUS service worker */
-const CACHE = "fsociety-plus-v3";
+const CACHE = "fsociety-plus-v5";
 const ASSETS = [
   "./",
   "./index.html",
   "./fsociety-plus.css",
   "./fsociety-plus.js",
+  "./fsociety-plus-2.css",
+  "./fsociety-plus-2.js",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
