@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>fsociety</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <style>
@@ -383,6 +385,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   100%{opacity:0;transform:scale(16) rotateY(360deg);color:#ef4444}
 }
 </style>
+<link rel="stylesheet" href="fsociety-plus.css">
 </head>
 <body>
 <canvas id="wall"></canvas>
@@ -2655,6 +2658,7 @@ function renderThread(th,rows){
   }
   head.appendChild(h);head.appendChild(meta);
   setRich($("th_body"),th.body);
+  $("th_body").dataset.id=String(th.id);$("th_body").dataset.kind="thread";
   const atts=$("th_atts");atts.textContent="";
   (th.files||[]).forEach(f=>atts.appendChild(fileNode(f)));
   box.textContent="";
@@ -2663,6 +2667,7 @@ function renderThread(th,rows){
   }
   rows.forEach(rp=>{
     const card=document.createElement("div");card.className="tr glass";
+    card.dataset.id=String(rp.id);card.dataset.kind="reply";
     const hd=document.createElement("div");hd.className="trh";
     const nk=document.createElement("button");nk.type="button";nk.className="trn "+(rp.role||"user");richName(nk,rp.author,rp.nick);
     nk.onclick=()=>{if(rp.author)openProfile(rp.author)};
@@ -3386,6 +3391,7 @@ function renderGroupMsgs(){
   groupRows.forEach(m=>{
     const mine=m.author===user.id;
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
+    d.dataset.id=String(m.id);d.dataset.kind="group";
     const head=document.createElement("div");head.className="mh";
     const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick);
     nk.onclick=()=>{if(m.author)openProfile(m.author)};
@@ -3723,6 +3729,7 @@ function renderDmMsgs(){
   dmRows.forEach(m=>{
     const mine=m.sender===user.id;
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
+    d.dataset.id=String(m.id);d.dataset.kind="dm";
     if(m.att_path){
       const u=dmUrl(m.att_path);
       const tp=(m.att_type||"").toLowerCase();
@@ -4016,6 +4023,7 @@ function renderServerMsgs(){
   srvRows.forEach(m=>{
     const mine=m.author===user.id;
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
+    d.dataset.id=String(m.id);d.dataset.kind="server";
     const head=document.createElement("div");head.className="mh";
     const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick);
     nk.onclick=()=>{if(m.author)openProfile(m.author)};
@@ -4795,5 +4803,6 @@ if(sb){
 }
 boot();
 </script>
+<script src="fsociety-plus.js"></script>
 </body>
 </html>
