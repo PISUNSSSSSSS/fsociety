@@ -1153,7 +1153,8 @@
       top.appendChild(mk("span", "fx2-effect-cost", GEM + " " + nfmt(it.cost_gems)));
       card.appendChild(top);
       var demo = mk("div", "fx2-effect-demo");
-      var nick = mk("span", "fx2-effect-nick", L("Твой ник", "Your nick"));
+      var nick = mk("span", "fx2-effect-nick");
+      nick.appendChild(mk("span", "rnm", L("Твой ник", "Your nick")));
       paintNickFx(nick, it.value);
       demo.appendChild(nick);
       card.appendChild(demo);

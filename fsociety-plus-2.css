@@ -628,7 +628,24 @@ body.fx-noanim .fx2-eq.playing i{animation:none!important}
 .fx2-nfx[data-fx="hearts"] i,
 .fx2-nfx[data-fx="fire"] i,
 .fx2-nfx[data-fx="bubbles"] i{animation-name:fx2Nrise}
-.fx2-nick-fx[data-fx2-fx="money"]{background:linear-gradient(90deg,rgba(250,204,21,.15),rgba(74,222,128,.07));box-shadow:0 0 0 1px rgba(250,204,21,.14)}
+.fx2-nick-fx[data-fx2-fx="money"]{
+  background:linear-gradient(90deg,rgba(250,204,21,.18),rgba(74,222,128,.08));
+  box-shadow:0 0 0 1px rgba(250,204,21,.22),0 0 18px rgba(250,204,21,.12);
+}
+.fx2-nick-fx[data-fx2-fx="money"] .rnm,
+.fx2-effect-nick[data-fx2-fx="money"] .rnm{
+  background:linear-gradient(90deg,#b45309,#fde68a,#f59e0b,#fde68a,#b45309);
+  background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  font-weight:800;
+  animation:fx2RichShine 3s linear infinite;
+  text-shadow:none;
+  filter:drop-shadow(0 0 6px rgba(250,204,21,.35));
+}
+.fx2-nick-fx[data-fx2-fx="money"] .fx2-nfx{z-index:0}
+.fx2-nick-fx[data-fx2-fx="money"] .rnm{position:relative;z-index:1}
+@keyframes fx2RichShine{to{background-position:250% 0}}
 .fx2-nick-fx[data-fx2-fx="rain"]{background:rgba(96,165,250,.09)}
 .fx2-nick-fx[data-fx2-fx="stars"]{background:rgba(250,204,21,.07)}
 .fx2-nick-fx[data-fx2-fx="snow"]{background:rgba(186,230,253,.08)}
