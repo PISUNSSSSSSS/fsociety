@@ -9,9 +9,10 @@ body.fx-noanim *{animation:none!important;transition:none!important}
 #fxbtn.has .fx-dot{display:block}
 
 /* panel */
-#fxpanel{position:fixed;inset:0;z-index:40;display:none;background:rgba(0,0,0,.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-#fxpanel.show{display:block}
-.fx-wrap{position:absolute;inset:0;overflow-y:auto;padding:calc(60px + env(safe-area-inset-top)) 14px calc(28px + env(safe-area-inset-bottom));box-sizing:border-box}
+#fxpanel{position:fixed;inset:0;z-index:40;display:block;opacity:0;visibility:hidden;pointer-events:none;background:rgba(0,0,0,.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:opacity .28s ease,visibility .28s ease}
+#fxpanel.show{opacity:1;visibility:visible;pointer-events:auto}
+.fx-wrap{position:absolute;inset:0;overflow-y:auto;padding:calc(60px + env(safe-area-inset-top)) 14px calc(28px + env(safe-area-inset-bottom));box-sizing:border-box;transform:translateY(18px) scale(.985);opacity:0;transition:transform .42s cubic-bezier(.2,.9,.2,1),opacity .3s ease}
+#fxpanel.show .fx-wrap{transform:none;opacity:1}
 .fx-inner{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:12px;text-align:left}
 .fx-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .fx-top h2{margin:0;font-size:1.15rem}
@@ -189,4 +190,79 @@ body.fx-noanim *{animation:none!important;transition:none!important}
 #fxbookmark.on{color:#facc15;text-shadow:0 0 10px rgba(250,204,21,.7)}
 @media(max-width:380px){
   .fx-term-out{max-height:46vh}
+}
+
+/* ============================================================
+   v2.2 — анимация открытия, меню, плиток и подводок
+   ============================================================ */
+@keyframes fxWrapIn{from{opacity:0;transform:translateY(24px) scale(.975)}to{opacity:1;transform:none}}
+@keyframes fxHeadIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes fxTileIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes fxViewIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+@keyframes fxCardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fxSoftGlow{0%,100%{box-shadow:0 0 0 1px rgba(74,222,128,.08),0 8px 28px rgba(0,0,0,.32)}50%{box-shadow:0 0 0 1px rgba(74,222,128,.18),0 10px 34px rgba(0,0,0,.4)}}
+
+#fxpanel.show .fx-wrap,#fx2panel.show .fx-wrap{animation:fxWrapIn .46s cubic-bezier(.2,.9,.2,1) both}
+#fxpanel.show .fx-top,#fx2panel.show .fx-top{animation:fxHeadIn .4s ease both}
+#fxpanel.show .fx-card,#fx2panel.show .fx-card,#fx2panel.show .fx2-wallet{animation:fxCardIn .45s .05s both}
+#fxpanel.show .fx-tile,#fx2panel.show .fx-tile{animation:fxTileIn .46s both}
+#fxpanel.show .fx-tile:nth-child(2),#fx2panel.show .fx-tile:nth-child(2){animation-delay:.035s}
+#fxpanel.show .fx-tile:nth-child(3),#fx2panel.show .fx-tile:nth-child(3){animation-delay:.07s}
+#fxpanel.show .fx-tile:nth-child(4),#fx2panel.show .fx-tile:nth-child(4){animation-delay:.105s}
+#fxpanel.show .fx-tile:nth-child(5),#fx2panel.show .fx-tile:nth-child(5){animation-delay:.14s}
+#fxpanel.show .fx-tile:nth-child(6),#fx2panel.show .fx-tile:nth-child(6){animation-delay:.175s}
+#fxpanel.show .fx-tile:nth-child(7),#fx2panel.show .fx-tile:nth-child(7){animation-delay:.21s}
+#fxpanel.show .fx-tile:nth-child(8),#fx2panel.show .fx-tile:nth-child(8){animation-delay:.245s}
+#fxpanel.show .fx-tile:nth-child(9),#fx2panel.show .fx-tile:nth-child(9){animation-delay:.28s}
+#fxpanel.show .fx-tile:nth-child(10),#fx2panel.show .fx-tile:nth-child(10){animation-delay:.315s}
+#fxpanel.show .fx-tile:nth-child(11),#fx2panel.show .fx-tile:nth-child(11){animation-delay:.35s}
+#fxpanel.show .fx-tile:nth-child(12),#fx2panel.show .fx-tile:nth-child(12){animation-delay:.385s}
+#fxpanel.show .fx-tile:nth-child(13),#fx2panel.show .fx-tile:nth-child(13){animation-delay:.42s}
+#fxpanel.show .fx-view.on,#fx2panel.show .fx-view.on{animation:fxViewIn .34s ease both}
+
+/* плитки: подсветка, блик и мягкий подъём */
+.fx-tile{position:relative;overflow:hidden;transition:transform .24s cubic-bezier(.2,.9,.2,1),background .24s,border-color .24s,box-shadow .24s}
+.fx-tile::before{content:"";position:absolute;inset:-40% -70%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);transform:translateX(-70%) rotate(8deg);transition:transform .6s ease;pointer-events:none}
+.fx-tile:hover::before{transform:translateX(70%) rotate(8deg)}
+.fx-tile:hover{transform:translateY(-2px);background:rgba(255,255,255,.1);border-color:rgba(74,222,128,.32);box-shadow:0 10px 26px rgba(0,0,0,.34)}
+.fx-tile:active{transform:scale(.97)}
+.fx-tile .fx-ico{transition:transform .25s,box-shadow .25s}
+.fx-tile:hover .fx-ico{transform:scale(1.08) rotate(-3deg);box-shadow:0 0 16px rgba(74,222,128,.2)}
+
+/* кнопки и крестики */
+.fx-btn,.fx-x,.fx-back,.fx2-link{transition:transform .2s,background .2s,border-color .2s,opacity .2s,box-shadow .2s}
+.fx-btn:hover{background:rgba(255,255,255,.16);transform:translateY(-1px)}
+.fx-btn.main:hover{background:#6ee7a0;box-shadow:0 8px 24px rgba(74,222,128,.24)}
+.fx-btn:active,.fx-x:active,.fx-back:active{transform:scale(.94)}
+.fx-x:hover,.fx-back:hover{background:rgba(255,255,255,.18)}
+
+/* карточки и шапка */
+.fx-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.045));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.fx-top h2{letter-spacing:.01em;text-shadow:0 0 22px rgba(74,222,128,.18)}
+.fx-head h3{letter-spacing:.01em}
+
+/* док-меню */
+#dock button>svg{transition:transform .25s cubic-bezier(.2,.9,.2,1),filter .25s}
+#dock button:hover>svg{transform:translateY(-2px) scale(1.08)}
+#dock button.on>svg{filter:drop-shadow(0 0 8px rgba(74,222,128,.55))}
+#dock button.on{transform:translateY(-1px)}
+#dock{box-shadow:0 14px 44px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* скроллбар панели */
+.fx-wrap{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent}
+.fx-wrap::-webkit-scrollbar{width:8px}
+.fx-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
+
+/* кнопки хедера PLUS */
+#fxbtn,#fx2btn{transition:transform .2s,box-shadow .25s,background .25s}
+#fxbtn:hover,#fx2btn:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 0 22px rgba(167,139,250,.35)}
+#fxbtn:active,#fx2btn:active{transform:scale(.94)}
+
+@media(prefers-reduced-motion:reduce){
+  #fxpanel .fx-wrap,#fx2panel .fx-wrap,
+  #fxpanel.show .fx-wrap,#fx2panel.show .fx-wrap,
+  #fxpanel.show .fx-top,#fx2panel.show .fx-top,
+  #fxpanel.show .fx-tile,#fx2panel.show .fx-tile,
+  #fxpanel.show .fx-view.on,#fx2panel.show .fx-view.on,
+  #fxpanel.show .fx-card,#fx2panel.show .fx-card{animation:none!important}
 }

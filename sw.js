@@ -1,5 +1,5 @@
 /* fsociety PLUS service worker */
-const CACHE = "fsociety-plus-v5";
+const CACHE = "fsociety-plus-v6";
 const ASSETS = [
   "./",
   "./index.html",

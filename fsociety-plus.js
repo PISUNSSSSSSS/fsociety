@@ -207,14 +207,8 @@
 
     var dot = mk("div", "fx-recdot"); dot.id = "fxrecdot"; dot.textContent = "● 0:00"; document.body.appendChild(dot);
 
-    /* stories strip */
-    var homeBox = document.querySelector("#home .box");
-    if (homeBox && !q("fxstories")) {
-      var strip = mk("div", "fx-stories"); strip.id = "fxstories";
-      var tag = homeBox.querySelector(".tag");
-      if (tag && tag.nextSibling) homeBox.insertBefore(strip, tag.nextSibling);
-      else homeBox.appendChild(strip);
-    }
+    /* stories strip removed from home — stories live inside the PLUS panel */
+    var oldStrip = q("fxstories"); if (oldStrip) oldStrip.remove();
 
     /* profile stats */
     var profileBox = document.querySelector("#profile .box");

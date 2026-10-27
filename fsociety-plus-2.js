@@ -18,6 +18,53 @@
     { name: "Deep Space One", genre: "space music", url: "https://ice1.somafm.com/deepspaceone-128-mp3" }
   ];
 
+  var WALL_ICONS = {
+    none: "🚫", matrix: "🟩", stars: "✨", aurora: "🌌", ocean: "🌊", galaxy: "🌠",
+    sakura: "🌸", rain: "🌧", neon: "🟣", embers: "🔥", fireworks: "🎆",
+    rich: "💚", money: "💸", snow: "❄", hearts: "💖", thunder: "⚡", bubbles: "🫧", custom: "🖼"
+  };
+  var WALL_PRICES = {
+    matrix: 40, stars: 35, aurora: 45, ocean: 45, galaxy: 55, sakura: 55, rain: 35,
+    neon: 65, embers: 65, fireworks: 75, rich: 80, money: 90,
+    snow: 70, hearts: 75, thunder: 85, bubbles: 70
+  };
+  var WALL_DESC = {
+    none: "Чистый фон без анимации.",
+    matrix: "Зелёный дождь символов.",
+    stars: "Медленно падающие звёзды.",
+    aurora: "Живое северное сияние.",
+    ocean: "Волны и пузырьки.",
+    galaxy: "Вращающаяся галактика.",
+    sakura: "Лепестки сакуры.",
+    rain: "Настоящий дождь с редкой молнией.",
+    neon: "Неоновая сетка и перспектива.",
+    embers: "Искры и угли снизу вверх.",
+    fireworks: "Салюты в ночном небе.",
+    rich: "Изумрудный туман и золотые частицы.",
+    money: "Дождь из купюр.",
+    snow: "Мягкий снегопад.",
+    hearts: "Сердца, летящие вверх.",
+    thunder: "Гроза с молниями.",
+    bubbles: "Пузыри в глубокой воде.",
+    custom: "Твоя загруженная картинка."
+  };
+  var FX_ICONS = {
+    rain: "🌧", stars: "✨", bubbles: "🫧", snow: "❄", hearts: "💖",
+    fire: "🔥", matrix: "🟩", money: "💸", confetti: "🎉", lightning: "⚡"
+  };
+  var EFFECT_DEFS = [
+    { id: "fx_rain", value: "rain", title: "Дождь в нике", description: "Капли падают прямо в твоём нике.", cost_gems: 55, min_level: 1 },
+    { id: "fx_stars", value: "stars", title: "Звёздный ник", description: "Звёзды и искры вокруг ника.", cost_gems: 60, min_level: 1 },
+    { id: "fx_bubbles", value: "bubbles", title: "Пузырьки", description: "Лёгкие пузыри всплывают в нике.", cost_gems: 65, min_level: 1 },
+    { id: "fx_snow", value: "snow", title: "Снегопад", description: "Снежинки медленно падают в нике.", cost_gems: 70, min_level: 1 },
+    { id: "fx_hearts", value: "hearts", title: "Сердечки", description: "Сердца летят вверх в твоём нике.", cost_gems: 75, min_level: 2 },
+    { id: "fx_fire", value: "fire", title: "Огонь", description: "Языки пламени и искры.", cost_gems: 80, min_level: 2 },
+    { id: "fx_matrix", value: "matrix", title: "Матрица", description: "Цифры и символы падают в нике.", cost_gems: 85, min_level: 2 },
+    { id: "fx_money", value: "money", title: "Дождь из денег", description: "Как «Богач»: купюры и монеты.", cost_gems: 90, min_level: 3 },
+    { id: "fx_confetti", value: "confetti", title: "Конфетти", description: "Праздничное конфетти в нике.", cost_gems: 95, min_level: 3 },
+    { id: "fx_lightning", value: "lightning", title: "Молнии", description: "Электрические разряды в нике.", cost_gems: 100, min_level: 4 }
+  ];
+
   var state = {
     wallet: null,
     privileges: [],
@@ -65,7 +112,27 @@
     threadAuthor: null,
     modTab: "reports",
     currentView: "main",
+    wallSel: null,
+    wallPreview: null,
+    wallSynced: false,
     missing: {}
+  };
+
+  var FREE_WALLS = {
+    none: 1, matrix: 1, stars: 1, aurora: 1, ocean: 1, galaxy: 1, sakura: 1, rain: 1, custom: 1
+  };
+
+  var FX_CONF = {
+    rain:      { chars: ["|", "'", "•", "💧"], count: 9,  size: [6, 10], drift: 10, rot: 20,  colors: ["#93c5fd", "#60a5fa", "#bae6fd"] },
+    stars:     { chars: ["✦", "✧", "★", "✨"], count: 9,  size: [6, 10], drift: 8,  rot: 30,  colors: ["#fde68a", "#fef3c7", "#facc15"] },
+    bubbles:   { chars: ["○", "●", "◌", "🫧"], count: 8,  size: [6, 10], drift: 14, rot: 0,   colors: ["#67e8f9", "#a5f3fc", "#bae6fd"] },
+    snow:      { chars: ["❄", "❅", "✻", "•"], count: 10, size: [6, 9],  drift: 12, rot: 40,  colors: ["#e0f2fe", "#bae6fd", "#f8fafc"] },
+    hearts:    { chars: ["♥", "💖", "❤", "♡"], count: 8,  size: [7, 11], drift: 10, rot: 20,  colors: ["#f472b6", "#fb7185", "#fda4af"] },
+    fire:      { chars: ["🔥", "✦", "▲", "·"], count: 9,  size: [6, 11], drift: 9,  rot: 15,  colors: ["#fb923c", "#facc15", "#ef4444"] },
+    matrix:    { chars: ["0", "1", "$", "#", "%", "7"], count: 11, size: [6, 9], drift: 4, rot: 0, colors: ["#22c55e", "#4ade80", "#86efac"] },
+    money:     { chars: ["$", "💵", "💸", "🪙"], count: 10, size: [7, 11], drift: 14, rot: 45, colors: ["#facc15", "#fde68a", "#f59e0b", "#22c55e"] },
+    confetti:  { chars: ["■", "●", "▲", "◆", "✦"], count: 12, size: [5, 9], drift: 16, rot: 180, colors: ["#f87171", "#facc15", "#4ade80", "#38bdf8", "#a78bfa", "#f472b6"] },
+    lightning: { chars: ["⚡", "ϟ", "⌁", "✦"], count: 7,  size: [7, 11], drift: 6,  rot: 10,  colors: ["#fde047", "#facc15", "#fef08a"] }
   };
 
   /* ---------------- helpers ---------------- */
@@ -169,6 +236,150 @@
     box.appendChild(mk("div", "fx-empty", text || L("Пока пусто.", "Empty for now.")));
   }
 
+  /* ---------------- wallpaper / effect helpers ---------------- */
+  function currentWallId() {
+    try { return typeof wallId !== "undefined" ? wallId : "none"; } catch (e) { return "none"; }
+  }
+  function wallRow(id) {
+    try {
+      if (typeof WALLS === "undefined") return null;
+      for (var i = 0; i < WALLS.length; i++) if (WALLS[i][0] === id) return WALLS[i];
+    } catch (e) {}
+    return null;
+  }
+  function wallName(id) {
+    var row = wallRow(id);
+    try { if (row && typeof t === "function") return t(row[1]); } catch (e) {}
+    return id;
+  }
+  function wallColor(id) {
+    try { if (typeof WALL_DOT !== "undefined" && WALL_DOT[id]) return WALL_DOT[id]; } catch (e) {}
+    return "#8b5cf6";
+  }
+  function wallPrice(id) {
+    return Number(WALL_PRICES[id] || 0);
+  }
+  function wallDesc(id) {
+    return WALL_DESC[id] || L("Анимированные обои.", "Animated wallpaper.");
+  }
+  function walletPrivs() {
+    var w = state.wallet;
+    var list = (w && w.privileges) || [];
+    return Array.isArray(list) ? list : [];
+  }
+  function wallUnlocked(id) {
+    id = String(id || "");
+    if (FREE_WALLS[id]) return true;
+    var pid = "wall_" + id;
+    if (walletPrivs().indexOf(pid) > -1) return true;
+    var u = gu();
+    if (u && Array.isArray(u.privileges) && u.privileges.indexOf(pid) > -1) return true;
+    if (u) {
+      var c = state.privCache.get(String(u.id));
+      if (c && Array.isArray(c.list) && c.list.indexOf(pid) > -1) return true;
+    }
+    return false;
+  }
+  function canUseWall(id) {
+    return !!FREE_WALLS[id] || wallUnlocked(id) || rank() >= 1;
+  }
+
+  function effectById(pid) {
+    if (!pid) return null;
+    var it = state.privilegeMap.get(pid);
+    if (it && it.kind === "effect") return it;
+    for (var i = 0; i < EFFECT_DEFS.length; i++) if (EFFECT_DEFS[i].id === pid) return EFFECT_DEFS[i];
+    if (String(pid).indexOf("fx_") === 0) return { id: pid, value: String(pid).slice(3), kind: "effect" };
+    return null;
+  }
+  function effectValue(pid) {
+    var it = effectById(pid);
+    return it ? (it.value || String(pid).replace(/^fx_/, "")) : "";
+  }
+  function effectOwned(pid) {
+    if (!pid) return false;
+    if (walletPrivs().indexOf(pid) > -1) return true;
+    var u = gu();
+    if (u && Array.isArray(u.privileges) && u.privileges.indexOf(pid) > -1) return true;
+    if (u) {
+      var c = state.privCache.get(String(u.id));
+      if (c && Array.isArray(c.list) && c.list.indexOf(pid) > -1) return true;
+    }
+    return false;
+  }
+  function activeEffectId() {
+    var u = gu();
+    if (!u) return "";
+    var w = state.wallet;
+    if (w && (typeof w.active_effect === "string" || w.active_effect === null)) return w.active_effect || "";
+    var c = state.privCache.get(String(u.id));
+    if (c && (typeof c.active === "string" || c.active === null)) return c.active || "";
+    var list = (c && c.list) || walletPrivs();
+    for (var i = list.length - 1; i >= 0; i--) {
+      if (effectById(list[i])) return list[i];
+    }
+    return "";
+  }
+  function activeEffectFor(id) {
+    var u = gu();
+    var pid = "";
+    if (u && String(id) === String(u.id)) pid = activeEffectId();
+    if (!pid) {
+      var c = state.privCache.get(String(id));
+      if (c && (typeof c.active === "string" || c.active === null)) {
+        pid = c.active || "";
+        if (!pid) return null;
+      } else if (c && Array.isArray(c.list)) {
+        for (var i = c.list.length - 1; i >= 0; i--) {
+          if (effectById(c.list[i])) { pid = c.list[i]; break; }
+        }
+      }
+    }
+    if (!pid) return null;
+    var val = effectValue(pid);
+    return val ? { id: pid, value: val } : null;
+  }
+  function nickFxLayer(el) {
+    if (!el) return null;
+    for (var i = 0; i < el.children.length; i++) {
+      if (el.children[i].classList && el.children[i].classList.contains("fx2-nfx")) return el.children[i];
+    }
+    return null;
+  }
+  function paintNickFx(el, value) {
+    if (!el) return;
+    value = String(value || "");
+    var layer = nickFxLayer(el);
+    var current = el.getAttribute("data-fx2-fx") || "";
+    if (!value) {
+      if (layer) layer.remove();
+      el.classList.remove("fx2-nick-fx");
+      el.removeAttribute("data-fx2-fx");
+      return;
+    }
+    if (current === value && layer) return;
+    if (layer) layer.remove();
+    el.classList.add("fx2-nick-fx");
+    el.setAttribute("data-fx2-fx", value);
+    var conf = FX_CONF[value] || FX_CONF.stars;
+    layer = mk("span", "fx2-nfx");
+    layer.setAttribute("data-fx", value);
+    layer.setAttribute("aria-hidden", "true");
+    var count = conf.count || 9;
+    for (var i = 0; i < count; i++) {
+      var s = mk("i", "", conf.chars[i % conf.chars.length]);
+      s.style.setProperty("--x", (3 + Math.random() * 92).toFixed(1) + "%");
+      s.style.setProperty("--d", (-(Math.random() * 3.2)).toFixed(2) + "s");
+      s.style.setProperty("--dur", (1.5 + Math.random() * 1.8).toFixed(2) + "s");
+      s.style.setProperty("--s", (conf.size[0] + Math.random() * (conf.size[1] - conf.size[0])).toFixed(1) + "px");
+      s.style.setProperty("--drift", ((Math.random() * 2 - 1) * conf.drift).toFixed(1) + "px");
+      s.style.setProperty("--rot", ((Math.random() * 2 - 1) * conf.rot).toFixed(0) + "deg");
+      if (conf.colors) s.style.setProperty("--c", conf.colors[i % conf.colors.length]);
+      layer.appendChild(s);
+    }
+    el.appendChild(layer);
+  }
+
   function ctx() {
     var v = curView();
     if (v === "thread" && threadId()) {
@@ -191,8 +402,8 @@
 
   /* ---------------- panel skeleton ---------------- */
   function view(id, title, body, action) {
-    return '<div id="fx2-view-' + id + '" class="fx2-view">' +
-      '<div class="fx2-head"><button type="button" class="fx2-back" data-fx2-back aria-label="Back">←</button>' +
+    return '<div id="fx2-view-' + id + '" class="fx2-view fx-view">' +
+      '<div class="fx2-head fx-head"><button type="button" class="fx2-back fx-back" data-fx2-back aria-label="Back">←</button>' +
       '<h3>' + title + '</h3>' + (action || '') + '</div>' + body + '</div>';
   }
 
@@ -211,6 +422,8 @@
 
     var tiles =
       '<button type="button" class="fx-tile" data-fx2-view="privileges"><span class="fx-ico">💎</span><span><b>Привилегии</b><small>за кристаллы</small></span></button>' +
+      '<button type="button" class="fx-tile" data-fx2-view="wallpapers"><span class="fx-ico">🌧</span><span><b>Обои</b><small>анимированные</small></span></button>' +
+      '<button type="button" class="fx-tile" data-fx2-view="effects"><span class="fx-ico">💫</span><span><b>Эффекты</b><small>деньги, звёзды, огонь</small></span></button>' +
       '<button type="button" class="fx-tile" data-fx2-view="polls"><span class="fx-ico">📊</span><span><b>Опросы</b><small>чат, форум, сервер</small></span></button>' +
       '<button type="button" class="fx-tile" data-fx2-view="pins"><span class="fx-ico">📌</span><span><b>Закрепы</b><small>важное под рукой</small></span></button>' +
       '<button type="button" class="fx-tile" data-fx2-view="anon"><span class="fx-ico">🕶</span><span><b>Анонимка</b><small>без имён</small></span></button>' +
@@ -225,18 +438,32 @@
     var panel = document.createElement("div");
     panel.id = "fx2panel";
     panel.innerHTML =
-      '<div class="fx2-wrap"><div class="fx2-inner">' +
-        '<div class="fx2-top"><h2>fsociety <span>PLUS 2</span></h2><button type="button" class="fx2-x" id="fx2close" aria-label="Close">✕</button></div>' +
+      '<div class="fx-wrap"><div class="fx-inner">' +
+        '<div class="fx-top fx2-top"><h2>fsociety <span class="fx2-title-grad">PLUS 2</span></h2><button type="button" class="fx-x fx2-x" id="fx2close" aria-label="Close">✕</button></div>' +
 
-        '<div id="fx2-main" class="fx2-view on">' +
+        '<div id="fx2-main" class="fx2-view fx-view on">' +
           '<div class="fx-card fx2-wallet" id="fx2-wallet"></div>' +
-          '<div class="fx2-tiles">' + tiles + '</div>' +
+          '<div class="fx-tiles fx2-tiles">' + tiles + '</div>' +
           '<div id="fx2-main-ann"></div>' +
         '</div>' +
 
         view("privileges", "Привилегии",
           '<p class="fx2-hint" id="fx2-priv-hint">Кристаллы тратятся на косметику и статус. Привилегии остаются навсегда.</p>' +
           '<div id="fx2-priv-list" class="fx2-list"></div>') +
+
+        view("wallpapers", "Анимированные обои",
+          '<p class="fx2-hint">Название обоев = эффект. Выбери, посмотри вживую и купи за 💎.</p>' +
+          '<div class="fx2-wall-preview" id="fx2-wall-preview">' +
+            '<canvas id="fx2-wall-canvas"></canvas>' +
+            '<div class="fx2-wall-overlay"><b id="fx2-wall-name">—</b><small id="fx2-wall-desc"></small></div>' +
+          '</div>' +
+          '<div class="fx2-form-row" id="fx2-wall-actions"></div>' +
+          '<div class="fx2-wall-grid" id="fx2-wall-grid"></div>') +
+
+        view("effects", "Эффекты ника",
+          '<p class="fx2-hint">Купи эффект — он будет падать прямо в твоём нике. Как «Богач», только на выбор.</p>' +
+          '<div class="fx2-form-row" id="fx2-effect-actions"></div>' +
+          '<div id="fx2-effect-list" class="fx2-list"></div>') +
 
         view("polls", "Опросы",
           '<div class="fx2-scope" id="fx2-poll-scope"></div>' +
@@ -375,6 +602,12 @@
       state.serverQuery = srvSearch.value.trim();
       state.serverTimer = setTimeout(loadServers, 320);
     });
+
+    window.addEventListener("resize", function () {
+      if (state.currentView === "wallpapers" && q("fx2panel") && q("fx2panel").classList.contains("show")) {
+        startWallPreview(state.wallSel || "rain");
+      }
+    });
   }
 
   function openPanel(name) {
@@ -389,6 +622,7 @@
     if (isStaff()) loadReportsCount();
   }
   function closePanel() {
+    stopWallPreview();
     var p = q("fx2panel");
     if (p) p.classList.remove("show");
     closeModal();
@@ -397,12 +631,15 @@
     var panel = q("fx2panel");
     if (!panel) return;
     if (name === "mod" && !isStaff()) name = "main";
+    if (state.currentView === "wallpapers" && name !== "wallpapers") stopWallPreview();
     state.currentView = name;
     Array.prototype.forEach.call(panel.querySelectorAll(".fx2-view"), function (v) {
       v.classList.toggle("on", v.id === "fx2-view-" + name || (name === "main" && v.id === "fx2-main"));
     });
     if (name === "main") { loadWallet(); loadAnnouncements(); }
     else if (name === "privileges") loadPrivileges();
+    else if (name === "wallpapers") loadWallpapers();
+    else if (name === "effects") loadEffects();
     else if (name === "polls") loadPolls();
     else if (name === "pins") loadPins();
     else if (name === "anon") loadAnon();
@@ -438,9 +675,20 @@
       var rows = await rpc("wallet_get");
       state.wallet = (rows || [])[0] || null;
       if (state.wallet) {
-        state.privCache.set(String(u.id), { at: Date.now(), list: state.wallet.privileges || [] });
+        state.privCache.set(String(u.id), {
+          at: Date.now(),
+          list: state.wallet.privileges || [],
+          active: state.wallet.active_effect
+        });
       }
       renderWallet();
+      if (!state.wallSynced) {
+        state.wallSynced = true;
+        applyOwnedWallpaper();
+      }
+      try {
+        if (typeof buildWallGrid === "function" && q("emodal") && q("emodal").classList.contains("show")) buildWallGrid();
+      } catch (e) {}
       decoratePrivileges(true);
     } catch (e) {
       if (isMissing(e)) state.missing.wallet = true;
@@ -541,7 +789,8 @@
 
   function privIcon(kind) {
     return kind === "badge" ? "🏅" : kind === "glow" ? "✨" : kind === "frame" ? "🖼" :
-      kind === "title" ? "🏷" : kind === "banner" ? "🌈" : "💬";
+      kind === "title" ? "🏷" : kind === "banner" ? "🌈" :
+      kind === "effect" ? "💫" : kind === "wallpaper" ? "🌧" : "💬";
   }
 
   function renderPrivileges() {
@@ -552,11 +801,14 @@
     var lvl = st.level || 0;
     var hint = q("fx2-priv-hint");
     if (hint) hint.textContent = GEM + " " + nfmt(st.gems) + L(" на балансе. Привилегии покупаются навсегда.", " on balance. Privileges are permanent.");
-    if (!state.privileges.length) {
+    var items = state.privileges.filter(function (it) {
+      return it.kind !== "effect" && it.kind !== "wallpaper";
+    });
+    if (!items.length) {
       list.appendChild(mk("div", "fx-empty", L("Пока нет привилегий.", "No privileges yet.")));
       return;
     }
-    state.privileges.forEach(function (it) {
+    items.forEach(function (it) {
       var card = mk("div", "fx2-priv" + (it.owned ? " owned" : ""));
       var top = mk("div", "fx2-priv-top");
       top.appendChild(mk("span", "fx2-priv-ico", privIcon(it.kind)));
@@ -626,6 +878,344 @@
       fail(e, "title");
     } finally {
       btn.disabled = false;
+    }
+  }
+
+  /* ---------------- animated wallpapers ---------------- */
+  function wallIds() {
+    var out = [];
+    try {
+      if (typeof WALLS !== "undefined") {
+        for (var i = 0; i < WALLS.length; i++) {
+          if (WALLS[i][0] !== "custom") out.push(WALLS[i][0]);
+        }
+      }
+    } catch (e) {}
+    if (!out.length) out = Object.keys(WALL_ICONS);
+    return out;
+  }
+
+  async function loadWallpapers() {
+    var grid = q("fx2-wall-grid");
+    if (!grid) return;
+    if (gu() && !state.wallet) await loadWallet();
+    if (!state.wallSel) state.wallSel = currentWallId();
+    if (state.wallSel === "custom" || !WALL_ICONS[state.wallSel]) state.wallSel = "rain";
+    renderWallGrid();
+    renderWallActions();
+    startWallPreview(state.wallSel);
+  }
+
+  function renderWallGrid() {
+    var grid = q("fx2-wall-grid");
+    if (!grid) return;
+    clear(grid);
+    var sel = state.wallSel || "rain";
+    wallIds().forEach(function (id) {
+      var usable = canUseWall(id);
+      var free = !!FREE_WALLS[id];
+      var card = mk("button", "fx2-wall-card" + (id === sel ? " on" : "") + (usable ? "" : " locked") + (currentWallId() === id ? " current" : ""));
+      card.type = "button";
+      card.style.setProperty("--wc", wallColor(id));
+      card.appendChild(mk("span", "fx2-wall-glow"));
+      card.appendChild(mk("span", "fx2-wall-ico", WALL_ICONS[id] || "🖼"));
+      var main = mk("span", "fx2-wall-main");
+      main.appendChild(mk("b", "", wallName(id)));
+      main.appendChild(mk("small", "", free ? L("бесплатно", "free") : usable ? L("открыто", "unlocked") : GEM + " " + wallPrice(id)));
+      card.appendChild(main);
+      if (!usable) card.appendChild(mk("span", "fx2-wall-lock", "🔒"));
+      card.onclick = function () {
+        state.wallSel = id;
+        renderWallGrid();
+        renderWallActions();
+        startWallPreview(id);
+      };
+      grid.appendChild(card);
+    });
+  }
+
+  function renderWallActions() {
+    var box = q("fx2-wall-actions");
+    if (!box) return;
+    clear(box);
+    var id = state.wallSel || "rain";
+    var nameEl = q("fx2-wall-name");
+    var descEl = q("fx2-wall-desc");
+    if (nameEl) nameEl.textContent = wallName(id);
+    if (descEl) descEl.textContent = wallDesc(id);
+    var usable = canUseWall(id);
+    var current = currentWallId() === id;
+    if (!gu()) {
+      var login = mk("button", "fx-btn main", L("Войти", "Sign in"));
+      login.type = "button";
+      login.onclick = function () {
+        closePanel();
+        try { if (typeof go === "function") go("register"); } catch (e) {}
+      };
+      box.appendChild(login);
+      box.appendChild(mk("span", "fx2-hint", usable
+        ? L("Превью можно смотреть без аккаунта, а применить обои — после входа.", "You can preview without an account; sign in to apply.")
+        : L("Войди, чтобы купить эти обои за кристаллы.", "Sign in to buy this wallpaper with gems.")));
+      return;
+    }
+    if (usable) {
+      var apply = mk("button", "fx-btn main", current ? L("Уже стоит", "Already applied") : L("Применить", "Apply"));
+      apply.type = "button";
+      apply.disabled = current;
+      apply.onclick = function () { applyWallpaper(id, apply); };
+      box.appendChild(apply);
+    } else {
+      var buy = mk("button", "fx-btn main", L("Купить за ", "Buy for ") + GEM + " " + wallPrice(id));
+      buy.type = "button";
+      buy.onclick = function () { buyWallpaper(id, buy); };
+      box.appendChild(buy);
+      box.appendChild(mk("span", "fx2-hint", L("Цена навсегда. После покупки обои включатся сразу.", "One-time price. Applied right after purchase.")));
+    }
+  }
+
+  function startWallPreview(id) {
+    stopWallPreview();
+    var cv = q("fx2-wall-canvas");
+    if (!cv) return;
+    var box = cv.parentElement;
+    if (!box) return;
+    var w = Math.max(140, Math.round(box.clientWidth || 320));
+    var h = Math.max(110, Math.round(box.clientHeight || 190));
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    var ctx = cv.getContext("2d");
+    if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (id === "none" || typeof DRAW === "undefined" || !DRAW[id]) {
+      ctx.clearRect(0, 0, w, h);
+      return;
+    }
+    var st = null;
+    var oldW = 0, oldH = 0;
+    try {
+      oldW = ww; oldH = wh;
+      ww = w; wh = h;
+      st = INIT[id] ? INIT[id]() : {};
+    } catch (e) {
+      st = {};
+    } finally {
+      try { ww = oldW; wh = oldH; } catch (e2) {}
+    }
+    if (!st) st = {};
+    var obj = { id: id, raf: 0, w: w, h: h, st: st, ctx: ctx };
+    state.wallPreview = obj;
+    var last = 0;
+    function frame(ts) {
+      if (!state.wallPreview || state.wallPreview !== obj) return;
+      obj.raf = requestAnimationFrame(frame);
+      if (document.hidden) return;
+      if (ts - last < 50) return;
+      last = ts;
+      try { DRAW[id](ctx, w, h, ts, st); } catch (e) {}
+    }
+    obj.raf = requestAnimationFrame(frame);
+  }
+
+  function stopWallPreview() {
+    var obj = state.wallPreview;
+    state.wallPreview = null;
+    if (obj && obj.raf) cancelAnimationFrame(obj.raf);
+    var cv = q("fx2-wall-canvas");
+    if (!cv) return;
+    var ctx = cv.getContext("2d");
+    if (ctx) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, cv.width, cv.height);
+    }
+  }
+
+  async function applyWallpaper(id, btn) {
+    var u = gu();
+    if (!u) { toast2(L("Сначала войди в аккаунт.", "Sign in first.")); return; }
+    if (!canUseWall(id)) { toast2(L("Эти обои ещё не куплены.", "This wallpaper is not unlocked yet.")); return; }
+    if (btn) btn.disabled = true;
+    try {
+      try { if (typeof setWall === "function") setWall(id); } catch (e) {}
+      u.wallpaper = id;
+      var s = gsb();
+      if (s) {
+        var r = await s.from("profiles").update({ wallpaper: id }).eq("id", u.id);
+        if (r.error) throw r.error;
+      }
+      toast2(L("Обои применены.", "Wallpaper applied."));
+      renderWallGrid();
+      renderWallActions();
+    } catch (e) {
+      toast2(L("Обои включены, но не сохранились в профиле.", "Wallpaper applied, but could not be saved."));
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function buyWallpaper(id, btn) {
+    if (!gu()) { toast2(L("Сначала войди в аккаунт.", "Sign in first.")); return; }
+    if (btn) btn.disabled = true;
+    try {
+      await rpc("privilege_buy", { p_id: "wall_" + id });
+      toast2(L("Куплено: ", "Bought: ") + wallName(id));
+      await loadWallet();
+      await loadPrivileges();
+      renderWallGrid();
+      renderWallActions();
+      await applyWallpaper(id, null);
+      decoratePrivileges(true);
+    } catch (e) {
+      var m = ((e && e.message) || "").toLowerCase();
+      if (m.indexOf("gems") > -1) toast2(L("Не хватает кристаллов.", "Not enough gems."));
+      else if (m.indexOf("level") > -1) toast2(L("Слишком низкий уровень.", "Level too low."));
+      else if (m.indexOf("owned") > -1) { await loadWallet(); renderWallGrid(); renderWallActions(); }
+      else fail(e, "wallpapers");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function applyOwnedWallpaper() {
+    var u = gu();
+    if (!u || !u.wallpaper) return;
+    var id = String(u.wallpaper);
+    if (id === "custom") return;
+    if (currentWallId() === id) return;
+    if (wallUnlocked(id) || rank() >= 1) {
+      try { if (typeof setWall === "function") setWall(id); } catch (e) {}
+    }
+  }
+
+  /* ---------------- nickname effects ---------------- */
+  function effectDefs() {
+    var map = new Map();
+    EFFECT_DEFS.forEach(function (d) {
+      map.set(d.id, {
+        id: d.id, title: d.title, description: d.description,
+        cost_gems: d.cost_gems, min_level: d.min_level, value: d.value, kind: "effect"
+      });
+    });
+    state.privileges.forEach(function (it) {
+      if (it.kind !== "effect") return;
+      var cur = map.get(it.id) || {};
+      map.set(it.id, Object.assign(cur, it));
+    });
+    return Array.from(map.values()).sort(function (a, b) {
+      return (Number(a.cost_gems) || 0) - (Number(b.cost_gems) || 0);
+    });
+  }
+
+  async function loadEffects() {
+    var list = q("fx2-effect-list");
+    if (!list) return;
+    if (gu() && !state.wallet) await loadWallet();
+    if (gu() && !state.privileges.length) {
+      try { state.privileges = (await rpc("privilege_list")) || []; }
+      catch (e) { if (isMissing(e)) state.missing.privileges = true; }
+    }
+    renderEffects();
+  }
+
+  function renderEffects() {
+    var list = q("fx2-effect-list");
+    if (!list) return;
+    clear(list);
+    var actions = q("fx2-effect-actions");
+    if (actions) clear(actions);
+    var activeId = activeEffectId();
+    if (actions && activeId) {
+      var off = mk("button", "fx-btn", L("Снять эффект", "Turn effect off"));
+      off.type = "button";
+      off.onclick = function () { setEffect("", off); };
+      actions.appendChild(off);
+      actions.appendChild(mk("span", "fx2-hint", L("Эффект можно включить снова бесплатно.", "You can turn it back on for free.")));
+    }
+    if (!gu()) {
+      loginPrompt(list);
+      return;
+    }
+    var defs = effectDefs();
+    if (!defs.length) {
+      empty(list, L("Эффекты не включены. Примени update-plus-2.sql.", "Effects are not enabled. Apply update-plus-2.sql."));
+      return;
+    }
+    defs.forEach(function (it) {
+      var owned = effectOwned(it.id);
+      var active = activeId === it.id;
+      var card = mk("div", "fx2-effect" + (owned ? " owned" : "") + (active ? " active" : ""));
+      var top = mk("div", "fx2-effect-top");
+      top.appendChild(mk("span", "fx2-effect-ico", FX_ICONS[it.value] || "💫"));
+      var main = mk("div", "fx2-effect-main");
+      main.appendChild(mk("b", "", it.title));
+      main.appendChild(mk("small", "", it.description));
+      top.appendChild(main);
+      top.appendChild(mk("span", "fx2-effect-cost", GEM + " " + nfmt(it.cost_gems)));
+      card.appendChild(top);
+      var demo = mk("div", "fx2-effect-demo");
+      var nick = mk("span", "fx2-effect-nick", L("Твой ник", "Your nick"));
+      paintNickFx(nick, it.value);
+      demo.appendChild(nick);
+      card.appendChild(demo);
+      var meta = mk("div", "fx2-effect-meta");
+      meta.appendChild(mk("span", "", "LVL " + it.min_level + "+"));
+      if (active) meta.appendChild(mk("span", "fx2-ok", L("включён", "active")));
+      else if (owned) meta.appendChild(mk("span", "fx2-ok", L("куплено", "owned")));
+      card.appendChild(meta);
+      var acts = mk("div", "fx2-form-row");
+      if (!owned) {
+        var buy = mk("button", "fx-btn main", L("Купить", "Buy"));
+        buy.type = "button";
+        buy.onclick = function () { buyEffect(it, buy); };
+        acts.appendChild(buy);
+      } else if (!active) {
+        var on = mk("button", "fx-btn main", L("Включить", "Enable"));
+        on.type = "button";
+        on.onclick = function () { setEffect(it.id, on); };
+        acts.appendChild(on);
+      } else {
+        acts.appendChild(mk("span", "fx2-hint", L("Эффект уже работает.", "This effect is active.")));
+      }
+      card.appendChild(acts);
+      list.appendChild(card);
+    });
+  }
+
+  async function buyEffect(it, btn) {
+    if (!gu()) { toast2(L("Сначала войди в аккаунт.", "Sign in first.")); return; }
+    if (btn) btn.disabled = true;
+    try {
+      await rpc("privilege_buy", { p_id: it.id });
+      toast2(L("Куплено: ", "Bought: ") + it.title);
+      await loadWallet();
+      await loadPrivileges();
+      renderEffects();
+      decoratePrivileges(true);
+    } catch (e) {
+      var m = ((e && e.message) || "").toLowerCase();
+      if (m.indexOf("gems") > -1) toast2(L("Не хватает кристаллов.", "Not enough gems."));
+      else if (m.indexOf("level") > -1) toast2(L("Слишком низкий уровень.", "Level too low."));
+      else if (m.indexOf("owned") > -1) { await loadWallet(); renderEffects(); }
+      else fail(e, "effects");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function setEffect(pid, btn) {
+    if (!gu()) { toast2(L("Сначала войди в аккаунт.", "Sign in first.")); return; }
+    if (btn) btn.disabled = true;
+    try {
+      await rpc("effect_set", { p_id: pid || "" });
+      toast2(pid ? L("Эффект включён.", "Effect enabled.") : L("Эффект снят.", "Effect removed."));
+      await loadWallet();
+      await loadPrivileges();
+      renderEffects();
+      decoratePrivileges(true);
+    } catch (e) {
+      fail(e, "effects");
+    } finally {
+      if (btn) btn.disabled = false;
     }
   }
 
@@ -2104,6 +2694,8 @@
         el.classList.add("fx2-hi-nick");
       }
     });
+    var fx = activeEffectFor(id);
+    paintNickFx(el, fx ? fx.value : "");
   }
 
   function applyPrivToAvatar(el, id) {
@@ -2132,7 +2724,11 @@
     try {
       var rows = (await rpc("privileges_get", { p_ids: ids })) || [];
       rows.forEach(function (r) {
-        state.privCache.set(String(r.id), { at: Date.now(), list: r.privileges || [] });
+        state.privCache.set(String(r.id), {
+          at: Date.now(),
+          list: r.privileges || [],
+          active: r.active_effect
+        });
       });
       applyAllPrivs();
     } catch (e) {
@@ -2707,6 +3303,11 @@
     hidePollSlots();
     clearMessageActions();
     Array.prototype.forEach.call(document.querySelectorAll(".fx2-pbadge"), function (b) { b.remove(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".fx2-nfx"), function (b) { b.remove(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".fx2-nick-fx"), function (el) {
+      el.classList.remove("fx2-nick-fx");
+      el.removeAttribute("data-fx2-fx");
+    });
     Array.prototype.forEach.call(document.querySelectorAll(".fx2-glow,.fx2-rainbow,.fx2-hi-nick"), function (el) {
       el.classList.remove("fx2-glow", "fx2-rainbow", "fx2-hi-nick");
       el.style.removeProperty("--fx2-glow");
@@ -2738,6 +3339,9 @@
       state.privCache.clear();
       state.privQueue.clear();
       state.missing = {};
+      state.wallet = null;
+      state.privileges = [];
+      state.wallSynced = false;
       injectAll();
       loadPrivilegeMap(true);
       loadWallet();
@@ -2751,6 +3355,10 @@
       state.privQueue.clear();
       state.privilegeMap = new Map();
       state.privilegeMapAt = 0;
+      state.privileges = [];
+      state.wallSynced = false;
+      state.wallSel = null;
+      stopWallPreview();
       removeGuestStuff();
     }
   }
@@ -2808,6 +3416,7 @@
         decoratePrivileges(true);
       },
       decorate: function () { decoratePrivileges(true); },
+      wallUnlocked: wallUnlocked,
       state: state
     };
   }
