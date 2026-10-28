@@ -6,9 +6,9 @@
 #emodal.fxed-ready{
   padding:0;
   align-items:stretch;
-  background:rgba(0,0,0,.76);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  background:rgba(0,0,0,.16);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
 }
 #emodal.fxed-ready .mcard.fxed-shell{
   margin:auto;
@@ -23,18 +23,24 @@
   flex-direction:column;
   gap:0;
   background:
-    radial-gradient(120% 80% at 0% 0%,rgba(34,197,94,.13),transparent 55%),
-    radial-gradient(90% 70% at 100% 100%,rgba(168,85,247,.10),transparent 55%),
-    #0b0d0c;
-  border:1px solid rgba(255,255,255,.15);
-  box-shadow:0 34px 110px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.06);
-  animation:fxedIn .42s cubic-bezier(.2,.9,.2,1);
+    radial-gradient(120% 80% at 0% 0%,rgba(255,255,255,.05),transparent 55%),
+    radial-gradient(90% 70% at 100% 100%,rgba(255,255,255,.035),transparent 55%),
+    rgba(10,10,10,.36);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 34px 110px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
   outline:none;
   text-align:left;
+  filter:grayscale(1);
+  backdrop-filter:blur(22px) saturate(0);
+  -webkit-backdrop-filter:blur(22px) saturate(0);
+}
+#emodal.fxed-ready.show .mcard.fxed-shell{
+  animation:fxedIn .58s cubic-bezier(.16,1,.3,1) both;
 }
 @keyframes fxedIn{
-  from{opacity:0;transform:translateY(18px) scale(.985)}
-  to{opacity:1;transform:none}
+  0%{opacity:0;transform:translateY(34px) scale(.93) rotateX(4deg)}
+  55%{opacity:1}
+  100%{opacity:1;transform:none}
 }
 #emodal.fxed-ready .fxed-shell *{box-sizing:border-box}
 #emodal.fxed-ready [hidden]{display:none!important}
@@ -92,10 +98,8 @@
   display:flex;
   flex-direction:column;
   gap:14px;
-  border-right:1px solid rgba(255,255,255,.07);
-  background:
-    radial-gradient(90% 60% at 20% 0%,rgba(34,197,94,.06),transparent 65%),
-    rgba(255,255,255,.012);
+  border-right:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.018);
   scrollbar-width:thin;
   scrollbar-color:rgba(255,255,255,.16) transparent;
 }
@@ -118,9 +122,11 @@
   position:relative;
   border-radius:24px;
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.13);
-  background:#101312;
-  box-shadow:0 18px 44px rgba(0,0,0,.36);
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(12,12,12,.52);
+  box-shadow:0 18px 44px rgba(0,0,0,.3);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
 }
 #emodal.fxed-ready .fxed-cover{
   position:relative;
@@ -132,7 +138,7 @@
 }
 #emodal.fxed-ready .fxed-cover::after{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 25%,rgba(16,19,18,.18) 70%,#101312 100%);
+  background:linear-gradient(180deg,transparent 25%,rgba(12,12,12,.12) 70%,rgba(12,12,12,.5) 100%);
 }
 #emodal.fxed-ready .fxed-cover-grid{
   position:absolute;inset:0;opacity:.5;
@@ -200,29 +206,6 @@
   color:var(--c,#fff);
   overflow-wrap:anywhere;
 }
-#emodal.fxed-ready .fxed-nick .rmoney{
-  position:absolute;inset:0;z-index:0;
-  pointer-events:none;overflow:hidden;
-}
-#emodal.fxed-ready .fxed-nick .rmoney i{
-  position:absolute;top:-11px;
-  font-style:normal;font-size:9px;line-height:1;
-  color:#fbbf24;-webkit-text-fill-color:#fbbf24;
-  font-weight:900;
-  animation:richfall linear infinite;
-  text-shadow:0 0 5px rgba(250,204,21,.8);
-}
-#emodal.fxed-ready .fxed-nick.fxed-rich .rnm{
-  position:relative;z-index:1;
-  background:linear-gradient(90deg,#b45309,#fde68a,#f59e0b,#fde68a,#b45309);
-  background-size:250% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:transparent;
-  font-weight:800;
-  animation:richshine 3s linear infinite;
-  text-shadow:none;
-  filter:drop-shadow(0 0 6px rgba(250,204,21,.35));
-}
 #emodal.fxed-ready .fxed-title{
   align-self:flex-start;
   max-width:100%;
@@ -271,7 +254,7 @@
 #emodal.fxed-ready .fxed-main{
   min-width:0;min-height:0;
   display:flex;flex-direction:column;
-  background:rgba(7,9,8,.28);
+  background:transparent;
 }
 #emodal.fxed-ready .fxed-tabs{
   flex:none;
@@ -448,29 +431,67 @@
 #emodal.fxed-ready .wopt.on .fxed-wall-check{opacity:1}
 #emodal.fxed-ready #ewallup{margin-top:9px}
 
-/* ---------- rich mode / premium ---------- */
-#emodal.fxed-ready .fxed-toggle-card{
-  display:flex;flex-direction:column;gap:8px;
+/* ---------- куплено / premium ---------- */
+#emodal.fxed-ready .fxed-owned{
   margin-top:16px;
   padding:14px;
   border-radius:16px;
-  background:linear-gradient(145deg,rgba(250,204,21,.09),rgba(255,255,255,.022));
-  border:1px solid rgba(250,204,21,.18);
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.12);
 }
-#emodal.fxed-ready #erichw{
+#emodal.fxed-ready .fxed-owned-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:4px;
+}
+#emodal.fxed-ready .fxed-owned-head b{
+  font-size:.82rem;font-weight:700;color:rgba(255,255,255,.9);
+}
+#emodal.fxed-ready .fxed-owned-count{
+  min-width:22px;height:22px;padding:0 7px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:999px;
+  font-size:.64rem;font-weight:800;
+  color:#111;background:#f2f2f2;
+}
+#emodal.fxed-ready .fxed-owned .fxed-help{margin:2px 0 10px}
+#emodal.fxed-ready .fxed-owned-list{display:flex;flex-direction:column;gap:6px}
+#emodal.fxed-ready .fxed-owned-row{
   display:flex;align-items:center;gap:10px;
-  font-size:.84rem;font-weight:600;text-align:left;
+  padding:9px 10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
+  animation:fxedOwnedIn .28s ease both;
 }
-#emodal.fxed-ready #erichw input{
-  width:18px;height:18px;flex:none;
-  accent-color:#facc15;
-  cursor:pointer;
+#emodal.fxed-ready .fxed-owned-ico{
+  width:28px;height:28px;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:9px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.14);
+  color:#f4f4f4;font-size:.8rem;
 }
-#emodal.fxed-ready #erichhint{
-  font-size:.67rem;line-height:1.45;
+#emodal.fxed-ready .fxed-owned-main{min-width:0;flex:1}
+#emodal.fxed-ready .fxed-owned-main b{
+  display:block;font-size:.76rem;font-weight:600;color:rgba(255,255,255,.9);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#emodal.fxed-ready .fxed-owned-main small{
+  display:block;margin-top:1px;font-size:.6rem;color:rgba(255,255,255,.4);
+}
+#emodal.fxed-ready .fxed-owned-on{
+  flex:none;padding:3px 7px;border-radius:999px;
+  font-size:.56rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+  color:#0b0b0b;background:#f2f2f2;
+}
+#emodal.fxed-ready .fxed-owned-empty{
+  padding:12px;
+  border-radius:12px;
+  border:1px dashed rgba(255,255,255,.16);
   color:rgba(255,255,255,.42);
-  padding-left:28px;
+  font-size:.68rem;line-height:1.45;text-align:center;
 }
+@keyframes fxedOwnedIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 #emodal.fxed-ready .fxed-premium{
   display:flex;align-items:center;gap:12px;
   margin-top:14px;
@@ -517,10 +538,10 @@
 #emodal.fxed-ready .fxed-foot{
   flex:none;
   padding:11px 22px calc(14px + env(safe-area-inset-bottom));
-  border-top:1px solid rgba(255,255,255,.08);
-  background:rgba(8,10,9,.78);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
+  border-top:1px solid rgba(255,255,255,.1);
+  background:rgba(8,8,8,.42);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
 }
 #emodal.fxed-ready .fxed-err .err{
   min-height:0;
@@ -572,6 +593,61 @@ body.fxed-lock{overflow:hidden}
   #emodal.fxed-ready .fxed-panes{padding:16px 18px 8px}
   #emodal.fxed-ready .fxed-foot{padding-left:18px;padding-right:18px}
 }
+/* ---------- анимации вкладок ---------- */
+#emodal.fxed-ready .fxed-tab.fxed-tab-pop{animation:fxedTabPop .3s cubic-bezier(.2,.9,.2,1)}
+@keyframes fxedTabPop{
+  0%{transform:scale(.95)}
+  55%{transform:scale(1.035)}
+  100%{transform:scale(1)}
+}
+#emodal.fxed-ready .fxed-panes[data-dir="fwd"] .fxed-pane.on.fxed-pane-anim{
+  animation:fxedPaneFwd .36s cubic-bezier(.2,.9,.2,1) both;
+}
+#emodal.fxed-ready .fxed-panes[data-dir="back"] .fxed-pane.on.fxed-pane-anim{
+  animation:fxedPaneBack .36s cubic-bezier(.2,.9,.2,1) both;
+}
+@keyframes fxedPaneFwd{
+  0%{opacity:0;transform:translateX(26px) scale(.985);filter:blur(5px)}
+  100%{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes fxedPaneBack{
+  0%{opacity:0;transform:translateX(-26px) scale(.985);filter:blur(5px)}
+  100%{opacity:1;transform:none;filter:blur(0)}
+}
+
+/* ---------- ручка: прокрутка вокруг оси ---------- */
+@keyframes fxedPenSpin{
+  0%{transform:rotate(0) scale(1)}
+  32%{transform:rotate(210deg) scale(.82)}
+  66%{transform:rotate(430deg) scale(1.1)}
+  100%{transform:rotate(720deg) scale(1)}
+}
+#pen{position:relative}
+#pen.fxed-spin{
+  animation:fxedPenSpin .62s cubic-bezier(.2,.8,.2,1);
+  pointer-events:none;
+  box-shadow:0 0 0 1px rgba(255,255,255,.22),0 0 26px rgba(255,255,255,.22);
+}
+#pen.fxed-spin::after{
+  content:"";position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.35);
+  animation:fxedPenRing .62s ease-out;
+}
+@keyframes fxedPenRing{
+  0%{opacity:.9;transform:scale(.6)}
+  100%{opacity:0;transform:scale(1.55)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  #emodal.fxed-ready.show .mcard.fxed-shell,
+  #emodal.fxed-ready .fxed-pane,
+  #emodal.fxed-ready .fxed-pane.fxed-pane-anim,
+  #emodal.fxed-ready .fxed-tab.fxed-tab-pop,
+  #emodal.fxed-ready .fxed-owned-row,
+  #pen.fxed-spin,
+  #pen.fxed-spin::after{animation:none!important}
+}
+
 @media(max-width:760px){
   #emodal.fxed-ready{align-items:stretch}
   #emodal.fxed-ready .mcard.fxed-shell{

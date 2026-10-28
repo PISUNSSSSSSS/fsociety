@@ -153,6 +153,22 @@
   function rank() { try { return myRank(); } catch (e) { return 0; } }
   function isStaff() { return rank() >= 2; }
   function canGrant() { return rank() >= 3; }
+  function roleText() {
+    var u = gu();
+    if (!u) return L("Гость", "Guest");
+    try { return roleLabel(u.role); } catch (e) { return String(u.role || "user").toUpperCase(); }
+  }
+  function grantRoot(el) {
+    return el && el.closest ? el.closest(".fx2-form") : null;
+  }
+  function grantEl(root, id) {
+    return root ? root.querySelector("#" + id) : q(id);
+  }
+  function escAttr(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
   function uid() { var u = gu(); return u && u.id ? String(u.id) : null; }
   function mk(tag, cls, text) {
     var n = document.createElement(tag);
@@ -2539,7 +2555,7 @@
     if (tabs) Array.prototype.forEach.call(tabs.children, function (b) {
       b.classList.toggle("on", b.getAttribute("data-mtab") === state.modTab);
       if (b.getAttribute("data-mtab") === "grants" || b.getAttribute("data-mtab") === "history") {
-        b.style.display = canGrant() ? "" : "none";
+        b.style.display = isStaff() ? "" : "none";
       }
     });
     if (state.modTab === "reports") await loadReports();
@@ -2548,66 +2564,214 @@
     else if (state.modTab === "history") await renderModHistory();
   }
 
-  function renderModGrants() {
-    var box = q("fx2-mod-body");
-    if (!box) return;
-    if (!canGrant()) { box.innerHTML = '<div class="fx-empty">' + L("Выдавать валюту могут админы и выше.", "Only admins and above can grant currency.") + '</div>'; return; }
-    box.innerHTML =
-      '<div class="fx2-form"><p class="fx2-hint">' + L("Выдача монет и кристаллов. Цель: UUID, короткий ID или ник.", "Grant coins and gems. Target: UUID, short ID or nickname.") + '</p>' +
-      '<input id="fx2-grant-target" class="fx-input" maxlength="80" placeholder="Цель: UUID / short ID / ник">' +
-      '<div class="fx2-form-row"><label>' + COIN + ' <input id="fx2-grant-coins" class="fx2-num" type="number" min="0" max="1000000" value="0"></label>' +
-      '<label>' + GEM + ' <input id="fx2-grant-gems" class="fx2-num" type="number" min="0" max="1000000" value="0"></label></div>' +
+  function grantFormHtml(prefill) {
+    return '<div class="fx2-form">' +
+      '<div id="fx2-grant-role" class="fx2-grant-role"></div>' +
+      '<p class="fx2-hint">' + L("Выдача монет, кристаллов и опыта. Цель: UUID, короткий ID или ник.", "Grant coins, gems and XP. Target: UUID, short ID or nickname.") + '</p>' +
+      '<input id="fx2-grant-target" class="fx-input" maxlength="80" placeholder="' + L("Цель: UUID / short ID / ник", "Target: UUID / short ID / nickname") + '" value="' + escAttr(prefill) + '">' +
+      '<div class="fx2-form-row fx2-grant-inputs"><label>' + COIN + ' <input id="fx2-grant-coins" class="fx2-num" type="number" min="0" max="1000000" value="0"></label>' +
+      '<label>' + GEM + ' <input id="fx2-grant-gems" class="fx2-num" type="number" min="0" max="1000000" value="0"></label>' +
+      '<label>✦ <input id="fx2-grant-xp" class="fx2-num" type="number" min="0" max="1000000" value="0"></label></div>' +
       '<div class="fx2-form-row fx2-quick"><button type="button" class="fx2-chip-btn" data-gem-add="10">+10 💎</button><button type="button" class="fx2-chip-btn" data-gem-add="50">+50 💎</button><button type="button" class="fx2-chip-btn" data-gem-add="100">+100 💎</button></div>' +
-      '<input id="fx2-grant-reason" class="fx-input" maxlength="200" placeholder="Причина (необязательно)">' +
+      '<div class="fx2-form-row fx2-quick"><button type="button" class="fx2-chip-btn" data-xp-add="50">+50 ✦</button><button type="button" class="fx2-chip-btn" data-xp-add="100">+100 ✦</button><button type="button" class="fx2-chip-btn" data-xp-add="500">+500 ✦</button></div>' +
+      '<input id="fx2-grant-reason" class="fx-input" maxlength="200" placeholder="' + L("Причина (необязательно)", "Reason (optional)") + '">' +
+      '<div class="fx2-grant-tools"><button type="button" class="fx2-chip-btn" id="fx2-grant-check">' + L("Проверить доступ", "Check access") + '</button><span id="fx2-grant-diag" class="fx2-grant-diag"></span></div>' +
       '<div id="fx2-grant-result" class="fx2-grant-result"></div>' +
       '<div id="fx2-grant-err" class="fx2-err"></div>' +
       '<div class="fx2-form-row"><button type="button" class="fx-btn main" id="fx2-grant-send">' + L("Выдать", "Grant") + '</button></div></div>';
-    Array.prototype.forEach.call(box.querySelectorAll("[data-gem-add]"), function (b) {
+  }
+
+  function bindGrantForm(root) {
+    if (!root) return;
+    var roleEl = grantEl(root, "fx2-grant-role");
+    if (roleEl) {
+      var r = rank();
+      roleEl.innerHTML = L("Твоя роль: ", "Your role: ") + "<b>" + roleText() + "</b> · " +
+        L("ранг ", "rank ") + r + (r >= 3 ? " ✅" : " ⛔");
+      roleEl.className = "fx2-grant-role " + (r >= 3 ? "ok" : "bad");
+    }
+    Array.prototype.forEach.call(root.querySelectorAll("[data-gem-add]"), function (b) {
       b.onclick = function () {
-        var inp = q("fx2-grant-gems");
+        var inp = grantEl(root, "fx2-grant-gems");
         if (!inp) return;
         inp.value = (parseInt(inp.value, 10) || 0) + (parseInt(b.getAttribute("data-gem-add"), 10) || 0);
       };
     });
-    var send = q("fx2-grant-send");
+    Array.prototype.forEach.call(root.querySelectorAll("[data-xp-add]"), function (b) {
+      b.onclick = function () {
+        var inp = grantEl(root, "fx2-grant-xp");
+        if (!inp) return;
+        inp.value = (parseInt(inp.value, 10) || 0) + (parseInt(b.getAttribute("data-xp-add"), 10) || 0);
+      };
+    });
+    var check = grantEl(root, "fx2-grant-check");
+    if (check) check.onclick = function () { checkGrantAccess(check); };
+    var send = grantEl(root, "fx2-grant-send");
     if (send) send.onclick = function () { submitGrant(send); };
   }
 
+  function renderModGrants() {
+    var box = q("fx2-mod-body");
+    if (!box) return;
+    if (!canGrant()) {
+      box.innerHTML = '<div class="fx-empty">' +
+        L("Выдавать валюту могут админы и выше. Твоя роль: ", "Only admins and above can grant currency. Your role: ") +
+        roleText() + " (" + L("ранг ", "rank ") + rank() + ").</div>";
+      return;
+    }
+    box.innerHTML = grantFormHtml("");
+    bindGrantForm(box.querySelector(".fx2-form"));
+  }
+
+  async function dbRoleLine() {
+    try {
+      var dbRole = await rpc("my_role", {});
+      if (Array.isArray(dbRole)) dbRole = dbRole[0] && (dbRole[0].my_role || dbRole[0].role || dbRole[0]);
+      if (!dbRole) return { role: null, rank: null, text: L(" База: роль не найдена.", " DB: role not found.") };
+      var dbRank = null;
+      try { dbRank = await rpc("role_rank", { r: String(dbRole) }); } catch (e) {}
+      if (Array.isArray(dbRank)) dbRank = dbRank[0];
+      return {
+        role: String(dbRole),
+        rank: dbRank,
+        text: L(" База: ", " DB: ") + String(dbRole).toUpperCase() + (dbRank != null ? " (" + dbRank + ")" : "")
+      };
+    } catch (e) {
+      return { role: null, rank: null, text: "" };
+    }
+  }
+
+  async function checkGrantAccess(btn) {
+    var root = grantRoot(btn);
+    var diag = grantEl(root, "fx2-grant-diag");
+    function say(text, cls) {
+      if (!diag) return;
+      diag.textContent = text;
+      diag.className = "fx2-grant-diag " + (cls || "");
+    }
+    if (!gu()) { say(L("Сначала войди в аккаунт.", "Sign in first."), "bad"); return; }
+    if (!canGrant()) {
+      say(L("Твоя роль: ", "Your role: ") + roleText() + " (" + L("ранг ", "rank ") + rank() +
+        L("). Нужен admin, coowner или owner.", "). Admin, coowner or owner required."), "bad");
+      return;
+    }
+    say(L("Проверяю…", "Checking…"), "");
+    btn.disabled = true;
+    try {
+      var db = await dbRoleLine();
+      try {
+        await rpc("admin_grant_currency", { p_target: "diag", p_coins: 0, p_gems: 0, p_reason: "diag" });
+        say(L("RPC работает, права есть.", "RPC works, permission granted.") + db.text, "ok");
+      } catch (e) {
+        var m = ((e && e.message) || "").toLowerCase();
+        var code = e && e.code ? " (" + e.code + ")" : "";
+        if (m.indexOf("bad amount") > -1) {
+          say(L("База обновлена, RPC работает, права есть. Можно выдавать.", "Database is updated, RPC works, permission granted.") + db.text, "ok");
+        } else if (m.indexOf("forbidden") > -1) {
+          say(L("Сайт: ", "Site: ") + roleText() + " (" + L("ранг ", "rank ") + rank() + ")." + db.text +
+            L(". Роль в profiles ниже admin.", ". The role in profiles is below admin."), "bad");
+          refreshRole();
+        } else if (isMissing(e)) {
+          say(L("SQL не применён или схема PostgREST не обновилась. Выполни update-plus-2.sql и перезагрузи страницу.", "SQL is not applied or the PostgREST schema is stale. Run update-plus-2.sql and reload."), "bad");
+        } else if (m.indexOf("permission denied") > -1) {
+          say(L("Функция есть, но у authenticated нет права execute. Выполни grant в SQL.", "The function exists but authenticated has no execute privilege. Run the grant in SQL.") + code, "bad");
+        } else if (m.indexOf("ambiguous") > -1 && m.indexOf("column reference") > -1) {
+          say(L("Ошибка в SQL-функции: ambiguous column. Выполни site/fix-grant-currency.sql в Supabase.", "SQL function error: ambiguous column. Run site/fix-grant-currency.sql in Supabase."), "bad");
+        } else {
+          say(L("Ошибка", "Error") + code + ": " + ((e && e.message) || e), "bad");
+        }
+      }
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function refreshRole() {
+    var u = gu();
+    if (!u || !u.id) return false;
+    try {
+      var r = await gsb().from("profiles").select("role").eq("id", u.id).maybeSingle();
+      if (r && r.data && r.data.role && r.data.role !== u.role) {
+        u.role = r.data.role;
+        try { if (typeof renderUser === "function") renderUser(); } catch (e) {}
+        updateStaffButtons();
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
   async function submitGrant(btn) {
+    var root = grantRoot(btn);
+    if (!root) return;
     if (!canGrant()) { toast2(L("Нет прав.", "No permission.")); return; }
-    var target = (q("fx2-grant-target").value || "").trim();
-    var coins = parseInt(q("fx2-grant-coins").value, 10) || 0;
-    var gems = parseInt(q("fx2-grant-gems").value, 10) || 0;
-    var reason = (q("fx2-grant-reason").value || "").trim();
-    var err = q("fx2-grant-err");
-    var res = q("fx2-grant-result");
+    var targetEl = grantEl(root, "fx2-grant-target");
+    var coinsEl = grantEl(root, "fx2-grant-coins");
+    var gemsEl = grantEl(root, "fx2-grant-gems");
+    var xpEl = grantEl(root, "fx2-grant-xp");
+    var reasonEl = grantEl(root, "fx2-grant-reason");
+    var err = grantEl(root, "fx2-grant-err");
+    var res = grantEl(root, "fx2-grant-result");
+    var target = (targetEl && targetEl.value || "").trim();
+    var coins = Math.max(parseInt(coinsEl && coinsEl.value, 10) || 0, 0);
+    var gems = Math.max(parseInt(gemsEl && gemsEl.value, 10) || 0, 0);
+    var xp = Math.max(parseInt(xpEl && xpEl.value, 10) || 0, 0);
+    var reason = (reasonEl && reasonEl.value || "").trim();
     if (!target) { if (err) err.textContent = L("Укажи цель.", "Enter a target."); return; }
-    if (coins <= 0 && gems <= 0) { if (err) err.textContent = L("Нужно выдать хотя бы что-то.", "Grant at least something."); return; }
+    if (coins <= 0 && gems <= 0 && xp <= 0) { if (err) err.textContent = L("Нужно выдать хотя бы что-то.", "Grant at least something."); return; }
     btn.disabled = true;
     if (err) err.textContent = "";
+    if (res) res.innerHTML = "";
     try {
-      var rows = await rpc("admin_grant_currency", { p_target: target, p_coins: coins, p_gems: gems, p_reason: reason });
+      var rows;
+      try {
+        rows = await rpc("admin_grant_currency", { p_target: target, p_coins: coins, p_gems: gems, p_xp: xp, p_reason: reason });
+      } catch (e1) {
+        // Старая SQL-функция без p_xp: без XP можно выдать по-старому.
+        if (isMissing(e1) && xp === 0) {
+          rows = await rpc("admin_grant_currency", { p_target: target, p_coins: coins, p_gems: gems, p_reason: reason });
+        } else if (isMissing(e1) && xp > 0) {
+          throw new Error("xp-sql-missing");
+        } else {
+          throw e1;
+        }
+      }
       var r = (rows || [])[0];
       if (res) {
-        res.innerHTML = r ? (L("Выдано ", "Granted to ") + "<b>" + r.nick + "</b>: " + COIN + " " + nfmt(r.coins) + " · " + GEM + " " + nfmt(r.gems)) : L("Готово.", "Done.");
+        var parts = [];
+        if (coins) parts.push(COIN + " " + nfmt(coins));
+        if (gems) parts.push(GEM + " " + nfmt(gems));
+        if (xp) parts.push("✦ " + nfmt(xp) + " XP");
+        res.innerHTML = r ? (L("Выдано ", "Granted to ") + "<b>" + r.nick + "</b>: " + parts.join(" · ")) : L("Готово.", "Done.");
       }
-      toast2(L("Валюта выдана.", "Currency granted."));
+      toast2(L("Награда выдана.", "Reward granted."));
       if (r && String(r.nick).toLowerCase() === String((gu() && gu().nick) || "").toLowerCase()) await loadWallet();
       if (state.modTab === "history") await renderModHistory();
       reloadPlus();
     } catch (e) {
       var m = ((e && e.message) || "").toLowerCase();
-      if (m.indexOf("not found") > -1) { if (err) err.textContent = L("Пользователь не найден.", "User not found."); }
-      else if (m.indexOf("forbidden") > -1) { if (err) err.textContent = L("Нет прав.", "No permission."); }
+      var code = e && e.code ? " (" + e.code + ")" : "";
+      if (m.indexOf("xp-sql-missing") > -1) { if (err) err.textContent = L("Выдача XP появится после site/fix-grant-currency.sql. Без XP можно выдать уже сейчас.", "XP grants need site/fix-grant-currency.sql. You can still grant without XP now."); }
+      else if (m.indexOf("not found") > -1) { if (err) err.textContent = L("Пользователь не найден.", "User not found."); }
+      else if (m.indexOf("forbidden") > -1) { if (err) err.textContent = L("Нет прав. Твоя роль: ", "No permission. Your role: ") + roleText() + " (" + L("ранг ", "rank ") + rank() + ")."; }
       else if (m.indexOf("bad amount") > -1) { if (err) err.textContent = L("Некорректная сумма.", "Bad amount."); }
-      else if (err) err.textContent = ((e && e.message) || L("Ошибка.", "Error."));
-      if (!isMissing(e)) fail(e, "grant");
+      else if (m.indexOf("permission denied") > -1) { if (err) err.textContent = L("Функция есть, но нет права execute. Выполни grant в SQL.", "The function exists but execute is not granted. Run the grant in SQL.") + code; }
+      else if (m.indexOf("ambiguous") > -1 && m.indexOf("column reference") > -1) { if (err) err.textContent = L("Ошибка в SQL-функции: ambiguous column. Выполни site/fix-grant-currency.sql в Supabase.", "SQL function error: ambiguous column. Run site/fix-grant-currency.sql in Supabase."); }
+      else if (isMissing(e)) { if (err) err.textContent = L("SQL не применён или схема не обновилась. Выполни update-plus-2.sql.", "SQL is not applied or the schema is stale. Run update-plus-2.sql.") + code; }
+      else if (err) err.textContent = ((e && e.message) || L("Ошибка.", "Error.")) + code;
+      if (!isMissing(e) && m.indexOf("xp-sql-missing") < 0) fail(e, "grant");
     } finally { btn.disabled = false; }
   }
 
   async function renderModHistory() {
     var box = q("fx2-mod-body");
-    if (!box || !canGrant()) return;
+    if (!box) return;
+    if (!canGrant()) {
+      box.innerHTML = '<div class="fx-empty">' +
+        L("История выдач доступна админам и выше. Твоя роль: ", "Grant history is available to admins and above. Your role: ") +
+        roleText() + " (" + L("ранг ", "rank ") + rank() + ").</div>";
+      return;
+    }
     box.innerHTML = '<div class="fx-empty">' + L("Загрузка…", "Loading…") + '</div>';
     try {
       var rows = (await rpc("currency_grants_list", { p_limit: 50 })) || [];
@@ -2622,6 +2786,7 @@
         var val = [];
         if (Number(g.coins)) val.push(COIN + " " + nfmt(g.coins));
         if (Number(g.gems)) val.push(GEM + " " + nfmt(g.gems));
+        if (Number(g.xp)) val.push("✦ " + nfmt(g.xp) + " XP");
         card.appendChild(mk("div", "fx2-grant-val", val.join(" · ") || "—"));
         if (g.reason) card.appendChild(mk("div", "fx2-hint", g.reason));
         box.appendChild(card);
@@ -2633,30 +2798,17 @@
   }
 
   function openGrant(target) {
-    if (!canGrant()) { toast2(L("Выдавать валюту могут админы и выше.", "Only admins and above can grant currency.")); return; }
+    if (!canGrant()) {
+      toast2(L("Выдавать валюту могут админы и выше. Твоя роль: ", "Only admins and above can grant currency. Your role: ") +
+        roleText() + " (" + L("ранг ", "rank ") + rank() + ").");
+      return;
+    }
     var prefill = "";
     if (target && typeof target === "object") prefill = target.short_id || target.id || target.nick || "";
     else if (target) prefill = String(target);
     openModal(L("Выдать валюту", "Grant currency"), function (body) {
-      body.innerHTML =
-        '<div class="fx2-form"><p class="fx2-hint">' + L("Цель: UUID, короткий ID или ник. Выдача попадёт в историю.", "Target: UUID, short ID or nickname. The grant is logged.") + '</p>' +
-        '<input id="fx2-grant-target" class="fx-input" maxlength="80" placeholder="Цель" value="' + String(prefill).replace(/"/g, "&quot;") + '">' +
-        '<div class="fx2-form-row"><label>' + COIN + ' <input id="fx2-grant-coins" class="fx2-num" type="number" min="0" max="1000000" value="0"></label>' +
-        '<label>' + GEM + ' <input id="fx2-grant-gems" class="fx2-num" type="number" min="0" max="1000000" value="0"></label></div>' +
-        '<div class="fx2-form-row fx2-quick"><button type="button" class="fx2-chip-btn" data-gem-add="10">+10 💎</button><button type="button" class="fx2-chip-btn" data-gem-add="50">+50 💎</button><button type="button" class="fx2-chip-btn" data-gem-add="100">+100 💎</button></div>' +
-        '<input id="fx2-grant-reason" class="fx-input" maxlength="200" placeholder="Причина (необязательно)">' +
-        '<div id="fx2-grant-result" class="fx2-grant-result"></div>' +
-        '<div id="fx2-grant-err" class="fx2-err"></div>' +
-        '<div class="fx2-form-row"><button type="button" class="fx-btn main" id="fx2-grant-send">' + L("Выдать", "Grant") + '</button></div></div>';
-      Array.prototype.forEach.call(body.querySelectorAll("[data-gem-add]"), function (b) {
-        b.onclick = function () {
-          var inp = q("fx2-grant-gems");
-          if (!inp) return;
-          inp.value = (parseInt(inp.value, 10) || 0) + (parseInt(b.getAttribute("data-gem-add"), 10) || 0);
-        };
-      });
-      var send = q("fx2-grant-send");
-      if (send) send.onclick = function () { submitGrant(send); };
+      body.innerHTML = grantFormHtml(prefill);
+      bindGrantForm(body.querySelector(".fx2-form"));
     });
   }
 
@@ -3204,8 +3356,8 @@
     var mdot = q("fx2-mod-dot");
     if (mdot) mdot.style.display = staff && state.reportCount > 0 ? "" : "none";
     var gt = q("fx2-mtab-grants"), ht = q("fx2-mtab-history");
-    if (gt) gt.style.display = grant ? "" : "none";
-    if (ht) ht.style.display = grant ? "" : "none";
+    if (gt) gt.style.display = staff ? "" : "none";
+    if (ht) ht.style.display = staff ? "" : "none";
     var rr = q("fx2-admin-reports"), gg = q("fx2-admin-grant");
     if (rr) rr.style.display = staff ? "" : "none";
     if (gg) gg.style.display = grant ? "" : "none";

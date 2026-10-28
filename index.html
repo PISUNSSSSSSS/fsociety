@@ -105,12 +105,6 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .seg button{all:unset;flex:1;text-align:center;padding:8px 0;border-radius:999px;cursor:pointer;font-size:.9rem;color:#ccc;transition:background .3s,color .3s}
 .seg button.on{background:rgba(255,255,255,.22);color:#fff;font-weight:bold}
 .pane{width:100%;display:flex;flex-direction:column;gap:8px;align-items:center}
-.ailist{display:flex;flex-direction:column;gap:8px;width:100%}
-.ailink{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:18px;text-decoration:none;color:#fff;text-align:left;transition:transform .15s,background .3s}
-.ailink:active{transform:scale(.97)}
-.ailink span:first-child{font-weight:bold}
-.ailink small{opacity:.55;font-size:.75rem;margin-left:auto;margin-right:6px}
-.ailink .ar{opacity:.7}
 .rooms{display:flex;gap:6px;overflow-x:auto;width:100%;padding-bottom:4px;flex:none}
 .room{border:none;border-radius:999px;padding:7px 14px;font-size:.82rem;cursor:pointer;color:#ddd;background:rgba(255,255,255,.1);white-space:nowrap;flex:none}
 .room.on{background:#fff;color:#000;font-weight:bold}
@@ -404,16 +398,11 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 
   <section id="forum" class="view"><div class="box">
     <h2>Forum</h2>
-    <div class="seg glass">
-      <button id="ftab0" class="on" data-i18n="f_posts"></button>
-      <button id="ftab1">AI</button>
-    </div>
     <div id="fpane0" class="pane">
       <button id="fnew" class="btn main sm" data-i18n="f_new"></button>
       <div id="flist" class="ulist"></div>
       <p id="flogin" class="mail" data-i18n="f_login" style="display:none"></p>
     </div>
-    <div id="fpane1" class="pane" style="display:none"><div id="ailist" class="ailist"></div></div>
   </div></section>
 
   <section id="thread" class="view"><div class="box">
@@ -561,6 +550,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
     <div id="pbio" class="bio"></div>
     <div id="pwarn"></div>
     <div id="pfriends"></div>
+    <button id="padmin" class="btn glass" data-i18n="admin_panel" style="display:none"></button>
     <button id="logout" class="btn glass" data-i18n="logout"></button>
   </div></section>
 
@@ -581,7 +571,6 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <button data-go="dm"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg><span data-i18n="m_dm"></span><span id="dmbadge">0</span></button>
   <button data-go="servers"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg><span data-i18n="m_servers"></span></button>
   <button data-go="profile"><span id="me" class="dav user"></span><span data-i18n="m_profile"></span></button>
-  <button data-go="admin" id="dadmin" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span data-i18n="m_admin"></span></button>
 </div>
 
 <div id="modal"><div class="mcard">
@@ -617,8 +606,6 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   <div class="lab" data-i18n="wallpaper"></div>
   <div id="wgrid" class="wgrid"></div>
   <button id="ewallup" class="btn glass sm" data-i18n="wall_upload"></button>
-  <label id="erichw" class="chk" style="display:none"><input id="erich" type="checkbox"><span data-i18n="rich_mode"></span></label>
-  <div id="erichhint" class="formhint" style="display:none" data-i18n="rich_hint"></div>
   <button id="epass" class="btn glass sm" data-i18n="change_pass"></button>
   <div id="eerr" class="err"></div>
   <div class="mbtns">
@@ -991,8 +978,6 @@ Object.assign(TXT.ru,{
   w_snow:"Снег",w_hearts:"Сердца",w_thunder:"Гроза",w_bubbles:"Пузыри",
   wall_upload:"Загрузить свои обои",wall_uploading:"Загружаю обои...",wall_upload_fail:"Не удалось загрузить обои",
   wall_need_photo:"Сначала загрузи свои обои",wall_saved:"Обои обновлены",
-  rich_mode:"Режим «Богач»",rich_hint:"Золотое имя с падающими деньгами. Доступно со статуса «Спонсор».",
-  rich_only:"Доступно со статуса «Спонсор»",
   group_avatar:"Сменить аватарку группы",avatar_change:"Сменить аватарку",avatar_remove:"Убрать аватарку",avatar_saved:"Аватарка обновлена",
   srv_avatar:"Аватарка сервера",media_wait_upload:"Подожди, файлы ещё загружаются",
   media_upload_fail:"Не удалось загрузить файл"
@@ -1003,8 +988,6 @@ Object.assign(TXT.en,{
   w_snow:"Snow",w_hearts:"Hearts",w_thunder:"Thunder",w_bubbles:"Bubbles",
   wall_upload:"Upload my wallpaper",wall_uploading:"Uploading wallpaper...",wall_upload_fail:"Could not upload the wallpaper",
   wall_need_photo:"Upload your wallpaper first",wall_saved:"Wallpaper updated",
-  rich_mode:"Rich mode",rich_hint:"A golden name with falling money. Available from Sponsor status.",
-  rich_only:"Available from Sponsor status",
   group_avatar:"Change group avatar",avatar_change:"Change avatar",avatar_remove:"Remove avatar",avatar_saved:"Avatar updated",
   srv_avatar:"Server avatar",media_wait_upload:"Wait, files are still uploading",
   media_upload_fail:"Could not upload the file"
@@ -1022,20 +1005,6 @@ const WALL_DOT={none:"#333",matrix:"#22c55e",stars:"#e5e5e5",aurora:"#38bdf8",oc
 const RANK={user:0,sponsor:1,moderator:2,admin:3,coowner:4,owner:5};
 const ROLES=["user","sponsor","moderator","admin","coowner"];
 const ROLEC=["user","sponsor","moderator","admin","coowner","owner"];
-const AI=[
-  ["Gemini","https://gemini.google.com"],
-  ["Claude","https://claude.ai"],
-  ["ChatGPT","https://chatgpt.com"],
-  ["DeepSeek","https://chat.deepseek.com"],
-  ["Grok","https://grok.com"],
-  ["Qwen","https://chat.qwen.ai"],
-  ["GLM (Z.ai)","https://chat.z.ai"],
-  ["Muse Spark (Meta AI)","https://www.meta.ai"],
-  ["Momo (Xiaomi MiMo)","https://mimo.mi.com"],
-  ["Nemotron (NVIDIA)","https://build.nvidia.com"],
-  ["opencode","https://opencode.ai"],
-  ["freebuff","https://freebuff.com"]
-];
 const USER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
 const $=id=>document.getElementById(id);
 const Q=s=>document.querySelectorAll(s);
@@ -1465,7 +1434,7 @@ function dockActive(){
 }
 const back=$("back");
 function go(name){
-  if(name==="admin"&&!isStaff())name="home";
+  if(name==="admin"&&!ownerLike(user&&user.role))name="home";
   if(name==="thread"&&!forumThreadId)name="forum";
   stopChat();stopDmPoll();stopGroupPoll();stopServerPoll();
   cur=name;
@@ -1486,28 +1455,6 @@ back.onclick=()=>{
   else go(cur==="admin"?"profile":"home");
 };
 
-/* ---------- Forum / AI ---------- */
-function forumTab(i){
-  $("ftab0").classList.toggle("on",i===0);
-  $("ftab1").classList.toggle("on",i===1);
-  $("fpane0").style.display=i===0?"":"none";
-  $("fpane1").style.display=i===1?"":"none";
-}
-$("ftab0").onclick=()=>forumTab(0);
-$("ftab1").onclick=()=>forumTab(1);
-function buildAI(){
-  const box=$("ailist");
-  AI.forEach(a=>{
-    const l=document.createElement("a");
-    l.className="ailink glass";
-    l.href=a[1];l.target="_blank";l.rel="noopener noreferrer";
-    const n=document.createElement("span");n.textContent=a[0];
-    const h=document.createElement("small");h.textContent=a[1].replace("https://","").replace("www.","");
-    const ar=document.createElement("span");ar.className="ar";ar.textContent="↗";
-    l.appendChild(n);l.appendChild(h);l.appendChild(ar);
-    box.appendChild(l);
-  });
-}
 
 /* ---------- язык ---------- */
 function applyMode(){
@@ -1696,7 +1643,8 @@ function renderUser(){
   $("pmail").textContent=user?user.email:"";
   $("pbio").textContent=(user&&user.bio)?user.bio:"";
   $("pbio").style.display=(user&&user.bio)?"":"none";
-  $("dadmin").style.display=isStaff()?"":"none";
+  const padmin=$("padmin");
+  if(padmin)padmin.style.display=ownerLike(role)?"":"none";
   const ab=$("auditbtn");
   if(ab)ab.style.display=myRank()>=3?"":"none";
   dockActive();
@@ -1792,10 +1740,6 @@ function openEdit(){
   setAva($("eava"),user.avatar,ownerLike(user.role));
   $("eerr").textContent="";
   buildWallGrid();
-  const canRich=myRank()>=1;
-  $("erichw").style.display=canRich?"":"none";
-  $("erichhint").style.display=canRich?"":"none";
-  $("erich").checked=canRich&&!!user.richFx;
   $("emodal").classList.add("show");
 }
 function closeEdit(revert){
@@ -1841,12 +1785,6 @@ $("eyes").onclick=async()=>{
   if(eAva!==undefined)patch.avatar=eAva;
   pbusy=true;
   try{
-    if(myRank()>=1){
-      const rr=await sb.rpc("set_rich_fx",{p_on:$("erich").checked});
-      if(rr.error){$("eerr").textContent=t("err_generic");return}
-      user.richFx=!!$("erich").checked;
-      if(user.richFx)richIds.add(String(user.id));else richIds.delete(String(user.id));
-    }
     const r=await sb.from("profiles").update(patch).eq("id",user.id);
     if(r.error){
       const c=r.error.code||"";
@@ -4773,7 +4711,7 @@ function updateShade(){
   const w=WALLS.find(x=>x[0]===wallId);
   $("t_wall_l").textContent=t("s_wall")+": "+t(w?w[1]:"w_none");
   $("t_out_l").textContent=t(u?"s_out":"s_in");
-  $("t_admin").style.display=isStaff()?"":"none";
+  $("t_admin").style.display=ownerLike(u&&u.role)?"":"none";
 }
 function openShade(){updateShade();$("shade").classList.add("open")}
 function closeShade(){$("shade").classList.remove("open")}
@@ -4794,6 +4732,7 @@ $("t_groups").onclick=()=>{closeShade();dmTab="groups";groupWith=null;dmWith=nul
 $("t_servers").onclick=()=>{closeShade();go("servers")};
 $("t_prof").onclick=()=>{closeShade();go(user?"profile":"register")};
 $("t_admin").onclick=()=>{closeShade();go("admin")};
+$("padmin").onclick=()=>go("admin");
 $("t_out").onclick=()=>{closeShade();if(user)askConfirm(t("logout_q"),doLogout);else go("register")};
 
 let shDrag=null;
@@ -4862,7 +4801,6 @@ async function boot(){
   renderUser();
   if(user)await afterAuth();else await checkBan();
 }
-buildAI();
 setPrev(null);
 renderUser();
 applyLang();

@@ -16,7 +16,9 @@
     tab: "main",
     timer: 0,
     lastFocus: null,
-    built: false
+    built: false,
+    spinning: false,
+    ownedSig: ""
   };
 
   function q(id) { return document.getElementById(id); }
@@ -74,8 +76,6 @@
     var lab = card.querySelector(".lab");
     var ewallup = q("ewallup");
     var wgrid = q("wgrid");
-    var erichw = q("erichw");
-    var erichhint = q("erichhint");
     var epass = q("epass");
     var eerr = q("eerr");
     var mbtns = card.querySelector(".mbtns");
@@ -182,7 +182,7 @@
 
     panes = mk("div", "fxed-panes");
     panes.appendChild(buildMainPane(echoose, file2, enick, ebio));
-    panes.appendChild(buildAppearancePane(lab, wgrid, ewallup, erichw, erichhint));
+    panes.appendChild(buildAppearancePane(lab, wgrid, ewallup));
     panes.appendChild(buildAccountPane(epass));
     main.appendChild(panes);
 
@@ -299,7 +299,7 @@
     return p;
   }
 
-  function buildAppearancePane(lab, wgrid, ewallup, erichw, erichhint) {
+  function buildAppearancePane(lab, wgrid, ewallup) {
     var p = mk("section", "fxed-pane");
     p.id = "fxed-pane-look";
     p.setAttribute("data-fxed-pane", "look");
@@ -326,14 +326,20 @@
     if (ewallup) wallField.appendChild(ewallup);
     p.appendChild(wallField);
 
-    var richCard = mk("div", "fxed-toggle-card");
-    richCard.id = "fxed-rich-card";
-    if (erichw) {
-      erichw.classList.add("fxed-toggle");
-      richCard.appendChild(erichw);
-    }
-    if (erichhint) richCard.appendChild(erichhint);
-    p.appendChild(richCard);
+    var owned = mk("div", "fxed-owned");
+    var ownedHead = mk("div", "fxed-owned-head");
+    ownedHead.appendChild(txt(mk("b"), "Куплено", "Purchased"));
+    var ownedCount = mk("span", "fxed-owned-count", "0");
+    ownedCount.id = "fxed-owned-count";
+    ownedHead.appendChild(ownedCount);
+    owned.appendChild(ownedHead);
+    owned.appendChild(txt(mk("div", "fxed-help"),
+      "Всё, что ты уже купил: привилегии, эффекты, обои и титул.",
+      "Everything you already bought: privileges, effects, wallpapers and title."));
+    var ownedList = mk("div", "fxed-owned-list");
+    ownedList.id = "fxed-owned-list";
+    owned.appendChild(ownedList);
+    p.appendChild(owned);
 
     var premium = mk("div", "fxed-premium");
     premium.appendChild(mk("span", "fxed-premium-ico", "💎"));
@@ -384,24 +390,156 @@
     return row;
   }
 
+  /* ---------------- owned purchases ---------------- */
+  function privilegeMap() {
+    var map = safe(function () {
+      return window.fxPlus2 && window.fxPlus2.state ? window.fxPlus2.state.privilegeMap : null;
+    }, null);
+    return map instanceof Map ? map : new Map();
+  }
+  function wallTitle(pid) {
+    var id = String(pid || "").replace(/^wall_/, "");
+    var row = safe(function () {
+      for (var i = 0; i < WALLS.length; i++) if (WALLS[i][0] === id) return WALLS[i];
+      return null;
+    }, null);
+    return row ? tr(row[1], id) : id;
+  }
+  function kindTitle(kind) {
+    if (kind === "badge") return L("бейдж", "badge");
+    if (kind === "glow") return L("свечение ника", "name glow");
+    if (kind === "frame") return L("рамка аватара", "avatar frame");
+    if (kind === "banner") return L("баннер профиля", "profile banner");
+    if (kind === "highlight") return L("подсветка чата", "chat highlight");
+    if (kind === "effect") return L("эффект ника", "nick effect");
+    if (kind === "wallpaper") return L("обои", "wallpaper");
+    if (kind === "title") return L("титул", "title");
+    return L("привилегия", "privilege");
+  }
+  function ownedRows() {
+    var w = wallet();
+    if (!w) return [];
+    var map = privilegeMap();
+    var rows = [];
+    if (w.title) rows.push({ title: w.title, kind: "title", active: false });
+    var privs = Array.isArray(w.privileges) ? w.privileges : [];
+    privs.forEach(function (pid) {
+      pid = String(pid || "");
+      if (!pid) return;
+      var item = map.get(pid);
+      var kind = item && item.kind ? item.kind
+        : pid.indexOf("wall_") === 0 ? "wallpaper"
+        : pid.indexOf("fx_") === 0 ? "effect" : "privilege";
+      var title = item && item.title ? item.title
+        : kind === "wallpaper" ? L("Обои: ", "Wallpaper: ") + wallTitle(pid)
+        : pid;
+      rows.push({
+        title: title,
+        kind: kind,
+        active: String(w.active_effect || "") === pid
+      });
+    });
+    return rows;
+  }
+  function renderOwned(force) {
+    var list = q("fxed-owned-list");
+    var count = q("fxed-owned-count");
+    if (!list) return;
+    var w = wallet();
+    if (!w) {
+      if (count) count.textContent = "0";
+      if (!force && st.ownedSig === "guest") return;
+      st.ownedSig = "guest";
+      clear(list);
+      list.appendChild(mk("div", "fxed-owned-empty",
+        L("Войди в аккаунт, чтобы видеть покупки.", "Sign in to see your purchases.")));
+      return;
+    }
+    var rows = ownedRows();
+    var sig = JSON.stringify(rows);
+    if (!force && sig === st.ownedSig) return;
+    st.ownedSig = sig;
+    if (count) count.textContent = String(rows.length);
+    clear(list);
+    if (!rows.length) {
+      list.appendChild(mk("div", "fxed-owned-empty",
+        L("Пока ничего не куплено. Загляни в PLUS 2 → Привилегии.",
+          "Nothing purchased yet. Check PLUS 2 → Privileges.")));
+      return;
+    }
+    rows.forEach(function (r) {
+      var row = mk("div", "fxed-owned-row");
+      var icon = r.kind === "wallpaper" ? "▦"
+        : r.kind === "effect" ? "✦"
+        : r.kind === "badge" ? "◆"
+        : r.kind === "frame" ? "▣"
+        : r.kind === "title" ? "✎"
+        : r.kind === "highlight" ? "▤"
+        : "●";
+      row.appendChild(mk("span", "fxed-owned-ico", icon));
+      var main = mk("div", "fxed-owned-main");
+      main.appendChild(mk("b", "", r.title));
+      main.appendChild(mk("small", "", kindTitle(r.kind)));
+      row.appendChild(main);
+      if (r.active) row.appendChild(mk("span", "fxed-owned-on", L("активно", "active")));
+      list.appendChild(row);
+    });
+  }
+  async function loadOwned(force) {
+    var w = wallet();
+    var map = privilegeMap();
+    if (w && Array.isArray(w.privileges) && w.privileges.length && !map.size) {
+      var s = safe(function () { return sb; }, null);
+      if (s) {
+        try {
+          var r = await s.rpc("privilege_list");
+          if (r && !r.error && Array.isArray(r.data)) {
+            var next = new Map();
+            r.data.forEach(function (it) { next.set(it.id, it); });
+            safe(function () {
+              if (window.fxPlus2 && window.fxPlus2.state) window.fxPlus2.state.privilegeMap = next;
+            });
+          }
+        } catch (e) {}
+      }
+    }
+    renderOwned(force);
+  }
+
   /* ---------------- tabs ---------------- */
   function showTab(name) {
     if (!tabs || !panes) return;
     if (name !== "main" && name !== "look" && name !== "acc") name = "main";
+    var order = ["main", "look", "acc"];
+    var oldIdx = order.indexOf(st.tab);
+    var nextIdx = order.indexOf(name);
+    if (oldIdx < 0) oldIdx = 0;
+    panes.setAttribute("data-dir", nextIdx >= oldIdx ? "fwd" : "back");
     st.tab = name;
     Array.prototype.forEach.call(tabs.querySelectorAll("[data-fxed-tab]"), function (b) {
       var on = b.getAttribute("data-fxed-tab") === name;
       b.classList.toggle("on", on);
       b.setAttribute("aria-selected", on ? "true" : "false");
       b.tabIndex = on ? 0 : -1;
+      if (on) {
+        b.classList.remove("fxed-tab-pop");
+        void b.offsetWidth;
+        b.classList.add("fxed-tab-pop");
+      }
     });
     Array.prototype.forEach.call(panes.querySelectorAll("[data-fxed-pane]"), function (p) {
       var on = p.getAttribute("data-fxed-pane") === name;
       p.classList.toggle("on", on);
       p.hidden = !on;
+      if (on) {
+        p.classList.remove("fxed-pane-anim");
+        void p.offsetWidth;
+        p.classList.add("fxed-pane-anim");
+      }
     });
     if (name === "look") {
       decorateWalls();
+      loadOwned(true);
       setTimeout(function () { syncPreview(false); }, 0);
     }
   }
@@ -428,22 +566,6 @@
       if (u && u.id) nickEl.setAttribute("data-fx2-uid", String(u.id));
       safe(function () { setRoleClass(nickEl, role); });
 
-      var rich = !!(q("erich") && q("erich").checked);
-      nickEl.classList.toggle("fxed-rich", rich);
-      var rain = nickEl.querySelector(".rmoney");
-      if (rich && !rain) {
-        rain = mk("span", "rmoney");
-        for (var i = 0; i < 7; i++) {
-          var s = mk("i", "", i % 2 ? "$" : "💵");
-          s.style.left = (4 + i * 14) + "%";
-          s.style.animationDelay = (-(i * 0.37) % 2.4) + "s";
-          s.style.animationDuration = (2.1 + (i % 3) * 0.45) + "s";
-          rain.appendChild(s);
-        }
-        nickEl.appendChild(rain);
-      } else if (!rich && rain) {
-        rain.remove();
-      }
     }
 
     var ava = q("eava");
@@ -508,6 +630,7 @@
 
     var gems = q("fxed-gems");
     if (gems) gems.textContent = w ? "💎 " + (Number(w.gems) || 0) : "—";
+    renderOwned(false);
 
     var cardEl = q("fxed-card");
     var sel = document.querySelector("#wgrid .wopt.on");
@@ -563,11 +686,6 @@
     var nickEl = q("fxed-nick");
     if (nickEl && u) nickEl.setAttribute("data-fx2-uid", String(u.id));
 
-    var richCard = q("fxed-rich-card");
-    if (richCard) {
-      richCard.hidden = !safe(function () { return myRank() >= 1; }, false);
-    }
-
     showTab("main");
     syncPreview(true);
     setTimeout(function () { syncPreview(true); }, 350);
@@ -594,6 +712,36 @@
     if (st.lastFocus && typeof st.lastFocus.focus === "function") {
       safe(function () { st.lastFocus.focus({ preventScroll: true }); });
     }
+  }
+
+  /* ---------------- pencil spin ---------------- */
+  function bindPen() {
+    var pen = q("pen");
+    if (!pen || pen.getAttribute("data-fxed-pen") === "1") return;
+    pen.setAttribute("data-fxed-pen", "1");
+    var original = pen.onclick;
+    pen.onclick = function (e) {
+      if (st.spinning) {
+        if (e) e.preventDefault();
+        return;
+      }
+      var reduce = safe(function () {
+        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      }, false);
+      var open = function () {
+        pen.classList.remove("fxed-spin");
+        pen.removeAttribute("aria-busy");
+        st.spinning = false;
+        if (typeof original === "function") original.call(pen, e);
+      };
+      if (reduce) { open(); return; }
+      st.spinning = true;
+      pen.setAttribute("aria-busy", "true");
+      pen.classList.remove("fxed-spin");
+      void pen.offsetWidth;
+      pen.classList.add("fxed-spin");
+      setTimeout(open, 640);
+    };
   }
 
   /* ---------------- events ---------------- */
@@ -654,9 +802,6 @@
     if (enick) enick.addEventListener("input", function () { syncPreview(false); });
     var ebio = q("ebio");
     if (ebio) ebio.addEventListener("input", function () { syncPreview(false); });
-    var erich = q("erich");
-    if (erich) erich.addEventListener("change", function () { syncPreview(false); });
-
     var wgrid = q("wgrid");
     if (wgrid) wgrid.addEventListener("click", function () {
       setTimeout(function () { decorateWalls(); syncPreview(false); }, 0);
@@ -753,6 +898,7 @@
     if (card.getAttribute("data-fxed") === "1") return;
     build();
     bind();
+    bindPen();
     watch();
     modal.classList.add("fxed-ready");
     if (typeof window !== "undefined") {
