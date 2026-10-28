@@ -385,6 +385,7 @@
     for (var i = 0; i < count; i++) {
       var s = mk("i", "", conf.chars[i % conf.chars.length]);
       s.style.setProperty("--x", (3 + Math.random() * 92).toFixed(1) + "%");
+      s.style.setProperty("--y", (14 + Math.random() * 68).toFixed(1) + "%");
       s.style.setProperty("--d", (-(Math.random() * 3.2)).toFixed(2) + "s");
       s.style.setProperty("--dur", (1.5 + Math.random() * 1.8).toFixed(2) + "s");
       s.style.setProperty("--s", (conf.size[0] + Math.random() * (conf.size[1] - conf.size[0])).toFixed(1) + "px");
@@ -3568,6 +3569,9 @@
         if (isStaff()) loadReportsCount();
         decoratePrivileges(true);
       },
+      refreshWallet: loadWallet,
+      setEffect: setEffect,
+      applyWallpaper: applyWallpaper,
       decorate: function () { decoratePrivileges(true); },
       wallUnlocked: wallUnlocked,
       state: state

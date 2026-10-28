@@ -550,7 +550,6 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
     <div id="pbio" class="bio"></div>
     <div id="pwarn"></div>
     <div id="pfriends"></div>
-    <button id="padmin" class="btn glass" data-i18n="admin_panel" style="display:none"></button>
     <button id="logout" class="btn glass" data-i18n="logout"></button>
   </div></section>
 
@@ -675,7 +674,6 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
       <button class="tile" id="t_groups"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c2.8 0 5 2.2 5 5"/></svg></span><span data-i18n="m_groups"></span></button>
       <button class="tile" id="t_servers"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span><span data-i18n="m_servers"></span></button>
       <button class="tile" id="t_prof"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></span><span data-i18n="m_profile"></span></button>
-      <button class="tile" id="t_admin"><span class="ti"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></span><span data-i18n="m_admin"></span></button>
       <button class="tile" id="t_out"><span class="ti"><svg viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M6.5 6.5a8 8 0 1 0 11 0"/></svg></span><span id="t_out_l"></span></button>
     </div>
     <div class="shgrab"></div>
@@ -1643,8 +1641,6 @@ function renderUser(){
   $("pmail").textContent=user?user.email:"";
   $("pbio").textContent=(user&&user.bio)?user.bio:"";
   $("pbio").style.display=(user&&user.bio)?"":"none";
-  const padmin=$("padmin");
-  if(padmin)padmin.style.display=ownerLike(role)?"":"none";
   const ab=$("auditbtn");
   if(ab)ab.style.display=myRank()>=3?"":"none";
   dockActive();
@@ -4711,7 +4707,6 @@ function updateShade(){
   const w=WALLS.find(x=>x[0]===wallId);
   $("t_wall_l").textContent=t("s_wall")+": "+t(w?w[1]:"w_none");
   $("t_out_l").textContent=t(u?"s_out":"s_in");
-  $("t_admin").style.display=ownerLike(u&&u.role)?"":"none";
 }
 function openShade(){updateShade();$("shade").classList.add("open")}
 function closeShade(){$("shade").classList.remove("open")}
@@ -4731,8 +4726,6 @@ $("t_chat").onclick=()=>{closeShade();go("chat")};
 $("t_groups").onclick=()=>{closeShade();dmTab="groups";groupWith=null;dmWith=null;go("dm")};
 $("t_servers").onclick=()=>{closeShade();go("servers")};
 $("t_prof").onclick=()=>{closeShade();go(user?"profile":"register")};
-$("t_admin").onclick=()=>{closeShade();go("admin")};
-$("padmin").onclick=()=>go("admin");
 $("t_out").onclick=()=>{closeShade();if(user)askConfirm(t("logout_q"),doLogout);else go("register")};
 
 let shDrag=null;

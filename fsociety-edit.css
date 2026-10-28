@@ -81,6 +81,21 @@
 }
 #emodal.fxed-ready .fxed-x:hover{background:rgba(239,68,68,.18);color:#fecaca;border-color:rgba(239,68,68,.3)}
 #emodal.fxed-ready .fxed-x:active{transform:scale(.92)}
+#emodal.fxed-ready .fxed-admin{
+  all:unset;cursor:pointer;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  height:38px;padding:0 14px;border-radius:999px;
+  color:rgba(255,255,255,.78);
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.16);
+  font:inherit;font-size:.62rem;font-weight:700;letter-spacing:.02em;
+  transition:background .18s,color .18s,border-color .18s,transform .18s;
+}
+#emodal.fxed-ready .fxed-admin:hover{
+  color:#0b0b0b;background:#f2f2f2;border-color:#f2f2f2;transform:translateY(-1px);
+}
+#emodal.fxed-ready .fxed-admin:active{transform:scale(.96)}
+#emodal.fxed-ready .fxed-admin-ico{font-size:.9rem;line-height:1}
 
 /* ---------- корпус ---------- */
 #emodal.fxed-ready .fxed-body{
@@ -456,7 +471,7 @@
 #emodal.fxed-ready .fxed-owned .fxed-help{margin:2px 0 10px}
 #emodal.fxed-ready .fxed-owned-list{display:flex;flex-direction:column;gap:6px}
 #emodal.fxed-ready .fxed-owned-row{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
   padding:9px 10px;
   border-radius:12px;
   background:rgba(255,255,255,.045);
@@ -479,11 +494,29 @@
 #emodal.fxed-ready .fxed-owned-main small{
   display:block;margin-top:1px;font-size:.6rem;color:rgba(255,255,255,.4);
 }
+#emodal.fxed-ready .fxed-owned-act{
+  flex:none;display:flex;align-items:center;gap:6px;margin-left:auto;
+}
 #emodal.fxed-ready .fxed-owned-on{
   flex:none;padding:3px 7px;border-radius:999px;
   font-size:.56rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
   color:#0b0b0b;background:#f2f2f2;
 }
+#emodal.fxed-ready .fxed-owned-btn{
+  all:unset;cursor:pointer;flex:none;
+  padding:5px 10px;border-radius:999px;
+  font:inherit;font-size:.6rem;font-weight:700;letter-spacing:.01em;
+  color:#0b0b0b;background:#f2f2f2;border:1px solid #f2f2f2;
+  transition:background .16s ease,color .16s ease,border-color .16s ease,transform .16s ease;
+}
+#emodal.fxed-ready .fxed-owned-btn:hover{transform:translateY(-1px);background:#fff;border-color:#fff}
+#emodal.fxed-ready .fxed-owned-btn.ghost{
+  color:rgba(255,255,255,.8);background:transparent;border-color:rgba(255,255,255,.22);
+}
+#emodal.fxed-ready .fxed-owned-btn.ghost:hover{
+  color:#0b0b0b;background:#f2f2f2;border-color:#f2f2f2;
+}
+#emodal.fxed-ready .fxed-owned-btn:disabled{opacity:.45;cursor:wait;transform:none}
 #emodal.fxed-ready .fxed-owned-empty{
   padding:12px;
   border-radius:12px;
@@ -663,6 +696,8 @@ body.fxed-lock{overflow:hidden}
   #emodal.fxed-ready .fxed-head .mt{font-size:1.05rem}
   #emodal.fxed-ready .fxed-kicker{font-size:.53rem;letter-spacing:.17em}
   #emodal.fxed-ready .fxed-x{width:34px;height:34px}
+  #emodal.fxed-ready .fxed-admin{width:34px;height:34px;padding:0;border-radius:50%}
+  #emodal.fxed-ready .fxed-admin-label{display:none}
   #emodal.fxed-ready .fxed-body{
     display:flex;
     flex-direction:column;

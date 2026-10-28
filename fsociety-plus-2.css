@@ -693,4 +693,11 @@ body.fx-noanim .fx2-eq.playing i{animation:none!important}
 }
 @media(prefers-reduced-motion:reduce){
   .fx2-effect,.fx2-nick-fx .fx2-nfx i{animation:none!important}
+  /* без анимации частицы не должны исчезать: показываем их статично */
+  .fx2-nick-fx .fx2-nfx i{
+    top:var(--y,50%);
+    opacity:.62;
+    transform:none;
+    will-change:auto;
+  }
 }

@@ -97,6 +97,14 @@
       tw.appendChild(mt);
     }
     head.appendChild(tw);
+    var adminBtn = mk("button", "fxed-admin");
+    adminBtn.type = "button";
+    adminBtn.id = "fxed-admin";
+    adminBtn.hidden = true;
+    adminBtn.appendChild(mk("span", "fxed-admin-ico", "⚙"));
+    adminBtn.appendChild(txt(mk("span", "fxed-admin-label"), "Админ-панель", "Admin panel"));
+    adminBtn.setAttribute("aria-label", L("Открыть админ-панель", "Open admin panel"));
+    head.appendChild(adminBtn);
     var x = mk("button", "fxed-x", "✕");
     x.type = "button";
     x.id = "fxed-close";
@@ -334,8 +342,8 @@
     ownedHead.appendChild(ownedCount);
     owned.appendChild(ownedHead);
     owned.appendChild(txt(mk("div", "fxed-help"),
-      "Всё, что ты уже купил: привилегии, эффекты, обои и титул.",
-      "Everything you already bought: privileges, effects, wallpapers and title."));
+      "Всё, что уже куплено. Эффекты включай кнопкой, обои ставь сразу — без выхода из редактора.",
+      "Everything you own. Turn effects on and apply wallpapers right here."));
     var ownedList = mk("div", "fxed-owned-list");
     ownedList.id = "fxed-owned-list";
     owned.appendChild(ownedList);
@@ -346,8 +354,8 @@
     var premMain = mk("div");
     premMain.appendChild(txt(mk("b"), "Эффекты ника", "Nick effects"));
     premMain.appendChild(txt(mk("small"),
-      "Дождь, звёзды, огонь и «дождь из денег» — в PLUS 2 → Эффекты.",
-      "Rain, stars, fire and money rain — in PLUS 2 → Effects."));
+      "Дождь, звёзды, огонь и «дождь из денег» — покупаются в PLUS 2 → Эффекты, включаются в «Куплено» выше.",
+      "Rain, stars, fire and money rain — buy in PLUS 2 → Effects, enable in Purchased above."));
     premium.appendChild(premMain);
     p.appendChild(premium);
     return p;
@@ -416,16 +424,27 @@
     if (kind === "title") return L("титул", "title");
     return L("привилегия", "privilege");
   }
+  function wallIdFromPid(pid) {
+    return String(pid || "").replace(/^wall_/, "");
+  }
+  function currentWallId() {
+    return safe(function () {
+      if (typeof wallId !== "undefined" && wallId) return String(wallId);
+      var u = currentUser();
+      return u && u.wallpaper ? String(u.wallpaper) : "";
+    }, "");
+  }
   function ownedRows() {
     var w = wallet();
     if (!w) return [];
     var map = privilegeMap();
     var rows = [];
-    if (w.title) rows.push({ title: w.title, kind: "title", active: false });
+    var curWall = currentWallId();
+    if (w.title) rows.push({ pid: "title", title: w.title, kind: "title", active: true });
     var privs = Array.isArray(w.privileges) ? w.privileges : [];
     privs.forEach(function (pid) {
       pid = String(pid || "");
-      if (!pid) return;
+      if (!pid || pid === "custom_title") return;
       var item = map.get(pid);
       var kind = item && item.kind ? item.kind
         : pid.indexOf("wall_") === 0 ? "wallpaper"
@@ -433,10 +452,16 @@
       var title = item && item.title ? item.title
         : kind === "wallpaper" ? L("Обои: ", "Wallpaper: ") + wallTitle(pid)
         : pid;
+      var active = false;
+      if (kind === "effect") active = String(w.active_effect || "") === pid;
+      else if (kind === "wallpaper") active = curWall === wallIdFromPid(pid);
+      else if (kind === "badge" || kind === "highlight" || kind === "glow" ||
+               kind === "frame" || kind === "banner" || kind === "title") active = true;
       rows.push({
+        pid: pid,
         title: title,
         kind: kind,
-        active: String(w.active_effect || "") === pid
+        active: active
       });
     });
     return rows;
@@ -481,9 +506,96 @@
       main.appendChild(mk("b", "", r.title));
       main.appendChild(mk("small", "", kindTitle(r.kind)));
       row.appendChild(main);
-      if (r.active) row.appendChild(mk("span", "fxed-owned-on", L("активно", "active")));
+
+      var act = mk("div", "fxed-owned-act");
+      if (r.active) {
+        var onLabel = r.kind === "wallpaper" ? L("на сайте", "applied")
+          : r.kind === "effect" ? L("включён", "on")
+          : L("активно", "active");
+        act.appendChild(mk("span", "fxed-owned-on", onLabel));
+      }
+      if (r.kind === "effect") {
+        var eb = mk("button", "fxed-owned-btn" + (r.active ? " ghost" : ""),
+          r.active ? L("Выключить", "Turn off") : L("Включить", "Enable"));
+        eb.type = "button";
+        eb.onclick = function () { ownedEffect(r.pid, !r.active, eb); };
+        act.appendChild(eb);
+      } else if (r.kind === "wallpaper") {
+        var wb = mk("button", "fxed-owned-btn" + (r.active ? " ghost" : ""),
+          r.active ? L("Снять", "Remove") : L("Поставить", "Apply"));
+        wb.type = "button";
+        wb.onclick = function () {
+          ownedWallpaper(r.active ? "none" : wallIdFromPid(r.pid), wb);
+        };
+        act.appendChild(wb);
+      }
+      if (act.children.length) row.appendChild(act);
       list.appendChild(row);
     });
+  }
+
+  function rpcCall(name, args) {
+    var s = safe(function () { return sb; }, null);
+    if (!s) return Promise.reject(new Error("no-supabase"));
+    return Promise.resolve(s.rpc(name, args || {})).then(function (r) {
+      if (r && r.error) throw r.error;
+      return r ? r.data : null;
+    });
+  }
+  async function refreshOwnedWallet() {
+    var fx = safe(function () { return window.fxPlus2; }, null);
+    if (fx && typeof fx.refreshWallet === "function") {
+      await fx.refreshWallet();
+      return;
+    }
+    if (fx && typeof fx.reload === "function") fx.reload();
+  }
+  async function ownedEffect(pid, on, btn) {
+    if (!pid) return;
+    if (btn) btn.disabled = true;
+    try {
+      var fx = safe(function () { return window.fxPlus2; }, null);
+      if (fx && typeof fx.setEffect === "function") {
+        await fx.setEffect(on ? pid : "", btn);
+      } else {
+        await rpcCall("effect_set", { p_id: on ? pid : "" });
+        await refreshOwnedWallet();
+      }
+      renderOwned(true);
+      syncPreview(false);
+    } catch (e) {
+      safe(function () { toast(t("err_generic")); });
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+  async function ownedWallpaper(id, btn) {
+    if (!id) return;
+    if (btn) btn.disabled = true;
+    try {
+      var fx = safe(function () { return window.fxPlus2; }, null);
+      if (fx && typeof fx.applyWallpaper === "function") {
+        await fx.applyWallpaper(id, btn);
+      } else {
+        var u = currentUser();
+        if (!u) throw new Error("guest");
+        safe(function () { setWall(id); });
+        u.wallpaper = id;
+        var s = safe(function () { return sb; }, null);
+        if (s) {
+          var r = await s.from("profiles").update({ wallpaper: id }).eq("id", u.id);
+          if (r && r.error) throw r.error;
+        }
+      }
+      safe(function () { eWall = id; buildWallGrid(); });
+      decorateWalls();
+      renderOwned(true);
+      syncPreview(false);
+    } catch (e) {
+      safe(function () { toast(t("err_generic")); });
+    } finally {
+      if (btn) btn.disabled = false;
+    }
   }
   async function loadOwned(force) {
     var w = wallet();
@@ -668,10 +780,23 @@
     syncPreview(false);
   }
 
+  /* ---------------- admin entry ---------------- */
+  function isOwnerLikeRole() {
+    var r = roleOf();
+    return r === "owner" || r === "coowner";
+  }
+  function updateAdminBtn() {
+    var b = q("fxed-admin");
+    if (!b) return;
+    b.hidden = !isOwnerLikeRole();
+    b.setAttribute("aria-label", L("Открыть админ-панель", "Open admin panel"));
+  }
+
   /* ---------------- open / close ---------------- */
   function onOpen() {
     st.open = true;
     st.lastFocus = document.activeElement;
+    updateAdminBtn();
     var u = currentUser();
     var ava = q("eava");
     if (ava) {
@@ -751,6 +876,14 @@
       var no = q("eno");
       if (no) no.click();
       else safe(function () { closeEdit(true); });
+    };
+
+    var adminBtn = q("fxed-admin");
+    if (adminBtn) adminBtn.onclick = function () {
+      var no = q("eno");
+      if (no) no.click();
+      else safe(function () { closeEdit(true); });
+      safe(function () { go("admin"); });
     };
 
     var ava = q("eava");
@@ -864,6 +997,7 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-fxed-ru]"), function (el) {
       el.textContent = L(el.getAttribute("data-fxed-ru"), el.getAttribute("data-fxed-en"));
     });
+    updateAdminBtn();
     var close = q("fxed-close");
     if (close) close.setAttribute("aria-label", L("Закрыть", "Close"));
     var ava = q("eava");
