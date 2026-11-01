@@ -1,0 +1,152 @@
+/* ============================================================
+   fsociety THEME — общий вид для всех слоёв (index, PLUS, PLUS 2,
+   редактор, EXTRA). Подключается последним.
+   Идея: чёрный, белый и один акцент — красный fsociety.
+   Белая кнопка = главное действие, красный = знак fsociety,
+   активное состояние, счётчики и опасные действия.
+   Цвета ролей и валют остаются только как метки.
+   ============================================================ */
+:root{
+  --fs-bg:#000;
+  --fs-text:#f2f2f2;
+  --fs-mute:rgba(242,242,242,.58);
+  --fs-line:rgba(255,255,255,.12);
+  --fs-surface:rgba(255,255,255,.05);
+  --fs-surface-2:rgba(255,255,255,.09);
+  --fs-red:#ff2b3a;
+  --fs-red-soft:rgba(255,43,58,.14);
+  --fs-display:"Unbounded",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --fs-r-card:18px;
+  --fs-r-ctl:12px;
+  /* акценты слоёв, которые раньше были зелёными */
+  --fx-accent:#f2f2f2;
+  --fx-accent-2:#f2f2f2;
+  --fx2-accent:#f2f2f2;
+  --fx2-danger:var(--fs-red);
+  --fxed-accent:#f2f2f2;
+}
+
+body{background:var(--fs-bg);color:var(--fs-text)}
+::selection{background:var(--fs-red);color:#fff}
+:focus-visible{outline:2px solid var(--fs-red);outline-offset:2px}
+
+/* ---------- заголовки: один шрифт, одно выравнивание ---------- */
+.view h2,
+.fx-top h2,
+.fx2-head h3,
+.fx-head h3,
+#emodal.fxed-ready .fxed-title{
+  font-family:var(--fs-display);
+  font-weight:700;
+  letter-spacing:-.01em;
+  text-shadow:none;
+}
+.view h2{font-size:1.45rem;line-height:1.15;align-self:flex-start;text-align:left;margin:4px 0 6px}
+.fx-top h2{font-size:1.05rem}
+.fx2-head h3,.fx-head h3{font-size:.98rem}
+/* «PLUS» больше не зелёный и не радужный */
+.fx-top h2 span{color:inherit!important}
+.fx2-title-grad{background:none!important;-webkit-text-fill-color:currentColor!important;color:inherit!important}
+
+/* ---------- разделы начинаются сверху, а не посреди экрана ---------- */
+#forum .box,#servers .box,#admin .box,#profile .box,#thread .box{margin:0 auto}
+#forum .box,#admin .box{align-items:stretch}
+#fnew{align-self:flex-start}
+#servers .srvhome h2,#servers .srvtop p{text-align:left}
+#servers .srvtop{align-items:flex-start}
+#admin #utotal{align-self:flex-start}
+
+/* ---------- поверхности: одна толщина линии, одни скругления ---------- */
+.glass,.fx-card,.fx-tile,.ucard,.fx2-priv,.fx2-ann,.fx2-effect,.fx2-wall-card,.fx2-ctf,.fx2-quest{
+  border-color:var(--fs-line);
+}
+.fx-card,.ucard,.fx2-priv,.fx2-ann,.fx2-ctf,.fx2-quest{border-radius:var(--fs-r-card)}
+.fx-card{background:var(--fs-surface);box-shadow:none}
+
+/* ---------- кнопки ---------- */
+/* главное действие: белая плашка, чёрный текст */
+.btn.main,.fx-btn.main,.fx-daily,#emodal.fxed-ready #eyes{
+  background:#f2f2f2;
+  color:#000;
+  border:1px solid transparent;
+  box-shadow:none;
+}
+.btn.main:hover,.fx-btn.main:hover,.fx-daily:hover,#emodal.fxed-ready #eyes:hover{
+  background:#fff;
+  box-shadow:0 0 0 3px var(--fs-red-soft);
+}
+/* недоступно (нужен уровень, бонус уже взят): тихая контурная кнопка */
+.btn.main:disabled,.fx-btn.main:disabled,.fx-daily:disabled{
+  background:transparent;
+  color:var(--fs-mute);
+  border-color:var(--fs-line);
+  opacity:1;
+}
+/* второстепенное */
+.fx-btn{background:var(--fs-surface-2);border-color:var(--fs-line)}
+/* опасное: удалить, забанить */
+.mini.danger,.fx-btn.danger,.btn.danger{background:var(--fs-red-soft);color:#ffd9dc;border-color:rgba(255,43,58,.35)}
+
+/* ---------- плитки меню PLUS ---------- */
+.fx-tile{background:var(--fs-surface);border-radius:16px}
+.fx-tile:hover{background:var(--fs-surface-2);border-color:rgba(255,255,255,.22);box-shadow:none}
+.fx-tile .fx-ico{background:var(--fs-surface-2);border-color:var(--fs-line)}
+.fx-tile:hover .fx-ico{box-shadow:none;transform:none}
+.fx-tile::before{display:none}
+
+/* ---------- активные вкладки и выбор: везде одинаково ---------- */
+.seg button.on,.fx-tabs button.on,.fx2-subtab.on,.fx2-scope-btn.on,.fx2-tag-btn.on,
+#emodal.fxed-ready .fxed-tab.on,#emodal.fxed-ready .wopt.on,.wopt.on{
+  background:rgba(255,255,255,.16);
+  border-color:rgba(255,255,255,.3);
+  color:#fff;
+  box-shadow:none;
+}
+.fx2-wall-card.on,.fx2-effect.active{border-color:var(--fs-red);box-shadow:0 0 0 1px var(--fs-red)}
+.fx2-wall-card:hover,.fx2-effect:hover{border-color:rgba(255,255,255,.28)}
+.fx2-priv.owned,.fx-item.owned,.fx-item.equipped,.fx2-ctf.solved,.fx2-quest.done{border-color:rgba(255,255,255,.3)}
+
+/* полосы прогресса и голосования */
+.fx-bar i,.fx2-poll-bar,.fx2-pollbar-fill{background:var(--fs-text)!important}
+
+/* ---------- меню снизу ---------- */
+#dock button.on{color:#fff}
+#dock button.on>svg{stroke:#fff;filter:none}
+#dind{background:var(--fs-surface-2);box-shadow:none}
+#dock button.on::after{content:"";position:absolute;bottom:1px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--fs-red)}
+
+/* ---------- верхний ряд кнопок ---------- */
+#fxbtn,#fx2btn,#fxadminbtn,#bell,#langbtn,#back{border:1px solid var(--fs-line)}
+#fxbtn:hover,#fx2btn:hover{box-shadow:none;border-color:rgba(255,255,255,.3)}
+#fxbtn .fx-dot{background:var(--fs-red);box-shadow:0 0 8px var(--fs-red)}
+
+/* ---------- редактор профиля ---------- */
+#emodal.fxed-ready .fxed-kicker,#emodal.fxed-ready .fxed-live{color:var(--fs-mute)}
+#emodal.fxed-ready .fxed-kicker::before,#emodal.fxed-ready .fxed-live i{background:var(--fs-red);box-shadow:none}
+#emodal.fxed-ready .fxed-card,#emodal.fxed-ready .fxed-cover{border-color:var(--fs-line)}
+#emodal.fxed-ready #enick:focus,#emodal.fxed-ready #ebio:focus{border-color:rgba(255,255,255,.4);box-shadow:none}
+
+/* ---------- терминал: остаётся «экраном», но в белом ---------- */
+.fx-term-out,.fx-term-line,.fx-term-line span,.fx-term-cmd{color:#e8e8e8}
+
+/* ---------- текст ---------- */
+.mail,.fx-tile small,.fx2-hint{color:var(--fs-mute);opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  .view,.fx-wrap,.fx-tile,#dind{transition:none!important}
+}
+
+/* ---------- поле статуса в редакторе — как поле ника ---------- */
+#emodal.fxed-ready .fxex-ed-status input{
+  width:100%;
+  box-sizing:border-box;
+  height:46px;
+  background:var(--fs-surface);
+  border:1px solid var(--fs-line);
+  border-radius:14px;
+  padding:12px 14px;
+  color:var(--fs-text);
+  font:inherit;
+  font-size:.9rem;
+}
+#emodal.fxed-ready .fxex-ed-status input:focus{border-color:rgba(255,255,255,.4);outline:none}

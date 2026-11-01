@@ -3440,8 +3440,41 @@
     }
   }
 
+  function injectAdminButton() {
+    var btn = q("fxadminbtn");
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.id = "fxadminbtn";
+      btn.type = "button";
+      btn.className = "glass";
+      btn.title = L("Админ-панель", "Admin panel");
+      btn.setAttribute("aria-label", L("Админ-панель", "Admin panel"));
+      btn.innerHTML = '<span class="fxadmin-a">A</span>';
+      btn.onclick = function () {
+        try { closePanel(); } catch (e) {}
+        try {
+          if (window.fxPlus && typeof window.fxPlus.close === "function") window.fxPlus.close();
+          else {
+            var p1 = q("fxpanel");
+            if (p1 && p1.classList.contains("show")) {
+              var c1 = q("fxclose");
+              if (c1) c1.click();
+              else p1.classList.remove("show");
+            }
+          }
+        } catch (e) {}
+        try { if (typeof go === "function") go("admin"); } catch (e) {}
+      };
+      document.body.appendChild(btn);
+    }
+    var show = rank() >= 4;
+    btn.hidden = !show;
+    btn.style.display = show ? "flex" : "none";
+  }
+
   function injectAll() {
     injectUI();
+    injectAdminButton();
     injectPlusHooks();
     injectPollSlots();
     injectSendPollButtons();
@@ -3561,6 +3594,7 @@
     window.fxPlus2 = {
       version: VERSION,
       open: openPanel,
+      close: closePanel,
       wallet: function () { return state.wallet; },
       sync: syncAuth,
       reload: function () {

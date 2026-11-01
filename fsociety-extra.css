@@ -1,0 +1,894 @@
+/* ============================================================
+   fsociety EXTRA — статусы, бейджи, гости, репутация, кейсы,
+   подарки, сезонный пропуск, музыка профиля, статистика,
+   командная палитра Ctrl+K.
+   Подключается после fsociety-edit.css. Монохром, прозрачность.
+   ============================================================ */
+
+/* ---------- общие мелочи ---------- */
+.fxex-muted,
+.fxex-hint{
+  margin:0;
+  font-size:.72rem;
+  line-height:1.5;
+  color:rgba(255,255,255,.55);
+}
+.fxex-hint{font-size:.68rem;opacity:.8}
+.fxex-confirm-text{
+  margin:0;
+  font-size:.82rem;
+  line-height:1.55;
+  color:rgba(255,255,255,.86);
+}
+
+/* ---------- статус ---------- */
+.fxex-status[hidden],
+.fxex-badges[hidden],
+.fxex-music[hidden],
+.fxex-gifts[hidden]{display:none!important}
+.fxex-status{
+  display:inline-block;
+  max-width:100%;
+  box-sizing:border-box;
+  margin:2px 0 0;
+  padding:6px 10px 6px 11px;
+  border-left:2px solid rgba(255,255,255,.75);
+  border-radius:0 10px 10px 0;
+  background:rgba(255,255,255,.055);
+  color:rgba(255,255,255,.86);
+  font-size:.76rem;
+  font-style:italic;
+  line-height:1.4;
+  word-break:break-word;
+}
+
+/* ---------- витрина бейджей ---------- */
+.fxex-badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:2px;
+}
+.fxex-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  max-width:100%;
+  padding:3px 8px 3px 6px;
+  border-radius:999px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.82);
+  font-size:.62rem;
+  line-height:1.2;
+  filter:grayscale(1);
+}
+.fxex-badge-ico{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:18px;
+  height:18px;
+  flex:none;
+  font-size:.82rem;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+}
+.fxex-badge-name{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width:130px;
+}
+
+/* ---------- социальные чипы ---------- */
+.fxex-social{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:2px;
+}
+.fxex-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 9px;
+  border-radius:999px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.13);
+  color:rgba(255,255,255,.72);
+  font-size:.63rem;
+  line-height:1.2;
+  white-space:nowrap;
+}
+.fxex-chip b{color:#f7f7f7;font-weight:700}
+.fxex-chip-ico{font-size:.76rem;line-height:1;opacity:.85}
+.fxex-chip-btn{
+  all:unset;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 9px;
+  border-radius:999px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.13);
+  color:rgba(255,255,255,.72);
+  font:inherit;
+  font-size:.63rem;
+  line-height:1.2;
+  white-space:nowrap;
+  transition:background .18s,color .18s,border-color .18s,transform .18s;
+}
+.fxex-chip-btn:hover{background:#f2f2f2;color:#0b0b0b;border-color:#f2f2f2}
+.fxex-chip-btn:active{transform:scale(.97)}
+.fxex-chip-btn:disabled{opacity:.5;cursor:default}
+.fxex-chip-btn[hidden]{display:none!important}
+
+/* ---------- музыка профиля ---------- */
+.fxex-music{margin-top:3px}
+.fxex-music-btn{
+  all:unset;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  max-width:330px;
+  box-sizing:border-box;
+  padding:7px 10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.13);
+  color:rgba(255,255,255,.85);
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.fxex-music-btn:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.25)}
+.fxex-music-btn:active{transform:scale(.985)}
+.fxex-music-ico{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:26px;
+  height:26px;
+  flex:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.16);
+  font-size:.66rem;
+}
+.fxex-music-name{
+  font-size:.7rem;
+  font-weight:700;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.fxex-music-sub{
+  margin-left:auto;
+  flex:none;
+  font-size:.55rem;
+  color:rgba(255,255,255,.45);
+}
+
+/* ---------- подарки в карточке ---------- */
+.fxex-gifts{
+  margin-top:7px;
+  padding-top:7px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.fxex-gifts-title{
+  margin-bottom:5px;
+  font-size:.58rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.42);
+}
+.fxex-gift-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:4px 0;
+}
+.fxex-gift-row-ico{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:26px;
+  height:26px;
+  flex:none;
+  border-radius:9px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  font-size:.85rem;
+}
+.fxex-gift-row-tx{min-width:0;flex:1}
+.fxex-gift-row-tx b{display:block;font-size:.68rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fxex-gift-row-tx small{display:block;font-size:.58rem;color:rgba(255,255,255,.45);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ============================================================
+   МОДАЛКА EXTRA
+   ============================================================ */
+.fxex-modal{
+  position:fixed;
+  inset:0;
+  z-index:95;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  box-sizing:border-box;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .22s ease,visibility .22s ease;
+}
+.fxex-modal.show{opacity:1;visibility:visible;pointer-events:auto}
+.fxex-mcard{
+  width:min(470px,100%);
+  max-height:calc(100vh - 32px);
+  max-height:calc(100dvh - 32px);
+  overflow-y:auto;
+  box-sizing:border-box;
+  padding:18px;
+  border-radius:22px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  background:rgba(12,12,12,.94);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 30px 90px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.06);
+  text-align:left;
+  transform:translateY(14px) scale(.985);
+  transition:transform .26s cubic-bezier(.16,1,.3,1);
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.2) transparent;
+}
+.fxex-modal.show .fxex-mcard{transform:none}
+.fxex-mcard::-webkit-scrollbar{width:7px}
+.fxex-mcard::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
+.fxex-mhead{display:flex;align-items:center;gap:10px}
+.fxex-mhead h3{
+  margin:0;
+  flex:1;
+  min-width:0;
+  font-size:1rem;
+  font-weight:800;
+  letter-spacing:-.01em;
+  line-height:1.25;
+  color:#f7f7f7;
+  word-break:break-word;
+}
+.fxex-x{
+  all:unset;
+  cursor:pointer;
+  width:32px;
+  height:32px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.6);
+  font-size:.8rem;
+  transition:background .18s,color .18s,transform .18s;
+}
+.fxex-x:hover{background:rgba(239,68,68,.18);color:#fecaca;border-color:rgba(239,68,68,.3)}
+.fxex-x:active{transform:scale(.92)}
+.fxex-mbody{display:flex;flex-direction:column;gap:10px;min-width:0}
+
+/* кнопки и поля */
+.fxex-btn{
+  all:unset;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:9px 16px;
+  border-radius:999px;
+  background:#f2f2f2;
+  border:1px solid #f2f2f2;
+  color:#0b0b0b;
+  font:inherit;
+  font-size:.76rem;
+  font-weight:700;
+  line-height:1.2;
+  text-align:center;
+  transition:background .18s,color .18s,border-color .18s,transform .18s,opacity .18s;
+}
+.fxex-btn:hover{background:#fff;border-color:#fff}
+.fxex-btn:active{transform:scale(.97)}
+.fxex-btn:disabled{opacity:.45;cursor:default;transform:none}
+.fxex-btn.ghost{
+  background:rgba(255,255,255,.055);
+  border-color:rgba(255,255,255,.16);
+  color:rgba(255,255,255,.8);
+}
+.fxex-btn.ghost:hover{background:rgba(255,255,255,.12);color:#fff}
+.fxex-row{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.fxex-row.end{justify-content:flex-end}
+.fxex-input{
+  width:100%;
+  box-sizing:border-box;
+  padding:9px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.16);
+  color:#f5f5f5;
+  font:inherit;
+  font-size:.78rem;
+  outline:none;
+}
+.fxex-input::placeholder{color:rgba(255,255,255,.35)}
+.fxex-input:focus{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.075)}
+
+/* гости */
+.fxex-list{display:flex;flex-direction:column;gap:6px}
+.fxex-guest-row{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:7px 8px;
+  border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.075);
+}
+.fxex-guest-ava{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  flex:none;
+  border-radius:50%;
+  background-color:rgba(255,255,255,.1);
+  background-size:cover;
+  background-position:center;
+  border:1px solid rgba(255,255,255,.18);
+  font-size:.7rem;
+  font-weight:700;
+  color:rgba(255,255,255,.8);
+}
+.fxex-guest-tx{min-width:0;flex:1}
+.fxex-guest-tx small{display:block;font-size:.58rem;color:rgba(255,255,255,.42);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fxex-link{
+  all:unset;
+  cursor:pointer;
+  display:inline-block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#f5f5f5;
+  font-size:.74rem;
+  font-weight:700;
+}
+.fxex-link:hover{text-decoration:underline}
+
+/* выбор подарка */
+.fxex-gift-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  max-height:310px;
+  overflow-y:auto;
+  padding:2px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.18) transparent;
+}
+.fxex-gift-item{
+  all:unset;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  padding:10px 7px;
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.11);
+  color:rgba(255,255,255,.82);
+  text-align:center;
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.fxex-gift-item:hover{background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.22)}
+.fxex-gift-item.on{background:rgba(255,255,255,.13);border-color:#f2f2f2;color:#fff}
+.fxex-gift-item:active{transform:scale(.98)}
+.fxex-gift-item b{font-size:.66rem;font-weight:700;line-height:1.25}
+.fxex-gift-item small{font-size:.6rem;color:rgba(255,255,255,.5)}
+.fxex-gift-ico{font-size:1.25rem;line-height:1.1}
+
+/* список подарков в PLUS 2 */
+.fxex-gift-card{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.09);
+}
+.fxex-gift-card-ico{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  flex:none;
+  border-radius:11px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  font-size:1.05rem;
+}
+.fxex-gift-card-tx{min-width:0;flex:1}
+.fxex-gift-card-tx b{display:block;font-size:.74rem;font-weight:700}
+.fxex-gift-card-tx small{display:block;font-size:.6rem;color:rgba(255,255,255,.45)}
+.fxex-gift-card-msg{display:block;margin-top:3px;font-size:.64rem;font-style:italic;color:rgba(255,255,255,.62);word-break:break-word}
+
+/* ============================================================
+   КЕЙСЫ
+   ============================================================ */
+.fxex-case-wallet{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:.7rem;
+  font-weight:700;
+  color:rgba(255,255,255,.85);
+}
+.fxex-case-list{display:flex;flex-direction:column;gap:8px}
+.fxex-case{
+  display:grid;
+  grid-template-columns:50px minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border-radius:16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  transition:background .18s,border-color .18s;
+}
+.fxex-case:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}
+.fxex-case-art{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:50px;
+  height:50px;
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:1.45rem;
+  filter:grayscale(1);
+}
+.fxex-case-info{min-width:0}
+.fxex-case-info b{display:block;font-size:.76rem;font-weight:700;line-height:1.25}
+.fxex-case-info small{display:block;margin-top:2px;font-size:.6rem;line-height:1.35;color:rgba(255,255,255,.48)}
+.fxex-case-prizes{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.fxex-prize-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  max-width:100%;
+  padding:2px 6px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.035);
+  color:rgba(255,255,255,.62);
+  font-size:.54rem;
+  line-height:1.25;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.fxex-prize-chip.rare{border-color:rgba(147,197,253,.3);color:rgba(191,219,254,.82)}
+.fxex-prize-chip.epic{border-color:rgba(196,181,253,.3);color:rgba(221,214,254,.84)}
+.fxex-prize-chip.legendary{border-color:rgba(253,224,71,.36);color:rgba(254,240,138,.9)}
+.fxex-sub{
+  margin-top:2px;
+  font-size:.58rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.42);
+}
+.fxex-history-row{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:7px 8px;
+  border-radius:11px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.07);
+}
+.fxex-history-ico{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  flex:none;
+  border-radius:9px;
+  background:rgba(255,255,255,.05);
+  font-size:.9rem;
+}
+.fxex-history-tx{min-width:0;flex:1}
+.fxex-history-tx b{display:block;font-size:.68rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fxex-history-tx small{display:block;font-size:.56rem;color:rgba(255,255,255,.42)}
+
+.fxex-case-result{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  padding:20px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.14);
+  text-align:center;
+}
+.fxex-case-result.rare{border-color:rgba(147,197,253,.34);background:rgba(147,197,253,.055)}
+.fxex-case-result.epic{border-color:rgba(196,181,253,.36);background:rgba(196,181,253,.06)}
+.fxex-case-result.legendary{border-color:rgba(253,224,71,.42);background:rgba(253,224,71,.07);box-shadow:0 0 40px rgba(253,224,71,.08)}
+.fxex-case-result-rarity{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.fxex-case-result-ico{font-size:3rem;line-height:1.1;filter:grayscale(1) drop-shadow(0 6px 18px rgba(0,0,0,.4))}
+.fxex-case-result.legendary .fxex-case-result-ico{filter:none}
+.fxex-case-result-title{font-size:.92rem;font-weight:800;color:#f7f7f7;line-height:1.3}
+.fxex-case-result-sub{font-size:.64rem;color:rgba(255,255,255,.5);line-height:1.4}
+
+/* ============================================================
+   СЕЗОННЫЙ ПРОПУСК
+   ============================================================ */
+.fxex-season-head{display:flex;flex-direction:column;gap:6px}
+.fxex-season-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.76rem}
+.fxex-season-top b{font-weight:700}
+.fxex-season-lvl{font-size:.64rem;color:rgba(255,255,255,.55);white-space:nowrap}
+.fxex-season-bar{
+  height:8px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.08);
+}
+.fxex-season-fill{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(255,255,255,.45),#f2f2f2);
+  transition:width .45s cubic-bezier(.2,.9,.2,1);
+}
+.fxex-season-xp{font-size:.6rem;color:rgba(255,255,255,.45)}
+.fxex-season-track{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  max-height:min(48vh,430px);
+  overflow-y:auto;
+  padding-right:2px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.18) transparent;
+}
+.fxex-season-node{
+  display:grid;
+  grid-template-columns:24px 26px minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  padding:7px 9px;
+  border-radius:12px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.07);
+}
+.fxex-season-node.available{background:rgba(255,255,255,.065);border-color:rgba(255,255,255,.22)}
+.fxex-season-node.claimed{opacity:.5}
+.fxex-season-node.locked{opacity:.45}
+.fxex-season-node-lvl{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:.58rem;
+  font-weight:700;
+}
+.fxex-season-node-ico{display:flex;align-items:center;justify-content:center;font-size:.95rem;filter:grayscale(1)}
+.fxex-season-node.available .fxex-season-node-ico{filter:none}
+.fxex-season-node-title{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:.66rem;
+  font-weight:600;
+}
+.fxex-season-node-sub{font-size:.56rem;color:rgba(255,255,255,.45);white-space:nowrap}
+.fxex-season-node-state{font-size:.7rem;opacity:.6}
+.fxex-season-claim{
+  all:unset;
+  cursor:pointer;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#f2f2f2;
+  border:1px solid #f2f2f2;
+  color:#0b0b0b;
+  font:inherit;
+  font-size:.58rem;
+  font-weight:700;
+  white-space:nowrap;
+  transition:background .18s,transform .18s,opacity .18s;
+}
+.fxex-season-claim:hover{background:#fff}
+.fxex-season-claim:active{transform:scale(.96)}
+.fxex-season-claim:disabled{opacity:.45;cursor:default;transform:none}
+
+/* ============================================================
+   Ctrl+K ПАЛИТРА
+   ============================================================ */
+.fxex-palette{
+  position:fixed;
+  inset:0;
+  z-index:96;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:11vh 16px 16px;
+  box-sizing:border-box;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .18s ease,visibility .18s ease;
+}
+.fxex-palette.show{opacity:1;visibility:visible;pointer-events:auto}
+.fxex-pal-box{
+  width:min(560px,100%);
+  overflow:hidden;
+  border-radius:18px;
+  background:rgba(12,12,12,.97);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 30px 100px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);
+  transform:translateY(-10px) scale(.99);
+  transition:transform .22s cubic-bezier(.16,1,.3,1);
+}
+.fxex-palette.show .fxex-pal-box{transform:none}
+.fxex-pal-input{
+  width:100%;
+  box-sizing:border-box;
+  padding:14px 16px;
+  border:0;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  background:transparent;
+  color:#f5f5f5;
+  font:inherit;
+  font-size:.9rem;
+  outline:none;
+}
+.fxex-pal-input::placeholder{color:rgba(255,255,255,.32)}
+.fxex-pal-list{
+  max-height:min(48vh,360px);
+  overflow-y:auto;
+  padding:6px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.18) transparent;
+}
+.fxex-pal-item{
+  all:unset;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  width:100%;
+  box-sizing:border-box;
+  padding:8px 9px;
+  border-radius:10px;
+  color:rgba(255,255,255,.82);
+  transition:background .14s,color .14s;
+}
+.fxex-pal-item:hover,
+.fxex-pal-item.on{background:rgba(255,255,255,.1);color:#fff}
+.fxex-pal-item:active{transform:scale(.995)}
+.fxex-pal-ico{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  flex:none;
+  border-radius:9px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.09);
+  font-size:.9rem;
+}
+.fxex-pal-tx{min-width:0;flex:1;display:flex;flex-direction:column;gap:1px}
+.fxex-pal-tx b{font-size:.75rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fxex-pal-tx small{font-size:.6rem;color:rgba(255,255,255,.45);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fxex-pal-foot{
+  padding:7px 14px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:.56rem;
+  color:rgba(255,255,255,.38);
+}
+.fxex-pal-empty{padding:20px;text-align:center;font-size:.72rem;color:rgba(255,255,255,.45)}
+
+/* ============================================================
+   АДМИН-СТАТИСТИКА
+   ============================================================ */
+.fxex-admin-stats{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin:0 0 8px;
+  padding:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.1);
+}
+.fxex-stats-title{
+  font-size:.58rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.42);
+}
+.fxex-stats-body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.fxex-stat-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(104px,1fr));
+  gap:6px;
+}
+.fxex-stat-card{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:8px 9px;
+  border-radius:10px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.07);
+}
+.fxex-stat-label{
+  font-size:.54rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.42);
+}
+.fxex-stat-value{font-size:1.02rem;font-weight:800;line-height:1.15;color:#f7f7f7}
+.fxex-stat-sub{font-size:.54rem;color:rgba(255,255,255,.38);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fxex-chart-wrap{display:flex;flex-direction:column;gap:5px;margin-top:2px}
+.fxex-chart-legend{display:flex;flex-wrap:wrap;gap:10px}
+.fxex-legend{display:inline-flex;align-items:center;gap:4px;font-size:.56rem;color:rgba(255,255,255,.48)}
+.fxex-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f2f2f2}
+.fxex-dot.messages{background:rgba(255,255,255,.35)}
+.fxex-chart{
+  display:flex;
+  align-items:flex-end;
+  gap:4px;
+  height:88px;
+  padding-top:2px;
+}
+.fxex-day{
+  flex:1;
+  min-width:0;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  gap:3px;
+}
+.fxex-day-bars{
+  display:flex;
+  align-items:flex-end;
+  gap:2px;
+  width:100%;
+  height:70px;
+}
+.fxex-bar{
+  flex:1;
+  min-width:2px;
+  min-height:2px;
+  border-radius:3px 3px 0 0;
+  background:#f2f2f2;
+  transition:height .4s cubic-bezier(.2,.9,.2,1);
+}
+.fxex-bar.messages{background:rgba(255,255,255,.32)}
+.fxex-day-label{font-size:.48rem;color:rgba(255,255,255,.38);white-space:nowrap}
+
+/* ============================================================
+   РЕДАКТОР ПРОФИЛЯ: СТАТУС, БЕЙДЖИ, МУЗЫКА
+   ============================================================ */
+#emodal.fxed-ready .fxex-ed-block{margin-top:2px}
+#emodal.fxed-ready .fxex-ed-block h4{
+  margin:0 0 5px;
+  font-size:.72rem;
+  font-weight:700;
+  color:rgba(255,255,255,.86);
+}
+#emodal.fxed-ready .fxex-ed-status .fxex-row{margin-top:7px}
+#emodal.fxed-ready .fxex-ed-status select,
+#emodal.fxed-ready .fxex-ed-block select{
+  flex:1;
+  min-width:130px;
+  padding:9px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.16);
+  color:#f5f5f5;
+  font:inherit;
+  font-size:.76rem;
+  outline:none;
+}
+#emodal.fxed-ready .fxex-ed-status select option,
+#emodal.fxed-ready .fxex-ed-block select option{background:#141414;color:#f5f5f5}
+#emodal.fxed-ready .fxex-badge-pick{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:7px;
+}
+#emodal.fxed-ready .fxex-badge-pick-item{
+  all:unset;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.13);
+  color:rgba(255,255,255,.72);
+  font:inherit;
+  font-size:.62rem;
+  line-height:1.2;
+  transition:background .18s,color .18s,border-color .18s,transform .18s;
+}
+#emodal.fxed-ready .fxex-badge-pick-item:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.24)}
+#emodal.fxed-ready .fxex-badge-pick-item.on{background:#f2f2f2;color:#0b0b0b;border-color:#f2f2f2}
+#emodal.fxed-ready .fxex-badge-pick-item:active{transform:scale(.97)}
+#emodal.fxed-ready .fxex-badge-pick-item .fxex-badge-ico{width:16px;height:16px;font-size:.75rem;background:transparent}
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+@media (max-width:560px){
+  .fxex-mcard{padding:15px;border-radius:19px;gap:10px}
+  .fxex-gift-grid{grid-template-columns:1fr 1fr}
+  .fxex-case{grid-template-columns:44px minmax(0,1fr);gap:8px}
+  .fxex-case-art{width:44px;height:44px;font-size:1.25rem;grid-row:span 2}
+  .fxex-case .fxex-btn{grid-column:1 / -1;width:100%;box-sizing:border-box}
+  .fxex-season-node{grid-template-columns:22px 24px minmax(0,1fr) auto;gap:6px;padding:7px}
+  .fxex-season-node-title{font-size:.62rem}
+  .fxex-palette{padding:8vh 10px 10px}
+  .fxex-stat-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fxex-chart{height:78px}
+  .fxex-day-bars{height:62px}
+  .fxex-day-label{font-size:.44rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .fxex-modal,
+  .fxex-mcard,
+  .fxex-palette,
+  .fxex-pal-box,
+  .fxex-btn,
+  .fxex-chip-btn,
+  .fxex-music-btn,
+  .fxex-gift-item,
+  .fxex-season-fill,
+  .fxex-season-claim,
+  .fxex-bar{
+    transition:none!important;
+    animation:none!important;
+  }
+  .fxex-mcard,
+  .fxex-pal-box{transform:none!important}
+}
