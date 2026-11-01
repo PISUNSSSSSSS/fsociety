@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#000000">
 <title>fsociety</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,7 +10,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://zdtgznbyuhpskiyyxslt.supabase.co" crossorigin>
+<!-- версия зафиксирована: обновления библиотеки не сломают сайт, а браузер кэширует её надолго -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.100.1/dist/umd/supabase.js"></script>
+<script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>')</script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <style>
 *{-webkit-tap-highlight-color:transparent}
@@ -388,6 +391,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 <link rel="stylesheet" href="fsociety-extra.css">
 <link rel="stylesheet" href="fsociety-theme.css">
 <link rel="stylesheet" href="fsociety-motion.css">
+<link rel="stylesheet" href="fsociety-app.css">
 </head>
 <body>
 <canvas id="wall"></canvas>
@@ -398,7 +402,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 
 <div id="app">
   <section id="home" class="view active"><div class="box">
-    <img class="banner" src="top.gif" alt="">
+    <video class="banner" src="top.mp4" poster="top-poster.jpg" autoplay muted loop playsinline disableremoteplayback aria-hidden="true"></video>
     <div class="tag glass" data-i18n="home_tag"></div>
   </div></section>
 
@@ -4821,5 +4825,6 @@ boot();
 <script src="fsociety-edit.js"></script>
 <script src="fsociety-extra.js"></script>
 <script src="fsociety-motion.js"></script>
+<script src="fsociety-app.js"></script>
 </body>
 </html>

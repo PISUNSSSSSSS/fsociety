@@ -1180,7 +1180,9 @@
       });
       ch.subscribe(function (status) {
         if (status === "SUBSCRIBED") {
-          try { ch.track({ id: u.id, nick: u.nick, avatar: u.avatar || null, at: Date.now() }); } catch (e) {}
+          // режим «невидимка» (Приватность): слушаем, но себя не показываем
+          var hidden = false; try { hidden = localStorage.getItem("fs_invisible") === "1"; } catch (e) {}
+          if (!hidden) { try { ch.track({ id: u.id, nick: u.nick, avatar: u.avatar || null, at: Date.now() }); } catch (e) {} }
         }
       });
     } catch (e) { state.channel = null; }
@@ -1556,8 +1558,17 @@
     window.fxPlus = {
       version: VERSION,
       open: openPanel,
+      close: closePanel,
       stats: function () { return state.stats; },
-      reload: function () { loadStats(); loadShop(); loadStories(); loadBookmarks(); }
+      reload: function () { loadStats(); loadShop(); loadStories(); loadBookmarks(); },
+      presence: function (visible) {
+        var ch = state.channel, u = gu();
+        if (!ch || !u) return;
+        try {
+          if (visible) ch.track({ id: u.id, nick: u.nick, avatar: u.avatar || null, at: Date.now() });
+          else ch.untrack();
+        } catch (e) {}
+      }
     };
   }
 

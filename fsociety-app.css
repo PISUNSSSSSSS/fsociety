@@ -1,0 +1,147 @@
+/* ============================================================
+   fsociety APP — приватность, главная-хаб, чаты на телефоне
+   и доводка дизайна разделов. Подключается после motion.css.
+   ============================================================ */
+
+/* ---------- свайп «назад» от края ---------- */
+#fsedge{position:fixed;left:0;top:50%;z-index:96;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;
+  transform:translate(-36px,-50%);background:#f2f2f2;color:#000;transition:opacity .15s,background .15s}
+#fsedge.on{opacity:1}
+#fsedge.go{background:var(--fs-red,#ff2b3a);color:#fff}
+#fsedge svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- центр приватности ---------- */
+#fspriv{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.7);display:flex;overflow-y:auto;padding:16px;box-sizing:border-box;
+  opacity:0;pointer-events:none;transition:opacity .22s ease;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#fspriv.show{opacity:1;pointer-events:auto}
+#fspriv.show .fsp-card{animation:fsPop .42s var(--fs-spring,cubic-bezier(.2,1.35,.35,1)) both}
+.fsp-card{max-width:380px;gap:6px;text-align:left}
+.fsp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.fsp-head .mt{font-family:var(--fs-display,inherit);font-size:1.15rem}
+.fsp-x{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid var(--fs-line,rgba(255,255,255,.12))}
+.fsp-sec{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fs-mute,rgba(255,255,255,.55));margin:12px 2px 2px}
+.fsp-row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;background:var(--fs-surface,rgba(255,255,255,.05));border:1px solid var(--fs-line,rgba(255,255,255,.12))}
+.fsp-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.fsp-txt b{font-size:.92rem;font-weight:600}
+.fsp-txt small{font-size:.74rem;color:var(--fs-mute,rgba(255,255,255,.55));line-height:1.3}
+.fsp-sw{all:unset;flex:none;cursor:pointer;width:44px;height:26px;border-radius:999px;position:relative;background:rgba(255,255,255,.16);transition:background .2s}
+.fsp-sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#bdbdbd;transition:transform .25s var(--fs-spring,ease),background .2s}
+.fsp-sw.on{background:var(--fs-red,#ff2b3a)}
+.fsp-sw.on::after{transform:translateX(18px);background:#fff}
+.fsp-sw:disabled{opacity:.6}
+.fsp-sw:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.fsp-note{font-size:.76rem;color:var(--fs-mute,rgba(255,255,255,.55));margin:4px 2px;line-height:1.4}
+.fsp-foot{margin-top:12px;padding-top:10px;border-top:1px solid var(--fs-line,rgba(255,255,255,.12))}
+.fsp-blocks{display:flex;flex-direction:column;gap:6px}
+.fsp-brow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:var(--fs-surface,rgba(255,255,255,.05))}
+.fsp-av{width:30px;height:30px;border-radius:50%;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);font-weight:700;font-size:.8rem}
+.fsp-av img{width:100%;height:100%;object-fit:cover}
+.fsp-bn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.88rem}
+
+/* кнопка в профиле */
+.fs-privbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.fs-privbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fs-blockbtn.danger{background:transparent;color:#ff9aa2;border:1px solid rgba(255,43,58,.35)}
+
+/* почта в профиле размыта, пока не нажмёшь */
+body.fs-mask-mail #pmail{filter:blur(6px);cursor:pointer;transition:filter .25s;user-select:none}
+body.fs-mask-mail #pmail.fs-peek{filter:none;user-select:text}
+
+/* ---------- главная-хаб ---------- */
+#fshub{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.fsh-tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fsh-tile{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px;border-radius:16px;
+  background:var(--fs-surface,rgba(255,255,255,.05));border:1px solid var(--fs-line,rgba(255,255,255,.12));
+  transition:transform .18s var(--fs-spring,ease),border-color .2s,background .2s;min-width:0}
+.fsh-tile:hover{border-color:rgba(255,255,255,.28);background:var(--fs-surface-2,rgba(255,255,255,.09))}
+.fsh-tile:active{transform:scale(.96)}
+.fsh-tile svg{width:22px;height:22px;flex:none;fill:none;stroke:#f2f2f2;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fsh-t{display:flex;flex-direction:column;min-width:0}
+.fsh-t b{font-size:.9rem;font-weight:600}
+.fsh-t small{font-size:.72rem;color:var(--fs-mute,rgba(255,255,255,.55));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fsh-t small.hot{color:var(--fs-red,#ff2b3a)}
+.fsh-fresh{display:flex;flex-direction:column;gap:6px}
+.fsh-head{display:flex;justify-content:space-between;align-items:center;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fs-mute,rgba(255,255,255,.55));padding:0 2px}
+.fsh-all{all:unset;cursor:pointer;letter-spacing:.04em;text-transform:none;font-size:.78rem;color:#f2f2f2}
+.fsh-list{display:flex;flex-direction:column;gap:6px}
+.fsh-th{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;padding:10px 12px 10px 14px;border-radius:14px;
+  background:var(--fs-surface,rgba(255,255,255,.05));border:1px solid var(--fs-line,rgba(255,255,255,.12));position:relative;overflow:hidden}
+.fsh-th::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;border-radius:2px;background:var(--fs-red,#ff2b3a)}
+.fsh-th b{font-size:.9rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fsh-th small{font-size:.72rem;color:var(--fs-mute,rgba(255,255,255,.55))}
+.fsh-th:active{transform:scale(.98)}
+
+/* баннер-видео ведёт себя как картинка */
+video.banner{width:100%;height:auto;aspect-ratio:540/308;object-fit:cover;background:#000;pointer-events:auto}
+
+/* ---------- чаты ---------- */
+#fsdown{position:fixed;z-index:25;width:40px;height:40px;border-radius:50%;border:1px solid var(--fs-line,rgba(255,255,255,.2));
+  background:rgba(20,20,20,.92);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  opacity:0;pointer-events:none;transform:translateY(10px) scale(.9);transition:opacity .2s,transform .25s var(--fs-spring,ease)}
+#fsdown.on{opacity:1;pointer-events:auto;transform:none}
+#fsdown svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#fsdown span{position:absolute;top:-6px;right:-4px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;
+  background:var(--fs-red,#ff2b3a);color:#fff;font-size:.66rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* свайп для ответа */
+.msgs .msg{position:relative}
+.msgs .msg::before{content:"↩";position:absolute;left:-28px;top:50%;transform:translateY(-50%) scale(.6);opacity:0;
+  font-size:1rem;color:#fff;transition:opacity .15s,transform .2s}
+.msgs .msg.fs-replyready::before{opacity:1;transform:translateY(-50%) scale(1);color:var(--fs-red,#ff2b3a)}
+
+/* свои сообщения отличаются от чужих */
+.msgs .msg{background:var(--fs-surface,rgba(255,255,255,.05));border:1px solid var(--fs-line,rgba(255,255,255,.1))}
+.msgs .msg.mine{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.2)}
+
+/* на телефоне действия с сообщением прячутся до нажатия на него */
+@media (hover:none){
+  .msgs .msg:not(.fs-sel) :is(.mh,.mfoot) > button:not(.mn):not(.mnik){display:none}
+  .msgs .msg:not(.fs-sel) .fx-react:has(.fx-counts:empty){display:none}
+  .msgs .msg.fs-sel{border-color:rgba(255,255,255,.34)}
+}
+@media (hover:hover){
+  .msgs .msg :is(.mh,.mfoot) > button:not(.mn):not(.mnik){opacity:.3;transition:opacity .15s}
+  .msgs .msg:hover :is(.mh,.mfoot) > button:not(.mn):not(.mnik){opacity:.8}
+  .msgs .msg .fx-react:has(.fx-counts:empty){opacity:0;transition:opacity .15s}
+  .msgs .msg:hover .fx-react{opacity:1}
+}
+
+/* панель форматирования появляется, когда пишешь */
+.view :not(:focus-within) > .etools{display:none}
+.view :focus-within > .etools{animation:fsIn .25s var(--fs-out,ease) both}
+
+/* восстановленный черновик мигает рамкой */
+textarea.fs-draft{box-shadow:0 0 0 2px var(--fs-red,#ff2b3a)!important;transition:box-shadow .6s}
+
+/* ---------- форум: темы — карточки ---------- */
+#flist{display:flex;flex-direction:column;gap:8px}
+#flist .flink{background:var(--fs-surface,rgba(255,255,255,.05));border:1px solid var(--fs-line,rgba(255,255,255,.12));padding:13px 14px 12px 16px;position:relative;overflow:hidden}
+#flist .flink::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;border-radius:2px;background:rgba(255,255,255,.25);transition:background .2s}
+#flist .flink:hover{border-color:rgba(255,255,255,.26)}
+#flist .flink:hover::before,#flist .flink:focus-visible::before{background:var(--fs-red,#ff2b3a)}
+#flist .flink .fm{opacity:1;color:var(--fs-mute,rgba(255,255,255,.55))}
+
+/* ---------- пустые состояния ---------- */
+#dmcontacts > .mail:only-child,#flist > .mail:only-child,#grouplist > .mail:only-child{
+  padding:28px 16px;border:1px dashed var(--fs-line,rgba(255,255,255,.16));border-radius:16px;text-align:center;line-height:1.5}
+#dmcontacts > .mail:only-child::before,#flist > .mail:only-child::before,#grouplist > .mail:only-child::before{
+  content:"> _";display:block;font-family:var(--fs-mono,monospace);color:var(--fs-red,#ff2b3a);margin-bottom:8px;font-size:1rem}
+
+/* ---------- профиль ---------- */
+#profile .box{gap:12px}
+#profile #logout{order:99}
+#profile .fs-privbtn,#profile #logout{min-width:220px}
+
+/* ---------- кнопки-иконки сверху на маленьких экранах ---------- */
+@media (max-width:360px){
+  #fxbtn,#fx2btn,#fxadminbtn,#bell,#langbtn{transform:scale(.92)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #fspriv.show .fsp-card,.view :focus-within > .etools{animation:none}
+}
+
+/* ---------- главная: всё одной ширины и по левому краю ---------- */
+#home #fx2-ann{width:100%;box-sizing:border-box;text-align:left;border-color:var(--fs-line,rgba(255,255,255,.12));background:var(--fs-surface,rgba(255,255,255,.05))}
+.fsh-tile,.fsh-t,.fsh-th{text-align:left}

@@ -1,5 +1,5 @@
 /* fsociety PLUS service worker */
-const CACHE = "fsociety-plus-v15";
+const CACHE = "fsociety-plus-v16";
 const ASSETS = [
   "./",
   "./index.html",
@@ -14,10 +14,12 @@ const ASSETS = [
   "./fsociety-theme.css",
   "./fsociety-motion.css",
   "./fsociety-motion.js",
+  "./fsociety-app.css",
+  "./fsociety-app.js",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
-  "./top.gif"
+  "./top-poster.jpg"
 ];
 
 self.addEventListener("install", (e) => {
@@ -54,6 +56,8 @@ self.addEventListener("fetch", (e) => {
   let url;
   try { url = new URL(req.url); } catch (err) { return; }
   if (url.origin !== location.origin) return;
+  // видео идёт напрямую: Safari нужны ответы на Range-запросы
+  if (req.headers.has("range") || /\.(?:mp4|webm|mov)$/i.test(url.pathname)) return;
 
   const isDoc = req.mode === "navigate";
   const isCode = /\.(?:js|css|webmanifest)$/i.test(url.pathname) || /\/$|\/index\.html$/i.test(url.pathname);

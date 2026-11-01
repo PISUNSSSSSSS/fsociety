@@ -16,7 +16,7 @@
   function buzz(p) { if (calm()) return; if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
   function replay(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
   function once(node, cls) { node.addEventListener("animationend", function h(e) { if (e.target !== node) return; node.classList.remove(cls); node.style.removeProperty("--i"); node.removeEventListener("animationend", h); }); }
-  var ru = (D.documentElement.lang || "ru").indexOf("en") !== 0;
+  var ru = true; try { ru = lang !== "en"; } catch (e) {}
 
   /* ---------- 1. Заставка: терминал перед логотипом ---------- */
   (function boot() {
