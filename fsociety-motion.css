@@ -1,0 +1,166 @@
+/* ============================================================
+   fsociety MOTION — анимации и стиль Mr. Robot поверх всех слоёв.
+   Отключить: удалить из index.html строки fsociety-motion.css/.js.
+   Уважает «уменьшение движения» в системе и PLUS → Настройки.
+   ============================================================ */
+:root{
+  --fs-spring:cubic-bezier(.2,1.35,.35,1);
+  --fs-out:cubic-bezier(.16,1,.3,1);
+  --fs-mono:"JetBrains Mono","Cascadia Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+
+/* ---------- 1. Заставка: терминал → логотип ---------- */
+#intro.boot,#intro.boot #itext{animation-play-state:paused}
+#intro.boot #itext,#intro.boot #itap{visibility:hidden}
+/* после терминала логотип идёт чуть быстрее, чтобы заставка не затягивалась */
+#intro.booted,#intro.booted #itext{animation-duration:2.7s}
+#intro::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px);
+  mix-blend-mode:overlay;
+}
+#intro::before{
+  content:"";position:absolute;left:0;right:0;height:22vh;top:-22vh;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(255,43,58,.08),transparent);
+  animation:fsSweep 2.6s linear infinite;
+}
+@keyframes fsSweep{to{transform:translateY(144vh)}}
+#fsboot{
+  position:absolute;left:50%;top:38%;transform:translateX(-50%);
+  width:min(86vw,420px);font-family:var(--fs-mono);font-size:13px;line-height:1.7;
+  color:#d9d9d9;text-align:left;white-space:pre-wrap;transition:opacity .35s ease,filter .35s ease;
+}
+#fsboot .ok{color:#f2f2f2}
+#fsboot .warn{color:var(--fs-red,#ff2b3a)}
+#fsboot .cur{display:inline-block;width:.6em;height:1.05em;margin-left:2px;vertical-align:-2px;background:var(--fs-red,#ff2b3a);animation:fsBlink .9s steps(1) infinite}
+#fsboot.out{opacity:0;filter:blur(6px)}
+@keyframes fsBlink{50%{opacity:0}}
+
+/* глитч логотипа: красная и белая «тени» режут слово полосами */
+#itext,.fs-glitch{position:relative}
+#itext::before,#itext::after,.fs-glitch::before,.fs-glitch::after{
+  content:attr(data-text);position:absolute;inset:0;pointer-events:none;opacity:0;
+}
+#itext::before{color:var(--fs-red,#ff2b3a);animation:fsSliceA 1.1s steps(1) .25s 2}
+#itext::after{color:#fff;animation:fsSliceB 1.1s steps(1) .25s 2}
+#intro.boot #itext::before,#intro.boot #itext::after{animation:none}
+@keyframes fsSliceA{
+  0%{opacity:.9;clip-path:inset(12% 0 70% 0);transform:translate(-6px,0)}
+  14%{clip-path:inset(60% 0 18% 0);transform:translate(5px,0)}
+  28%{clip-path:inset(35% 0 45% 0);transform:translate(-3px,0)}
+  42%{opacity:0}
+  70%{opacity:.85;clip-path:inset(78% 0 4% 0);transform:translate(7px,0)}
+  82%{opacity:0}
+}
+@keyframes fsSliceB{
+  0%{opacity:.7;clip-path:inset(55% 0 25% 0);transform:translate(5px,0)}
+  14%{clip-path:inset(8% 0 80% 0);transform:translate(-4px,0)}
+  28%{opacity:0}
+  64%{opacity:.6;clip-path:inset(30% 0 52% 0);transform:translate(-6px,0)}
+  78%{opacity:0}
+}
+
+/* ---------- 2. Смена раздела: красная развёртка + каскад ---------- */
+#fsscan{
+  position:fixed;left:0;right:0;top:0;height:2px;z-index:90;pointer-events:none;opacity:0;
+  background:var(--fs-red,#ff2b3a);box-shadow:0 0 14px 2px rgba(255,43,58,.55);
+}
+#fsscan.run{animation:fsScan .55s var(--fs-out) forwards}
+@keyframes fsScan{0%{opacity:1;transform:translateY(0)}85%{opacity:.9}100%{opacity:0;transform:translateY(100vh)}}
+
+.fs-in{animation:fsIn .55s var(--fs-out) both;animation-delay:calc(var(--i,0) * 38ms)}
+@keyframes fsIn{from{opacity:0;transform:translateY(14px) scale(.985);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+
+/* заголовок раздела «сбоит» при входе */
+.fs-glitch.go::before{color:var(--fs-red,#ff2b3a);animation:fsSliceA .5s steps(1) 1}
+.fs-glitch.go::after{color:#fff;animation:fsSliceB .5s steps(1) 1}
+
+/* ---------- 3. Окна: пружина ---------- */
+[id$="modal"]:not(#fx2modal).show > .mcard,#fx2modal.show .fx2-mcard,#sheet.show #sheetcard{
+  animation:fsPop .42s var(--fs-spring) both;
+}
+@keyframes fsPop{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+#fxpanel.show .fx-wrap,#fx2panel.show .fx-wrap,#fx2panel.show .fx2-wrap{transition-timing-function:var(--fs-spring)}
+
+/* плитки и карточки панелей появляются каскадом */
+.fx-view.on > *,.fx2-view.on > *{animation:fsIn .5s var(--fs-out) both}
+.fx-view.on > *:nth-child(2),.fx2-view.on > *:nth-child(2){animation-delay:40ms}
+.fx-view.on > *:nth-child(3),.fx2-view.on > *:nth-child(3){animation-delay:80ms}
+.fx-view.on > *:nth-child(4),.fx2-view.on > *:nth-child(4){animation-delay:120ms}
+.fx-view.on > *:nth-child(n+5),.fx2-view.on > *:nth-child(n+5){animation-delay:160ms}
+
+/* ---------- 4. Нажатия: «волна» и отклик ---------- */
+.fs-rip{position:relative;overflow:hidden}
+.fs-ripple{
+  position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.35;
+  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(255,255,255,0) 70%);
+  animation:fsRipple .55s var(--fs-out) forwards;
+}
+.btn.main .fs-ripple,.fx-btn.main .fs-ripple{background:radial-gradient(circle,rgba(255,43,58,.55),rgba(255,43,58,0) 70%)}
+@keyframes fsRipple{to{transform:scale(2.6);opacity:0}}
+.btn,.fx-btn,.mini,.room,.seg button,.fx-tile,.wopt{transition:transform .18s var(--fs-spring),background .2s,border-color .2s,box-shadow .2s}
+.btn:active,.fx-btn:active,.mini:active,.room:active,.seg button:active{transform:scale(.95)}
+
+/* ---------- 5. Нижнее меню ---------- */
+#dock button.on>svg,#dock button.on .dav{animation:fsHop .5s var(--fs-spring)}
+@keyframes fsHop{0%{transform:translateY(0)}40%{transform:translateY(-5px) scale(1.08)}100%{transform:none}}
+#dock button.on::after{animation:fsDot .45s var(--fs-spring)}
+@keyframes fsDot{from{transform:scale(0)}to{transform:scale(1)}}
+
+/* ---------- 6. Сообщения ---------- */
+.fs-msg-in{animation:fsMsg .42s var(--fs-out) both;animation-delay:calc(var(--i,0) * 45ms)}
+.fs-msg-in.mine,.mine.fs-msg-in{animation-name:fsMsgMine}
+@keyframes fsMsg{from{opacity:0;transform:translateX(-14px) scale(.97);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+@keyframes fsMsgMine{from{opacity:0;transform:translateX(14px) scale(.97);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+
+/* ---------- 7. Уведомления и счётчики ---------- */
+#bell.fs-ring svg{animation:fsRing .8s var(--fs-out)}
+@keyframes fsRing{0%,100%{transform:rotate(0)}15%{transform:rotate(16deg)}30%{transform:rotate(-14deg)}45%{transform:rotate(10deg)}60%{transform:rotate(-6deg)}75%{transform:rotate(3deg)}}
+#nbadge.fs-bump,#fx2-gem-badge.fs-bump{animation:fsBump .5s var(--fs-spring)}
+@keyframes fsBump{0%{transform:scale(1)}40%{transform:scale(1.45)}100%{transform:scale(1)}}
+#toast.show,.fx-toast.show{animation:fsToast .45s var(--fs-spring) both}
+#toast::before,.fx-toast::before{content:">";color:var(--fs-red,#ff2b3a);margin-right:.5em;font-family:var(--fs-mono)}
+@keyframes fsToast{from{opacity:0;transform:translate(-50%,24px) scale(.9)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* ---------- 8. Полоска активности сети ---------- */
+#fsnet{position:fixed;left:0;top:0;height:2px;width:100%;z-index:95;pointer-events:none;opacity:0;transition:opacity .25s;overflow:hidden}
+#fsnet.on{opacity:1}
+#fsnet::before{content:"";position:absolute;top:0;bottom:0;width:38%;left:-40%;background:linear-gradient(90deg,transparent,var(--fs-red,#ff2b3a),#fff,var(--fs-red,#ff2b3a),transparent);animation:fsNet 1s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes fsNet{to{left:102%}}
+
+/* ---------- 9. Главная: строка терминала вместо таблички ---------- */
+#home .tag.fs-term{
+  font-family:var(--fs-mono);font-size:.82rem;letter-spacing:0;text-align:left;
+  background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+  color:#d9d9d9;padding:2px 2px;align-self:stretch;min-height:1.4em;
+}
+#home .tag.fs-term .p{color:var(--fs-red,#ff2b3a);margin-right:.5em}
+#home .tag.fs-term .cur{display:inline-block;width:.55em;height:1em;vertical-align:-2px;margin-left:1px;background:var(--fs-red,#ff2b3a);animation:fsBlink .9s steps(1) infinite}
+#home .banner{transition:transform .5s var(--fs-out),box-shadow .5s}
+#home .banner.fs-glitchimg{animation:fsImgGlitch .5s steps(2) 1}
+@keyframes fsImgGlitch{
+  0%{transform:translate(0);filter:none}
+  20%{transform:translate(-4px,1px);filter:hue-rotate(-30deg) saturate(1.6)}
+  40%{transform:translate(4px,-1px);clip-path:inset(20% 0 30% 0)}
+  60%{transform:translate(-2px,0);clip-path:none;filter:contrast(1.4)}
+  100%{transform:none;filter:none}
+}
+
+/* ---------- 10. Пасхалка «hello, friend» ---------- */
+#fsegg{position:fixed;inset:0;z-index:300;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;pointer-events:none;animation:fsEgg 2.4s ease forwards}
+#fsegg img{width:min(46vw,220px);filter:grayscale(1) contrast(1.4);animation:fsEggMask 2.4s steps(6) forwards}
+#fsegg b{font-family:var(--fs-mono);font-weight:400;font-size:1.05rem;color:#fff}
+#fsegg b i{color:var(--fs-red,#ff2b3a);font-style:normal}
+@keyframes fsEgg{0%{opacity:0}8%{opacity:1}82%{opacity:1}100%{opacity:0}}
+@keyframes fsEggMask{0%{transform:scale(1.2);filter:grayscale(1) invert(1)}20%{transform:translateX(-6px)}40%{transform:translateX(6px) scale(1.02);filter:grayscale(1) contrast(1.6)}60%{transform:none}100%{transform:scale(1)}}
+
+/* ---------- лишнее ---------- */
+#fx-online-card{display:none!important}
+#emodal.fxed-ready .fxed-kicker{display:none}
+
+/* ---------- кто просил меньше движения — получает меньше ---------- */
+@media (prefers-reduced-motion:reduce){
+  .fs-in,.fs-msg-in,.fx-view.on > *,.fx2-view.on > *,[id$="modal"].show > .mcard,#fx2modal.show .fx2-mcard{animation:none!important}
+  #fsscan,#fsnet::before,#intro::before{animation:none!important;display:none}
+}
+body.fx-noanim #fsscan,body.fx-noanim #fsnet,body.fx-noanim .fs-ripple{display:none!important}

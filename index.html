@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>fsociety</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -383,6 +386,8 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 <link rel="stylesheet" href="fsociety-plus-2.css">
 <link rel="stylesheet" href="fsociety-edit.css">
 <link rel="stylesheet" href="fsociety-extra.css">
+<link rel="stylesheet" href="fsociety-theme.css">
+<link rel="stylesheet" href="fsociety-motion.css">
 </head>
 <body>
 <canvas id="wall"></canvas>
@@ -1419,7 +1424,7 @@ function endIntro(){
 }
 $("intro").addEventListener("animationend",e=>{if(e.animationName==="introBg")endIntro()});
 $("intro").onclick=endIntro;
-setTimeout(endIntro,4800);
+setTimeout(function f(){if(window.fsIntroHold)return setTimeout(f,400);endIntro()},4800);
 
 function dockActive(){
   const map={home:"home",forum:"forum",thread:"forum",chat:"chat",dm:"dm",servers:"servers",profile:"profile",register:"profile",admin:"admin"};
@@ -2380,12 +2385,6 @@ async function chatSend(){
     m.id=sentId;m.pending=false;
     addOrUpdate(m);
   }
-  if(sentId&&rep){
-    const tr=chatRows.find(x=>String(x.id)===String(rep.id));
-    if(tr&&tr.user_id&&tr.user_id!==user.id){
-      try{sb.rpc("chat_notify_reply",{p_target:tr.user_id,p_room:chatRoom,p_text:txt}).catch(()=>{})}catch(e){}
-    }
-  }
   await chatPoll();
 }
 async function chatDelete(id){
@@ -2545,9 +2544,9 @@ async function openNotif(n){
     if(uid)openProfile(uid);
   }else if(n.link&&n.link.indexOf("chat:")===0){
     closeNotifs();
-    const rid=Number(n.link.slice(5));
+    const rid=n.link.slice(5);
     go("chat");
-    if(rid&&chatRoom!==rid){
+    if(rid&&chatRoom!==rid&&(!chatRooms.length||chatRooms.some(r=>String(r.id)===rid))){
       chatRoom=rid;chatReset();renderRooms();
       chatLoadFull();
     }
@@ -2826,9 +2825,9 @@ function renderFiles(box,files,removable){
   files.forEach((f,i)=>{
     const it=document.createElement("div");it.className="fitem glass"+(f.uploading?" up":"");
     if(!f.uploading&&(f.type||"").indexOf("image/")===0&&f.url){
-      const im=document.createElement("img");im.src=f.url;im.alt="";it.appendChild(im);
+      const im=document.createElement("img");im.src=safeHref(f.url);im.alt="";it.appendChild(im);
     }else if(!f.uploading&&(f.type||"").toLowerCase().indexOf("video/")===0&&f.url){
-      const v=document.createElement("video");v.src=f.url;v.muted=true;v.preload="metadata";v.setAttribute("muted","");v.playsInline=true;it.appendChild(v);
+      const v=document.createElement("video");v.src=safeHref(f.url);v.muted=true;v.preload="metadata";v.setAttribute("muted","");v.playsInline=true;it.appendChild(v);
     }
     const nm=document.createElement("span");nm.className="fn2";nm.textContent=f.name||"file";it.appendChild(nm);
     const sz=document.createElement("span");sz.className="mtime";
@@ -2844,11 +2843,11 @@ function renderFiles(box,files,removable){
 }
 function fileNode(f){
   if((f.type||"").indexOf("image/")===0){
-    const im=document.createElement("img");im.className="fimg";im.src=f.url;im.loading="lazy";im.alt=f.name||"";
+    const im=document.createElement("img");im.className="fimg";im.src=safeHref(f.url);im.loading="lazy";im.alt=f.name||"";
     im.onclick=()=>{try{window.open(f.url,"_blank","noopener")}catch(e){}};
     return im;
   }
-  const a=document.createElement("a");a.className="fattach glass";a.href=f.url;a.target="_blank";a.rel="noopener noreferrer";
+  const a=document.createElement("a");a.className="fattach glass";a.href=safeHref(f.url)||"#";a.target="_blank";a.rel="noopener noreferrer";
   a.innerHTML='<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
   const sp=document.createElement("span");sp.textContent=(f.name||"file")+(f.size?" · "+fmtSize(f.size):"");
   a.appendChild(sp);
@@ -4821,5 +4820,6 @@ boot();
 <script src="fsociety-plus-2.js"></script>
 <script src="fsociety-edit.js"></script>
 <script src="fsociety-extra.js"></script>
+<script src="fsociety-motion.js"></script>
 </body>
 </html>
