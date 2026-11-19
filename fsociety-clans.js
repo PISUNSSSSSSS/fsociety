@@ -138,14 +138,25 @@
     return el;
   }
 
+  var extraTargets = [];
   function renderSelfCard() {
-    var el = selfCardEl();
+    paintCard(selfCardEl(), false);
+    extraTargets = extraTargets.filter(function (n) { return document.contains(n); });
+    extraTargets.forEach(function (n) { paintCard(n, true); });
+  }
+  // карточка «мой клан» в любом контейнере (профиль, редактор)
+  function paintCard(el, always) {
     if (!el) return;
     var u = me();
     el.textContent = "";
     if (!u) { el.hidden = true; return; }
     if (st.missing) {
-      el.hidden = siteRank() < 4;
+      el.hidden = !always && siteRank() < 4;
+      if (siteRank() < 4) {
+        el.appendChild(mk("div", "clan-k", L("Кланы", "Clans")));
+        el.appendChild(mk("p", "clan-note", L("Кланы скоро появятся.", "Clans are coming soon.")));
+        return;
+      }
       el.appendChild(mk("div", "clan-k", L("Кланы", "Clans")));
       el.appendChild(mk("p", "clan-note", L(
         "Кланы включатся после запуска sql/clans.sql в Supabase → SQL Editor.",
@@ -569,7 +580,13 @@
     create: openCreate,
     join: openJoin,
     list: openList,
-    reload: function () { return loadMy(true).then(renderSelfCard); }
+    reload: function () { return loadMy(true).then(renderSelfCard); },
+    renderInto: function (node) {
+      if (!node) return;
+      if (extraTargets.indexOf(node) < 0) extraTargets.push(node);
+      paintCard(node, true);
+      loadMy(false).then(function () { paintCard(node, true); });
+    }
   };
   try { if (me()) onSelf(); } catch (e) {}
 })();

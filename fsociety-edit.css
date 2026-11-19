@@ -1,798 +1,231 @@
 /* ============================================================
-   fsociety profile studio — новая редакция профиля.
-   Подключается после fsociety-plus-2.css, не переписывает index.html.
+   fsociety profile studio v2 — стили редактора профиля.
+   Разметку собирает fsociety-edit.js из старого #emodal.
    ============================================================ */
+body.fxed-lock{overflow:hidden}
+body.fxed-lock #grab{display:none}
 
-#emodal.fxed-ready{
-  padding:0;
-  align-items:stretch;
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(7px);
-  -webkit-backdrop-filter:blur(7px);
-}
+#emodal.fxed-ready{padding:0;background:rgba(3,3,5,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 #emodal.fxed-ready .mcard.fxed-shell{
-  margin:auto;
-  width:min(1040px,100%);
-  max-width:none;
-  height:min(880px,calc(100vh - 28px));
-  height:min(880px,calc(100dvh - 28px));
-  padding:0;
-  border-radius:28px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  gap:0;
+  margin:auto;width:min(1080px,calc(100% - 32px));max-width:none;
+  height:min(780px,calc(100vh - 32px));height:min(780px,calc(100dvh - 32px));
+  padding:0;gap:0;display:flex;flex-direction:column;overflow:hidden;border-radius:28px;text-align:left;outline:none;
   background:
-    radial-gradient(120% 80% at 0% 0%,rgba(255,255,255,.05),transparent 55%),
-    radial-gradient(90% 70% at 100% 100%,rgba(255,255,255,.035),transparent 55%),
-    rgba(10,10,10,.36);
-  border:1px solid rgba(255,255,255,.2);
-  box-shadow:0 34px 110px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
-  outline:none;
-  text-align:left;
-  filter:grayscale(1);
-  backdrop-filter:blur(22px) saturate(0);
-  -webkit-backdrop-filter:blur(22px) saturate(0);
+    radial-gradient(120% 70% at 0% 0%,rgba(255,43,58,.09),transparent 50%),
+    radial-gradient(90% 60% at 100% 100%,rgba(139,92,246,.08),transparent 55%),
+    linear-gradient(180deg,rgba(20,20,26,.97),rgba(9,9,12,.98));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 50px 120px -30px #000,inset 0 1px 0 rgba(255,255,255,.07);
+  color:var(--ui-text,#f4f4f5);
+  filter:none;
 }
-#emodal.fxed-ready.show .mcard.fxed-shell{
-  animation:fxedIn .58s cubic-bezier(.16,1,.3,1) both;
-}
-@keyframes fxedIn{
-  0%{opacity:0;transform:translateY(34px) scale(.93) rotateX(4deg)}
-  55%{opacity:1}
-  100%{opacity:1;transform:none}
-}
-#emodal.fxed-ready .fxed-shell *{box-sizing:border-box}
-#emodal.fxed-ready [hidden]{display:none!important}
+#emodal.fxed-ready.show .mcard.fxed-shell{animation:fxedIn .6s var(--ui-ease,cubic-bezier(.22,1,.36,1)) both}
+@keyframes fxedIn{from{opacity:0;transform:translateY(18px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
 
 /* ---------- шапка ---------- */
-#emodal.fxed-ready .fxed-head{
-  flex:none;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:18px 22px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0));
-}
-#emodal.fxed-ready .fxed-titlewrap{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
-#emodal.fxed-ready .fxed-kicker{
-  display:flex;align-items:center;gap:8px;
-  font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;
-  color:#4ade80;font-weight:700;opacity:.9;
-}
-#emodal.fxed-ready .fxed-kicker::before{
-  content:"";width:7px;height:7px;border-radius:50%;
-  background:#4ade80;box-shadow:0 0 12px #4ade80;flex:none;
-}
-#emodal.fxed-ready .fxed-head .mt{
-  font-size:1.28rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;
-  color:#f7f8f7;word-break:break-word;
-}
-#emodal.fxed-ready .fxed-x{
-  all:unset;
-  width:38px;height:38px;flex:none;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:50%;cursor:pointer;
-  color:rgba(255,255,255,.65);font-size:1rem;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  transition:background .18s,color .18s,transform .18s;
-}
-#emodal.fxed-ready .fxed-x:hover{background:rgba(239,68,68,.18);color:#fecaca;border-color:rgba(239,68,68,.3)}
-#emodal.fxed-ready .fxed-x:active{transform:scale(.92)}
-#emodal.fxed-ready .fxed-admin{
-  all:unset;cursor:pointer;flex:none;
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  height:38px;padding:0 14px;border-radius:999px;
-  color:rgba(255,255,255,.78);
-  background:rgba(255,255,255,.055);
-  border:1px solid rgba(255,255,255,.16);
-  font:inherit;font-size:.62rem;font-weight:700;letter-spacing:.02em;
-  transition:background .18s,color .18s,border-color .18s,transform .18s;
-}
-#emodal.fxed-ready .fxed-admin:hover{
-  color:#0b0b0b;background:#f2f2f2;border-color:#f2f2f2;transform:translateY(-1px);
-}
-#emodal.fxed-ready .fxed-admin:active{transform:scale(.96)}
-#emodal.fxed-ready .fxed-admin-ico{font-size:.9rem;line-height:1}
+#emodal.fxed-ready .fxed-head{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07);flex:none}
+#emodal.fxed-ready .fxed-titlewrap{flex:1;min-width:0}
+#emodal.fxed-ready .fxed-head .fxed-kicker{display:flex;align-items:center;gap:7px;font:600 10px/1 var(--ui-mono,ui-monospace,monospace);letter-spacing:.2em;text-transform:uppercase;color:#a1a1aa}
+#emodal.fxed-ready .fxed-kicker i{width:6px;height:6px;border-radius:50%;background:#ff2b3a;box-shadow:0 0 10px #ff2b3a}
+#emodal.fxed-ready #fxed-title-label{margin-top:7px;font-size:1.3rem;line-height:1.15;background:linear-gradient(180deg,#fff,#a1a1aa 140%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#emodal.fxed-ready .fxed-admin,#emodal.fxed-ready .fxed-x{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#f4f4f5;cursor:pointer;font:600 .78rem var(--ui-font,system-ui);transition:background .2s,border-color .2s,transform .3s var(--ui-spring,ease)}
+#emodal.fxed-ready .fxed-admin{padding:0 14px}
+#emodal.fxed-ready .fxed-admin[hidden]{display:none}
+#emodal.fxed-ready .fxed-x{width:38px;padding:0}
+#emodal.fxed-ready .fxed-admin:hover,#emodal.fxed-ready .fxed-x:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.22)}
+#emodal.fxed-ready .fxed-x:hover{transform:rotate(90deg)}
+#emodal.fxed-ready .fxed-head svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* ---------- корпус ---------- */
-#emodal.fxed-ready .fxed-body{
-  flex:1;
-  min-height:0;
-  display:grid;
-  grid-template-columns:minmax(280px,.82fr) minmax(0,1.18fr);
-}
-
-/* ---------- превью ---------- */
-#emodal.fxed-ready .fxed-preview{
-  min-height:0;
-  overflow-y:auto;
-  padding:22px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  border-right:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.018);
-  scrollbar-width:thin;
-  scrollbar-color:rgba(255,255,255,.16) transparent;
-}
-#emodal.fxed-ready .fxed-preview-label{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
-  color:rgba(255,255,255,.42);font-weight:700;
-}
-#emodal.fxed-ready .fxed-live{
-  display:flex;align-items:center;gap:6px;
-  color:#4ade80;letter-spacing:.08em;font-size:.56rem;
-}
-#emodal.fxed-ready .fxed-live i{
-  width:6px;height:6px;border-radius:50%;background:#4ade80;
-  box-shadow:0 0 10px #4ade80;animation:fxedPulse 1.8s ease-in-out infinite;
-}
+/* ---------- тело ---------- */
+#emodal.fxed-ready .fxed-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(300px,370px) 1fr}
+#emodal.fxed-ready .fxed-preview{padding:20px;border-right:1px solid rgba(255,255,255,.07);overflow-y:auto;display:flex;flex-direction:column;gap:12px;background:rgba(0,0,0,.2)}
+#emodal.fxed-ready .fxed-preview-label{display:flex;align-items:center;justify-content:space-between;font:600 10px/1 var(--ui-mono,monospace);letter-spacing:.16em;text-transform:uppercase;color:#a1a1aa}
+#emodal.fxed-ready .fxed-live{display:flex;align-items:center;gap:6px;color:#4ade80}
+#emodal.fxed-ready .fxed-live i{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:fxedPulse 1.6s ease-in-out infinite}
 @keyframes fxedPulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
-#emodal.fxed-ready .fxed-card{
-  --fxed-accent:#4ade80;
-  position:relative;
-  border-radius:24px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(12,12,12,.52);
-  box-shadow:0 18px 44px rgba(0,0,0,.3);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-}
-#emodal.fxed-ready .fxed-cover{
-  position:relative;
-  height:112px;
-  overflow:hidden;
-  background:
-    radial-gradient(120% 150% at 12% 0%,var(--fxed-accent),transparent 58%),
-    linear-gradient(135deg,rgba(34,197,94,.28),rgba(56,189,248,.12) 48%,rgba(168,85,247,.22));
-}
-#emodal.fxed-ready .fxed-cover::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 25%,rgba(12,12,12,.12) 70%,rgba(12,12,12,.5) 100%);
-}
-#emodal.fxed-ready .fxed-cover-grid{
-  position:absolute;inset:0;opacity:.5;
-  background-image:
-    linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);
-  background-size:24px 24px;
-  mask-image:linear-gradient(180deg,#000,transparent 92%);
-  -webkit-mask-image:linear-gradient(180deg,#000,transparent 92%);
-}
-#emodal.fxed-ready .fxed-wall-chip{
-  position:absolute;z-index:2;right:12px;bottom:10px;
-  max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  padding:4px 9px;border-radius:999px;
-  font-size:.62rem;font-weight:600;color:rgba(255,255,255,.85);
-  background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.14);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-}
-#emodal.fxed-ready .fxed-pcard-body{
-  position:relative;
-  padding:0 18px 18px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-#emodal.fxed-ready .fxed-ava-row{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
-  margin-top:-48px;position:relative;z-index:2;
-}
-#emodal.fxed-ready .fxed-ava-ring{
-  width:100px;height:100px;flex:none;
-  padding:3px;border-radius:50%;
-  background:conic-gradient(from 140deg,var(--fxed-accent,#4ade80),rgba(255,255,255,.16),var(--fxed-accent,#4ade80));
-  box-shadow:0 0 28px rgba(0,0,0,.55),0 0 22px rgba(74,222,128,.12);
-  transition:transform .2s,box-shadow .2s;
-}
-#emodal.fxed-ready .fxed-ava-ring:hover{transform:scale(1.025);box-shadow:0 0 30px rgba(0,0,0,.55),0 0 28px rgba(74,222,128,.22)}
-#emodal.fxed-ready #eava{
-  width:94px;height:94px;
-  border:0;
-  background:#151816;
-  cursor:pointer;
-  box-shadow:none;
-}
-#emodal.fxed-ready #eava:focus-visible{outline:2px solid #4ade80;outline-offset:3px}
+
+/* превью-карточка */
+#emodal.fxed-ready .fxed-card{--fxed-accent:#ff2b3a;position:relative;border-radius:22px;overflow:hidden;background:#0b0b0f;border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 60px -30px rgba(0,0,0,.95)}
+#emodal.fxed-ready .fxed-card::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(280px circle at var(--mx,-999px) var(--my,-999px),rgba(255,255,255,.07),transparent 60%)}
+#emodal.fxed-ready .fxed-cover{position:relative;height:118px;overflow:hidden;background:
+  radial-gradient(120% 140% at 12% 0%,var(--fxed-accent),transparent 62%),
+  radial-gradient(100% 120% at 100% 100%,rgba(139,92,246,.5),transparent 60%),#111116}
+#emodal.fxed-ready .fxed-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,#0b0b0f)}
+#emodal.fxed-ready .fxed-cover-mesh{position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.22),transparent 30%,transparent 55%,rgba(255,255,255,.12),transparent 80%);animation:fxedSpin 16s linear infinite;mix-blend-mode:overlay}
+#emodal.fxed-ready .fxed-cover-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.09) 1px,transparent 1px);background-size:18px 18px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 85%);mask-image:linear-gradient(180deg,#000,transparent 85%)}
+@keyframes fxedSpin{to{transform:rotate(360deg)}}
+#emodal.fxed-ready .fxed-wall-chip{position:absolute;right:10px;top:10px;z-index:1;font:600 10px/1 var(--ui-mono,monospace);padding:5px 9px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.18);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#emodal.fxed-ready .fxed-wall-chip[hidden]{display:none}
+#emodal.fxed-ready .fxed-pcard-body{position:relative;z-index:1;margin-top:-50px;padding:0 18px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+
+/* аватар с вращающимся кольцом цвета роли */
+#emodal.fxed-ready .fxed-ava-ring{--rc:#4ade80;position:relative;width:92px;height:92px;border-radius:50%;padding:3px;box-sizing:border-box;flex:none;
+  background:conic-gradient(from var(--ui-ang,0deg),var(--rc),transparent 30%,var(--rc) 50%,transparent 80%,var(--rc));animation:uiSpin 5s linear infinite;
+  box-shadow:0 0 30px -6px var(--rc);transition:transform .35s var(--ui-spring,ease)}
+#emodal.fxed-ready .fxed-ava-ring[data-role="sponsor"]{--rc:#facc15}
+#emodal.fxed-ready .fxed-ava-ring[data-role="moderator"]{--rc:#38bdf8}
+#emodal.fxed-ready .fxed-ava-ring[data-role="admin"]{--rc:#f59e0b}
+#emodal.fxed-ready .fxed-ava-ring[data-role="coowner"],#emodal.fxed-ready .fxed-ava-ring[data-role="owner"]{--rc:#ff2b3a}
+#emodal.fxed-ready .fxed-ava-ring.fxed-drop{transform:scale(1.07)}
+#emodal.fxed-ready #eava{width:100%;height:100%;border:3px solid #0b0b0f;box-sizing:border-box;cursor:pointer;background:#141418;box-shadow:none;animation:none}
+#emodal.fxed-ready #eava:focus-visible{outline:2px solid #fff;outline-offset:2px}
 #emodal.fxed-ready #eava img{pointer-events:none}
-#emodal.fxed-ready #eava.fxed-drop{filter:brightness(1.25);box-shadow:0 0 0 3px #4ade80!important}
-#emodal.fxed-ready .fxed-role-chip{
-  flex:none;align-self:center;display:inline-flex;
-}
-#emodal.fxed-ready .fxed-nickline{min-width:0;line-height:1.15}
-#emodal.fxed-ready .fxed-nick{
-  position:relative;
-  display:inline-block;
-  max-width:100%;
-  padding:0 2px;
-  border-radius:6px;
-  font-size:1.34rem;
-  font-weight:800;
-  line-height:1.18;
-  overflow-wrap:anywhere;
-}
-#emodal.fxed-ready .fxed-title{
-  align-self:flex-start;
-  max-width:100%;
-  padding:3px 9px;
-  border-radius:999px;
-  font-size:.65rem;
-  font-weight:700;
-  color:#e9d5ff;
-  background:rgba(168,85,247,.16);
-  border:1px solid rgba(168,85,247,.3);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-#emodal.fxed-ready .fxed-bio{
-  min-height:2.6em;
-  font-size:.82rem;
-  line-height:1.55;
-  color:rgba(255,255,255,.72);
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  display:-webkit-box;
-  -webkit-line-clamp:7;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-#emodal.fxed-ready .fxed-bio.empty{color:rgba(255,255,255,.36);font-style:italic}
-#emodal.fxed-ready .fxed-meta{
-  display:flex;align-items:center;gap:7px;flex-wrap:wrap;
-  margin-top:2px;
-  font-size:.6rem;color:rgba(255,255,255,.4);
-}
-#emodal.fxed-ready .fxed-chip{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:3px 8px;border-radius:999px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-#emodal.fxed-ready .fxed-chip.fx{
-  color:#fde68a;background:rgba(250,204,21,.09);border-color:rgba(250,204,21,.2);
-}
-#emodal.fxed-ready .fxed-tip{
-  font-size:.7rem;line-height:1.55;color:rgba(255,255,255,.36);
-  padding:0 2px;
-}
+#emodal.fxed-ready .fxed-ava-hint{position:absolute;right:0;bottom:2px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#f4f4f5;color:#09090b;box-shadow:0 0 0 3px #0b0b0f;pointer-events:none;transition:transform .3s var(--ui-spring,ease)}
+#emodal.fxed-ready .fxed-ava-ring:hover .fxed-ava-hint{transform:scale(1.12)}
+#emodal.fxed-ready .fxed-ava-hint svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+#emodal.fxed-ready .fxed-nickline{min-width:0;max-width:100%;margin-top:4px}
+#emodal.fxed-ready .fxed-nick{display:inline-block;max-width:100%;font-family:var(--fs-display,system-ui);font-size:1.45rem;font-weight:700;line-height:1.2;letter-spacing:-.02em;overflow-wrap:anywhere}
+#emodal.fxed-ready .fxed-role-chip{display:flex}
+#emodal.fxed-ready .fxed-bio{font-size:.86rem;line-height:1.5;color:#d4d4d8;white-space:pre-wrap;overflow-wrap:anywhere;max-height:9em;overflow:hidden}
+#emodal.fxed-ready .fxed-bio.empty{color:#71717a;font-style:italic}
+#emodal.fxed-ready .fxed-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+#emodal.fxed-ready .fxed-meta span:not(:empty){font:600 10px/1 var(--ui-mono,monospace);padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#a1a1aa}
+#emodal.fxed-ready .fxed-tip{font-size:.75rem;line-height:1.5;color:#71717a}
 
 /* ---------- правая часть ---------- */
-#emodal.fxed-ready .fxed-main{
-  min-width:0;min-height:0;
-  display:flex;flex-direction:column;
-  background:transparent;
-}
-#emodal.fxed-ready .fxed-tabs{
-  flex:none;
-  display:flex;gap:6px;
-  padding:14px 20px 0;
-}
-#emodal.fxed-ready .fxed-tab{
-  all:unset;
-  flex:1;
-  min-width:0;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  padding:10px 10px;
-  border-radius:12px;
-  cursor:pointer;
-  font-size:.76rem;font-weight:600;
-  color:rgba(255,255,255,.5);
-  background:transparent;
-  border:1px solid transparent;
-  transition:background .18s,color .18s,border-color .18s;
-}
-#emodal.fxed-ready .fxed-tab:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.045)}
-#emodal.fxed-ready .fxed-tab.on{
-  color:#f4fff8;
-  background:rgba(74,222,128,.10);
-  border-color:rgba(74,222,128,.24);
-  box-shadow:inset 0 0 0 1px rgba(74,222,128,.05);
-}
-#emodal.fxed-ready .fxed-tab-ico{font-size:.9rem;line-height:1;opacity:.9}
-#emodal.fxed-ready .fxed-tab-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#emodal.fxed-ready .fxed-tab:focus-visible{outline:2px solid #4ade80;outline-offset:2px}
+#emodal.fxed-ready .fxed-main{display:flex;flex-direction:column;min-height:0;min-width:0}
+#emodal.fxed-ready .fxed-tabs{position:relative;display:flex;gap:4px;margin:16px 20px 0;padding:4px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);overflow-x:auto;scrollbar-width:none;flex:none}
+#emodal.fxed-ready .fxed-tabs::-webkit-scrollbar{display:none}
+#emodal.fxed-ready .fxed-tab{position:relative;z-index:1;flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:7px;height:38px;padding:0 12px;border:0;border-radius:10px;background:none;color:#a1a1aa;font:600 .84rem var(--ui-font,system-ui);cursor:pointer;white-space:nowrap;transition:color .25s}
+#emodal.fxed-ready .fxed-tab:hover,#emodal.fxed-ready .fxed-tab.on{color:#fff;background:none;box-shadow:none;border:0}
+#emodal.fxed-ready .fxed-tab-ico{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s var(--ui-spring,ease)}
+#emodal.fxed-ready .fxed-tab.on .fxed-tab-ico{transform:scale(1.08)}
+#emodal.fxed-ready .fxed-tab-ind{position:absolute;left:0;top:4px;bottom:4px;width:0;border-radius:10px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.06));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 8px 20px -10px rgba(255,43,58,.7);
+  transition:transform .5s var(--ui-spring,ease),width .5s var(--ui-spring,ease)}
+#emodal.fxed-ready .fxed-tab-ind::after{content:"";position:absolute;bottom:-4px;left:28%;right:28%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#ff2b3a,transparent);box-shadow:0 0 10px #ff2b3a}
 
-#emodal.fxed-ready .fxed-panes{
-  flex:1;
-  min-height:0;
-  overflow-y:auto;
-  padding:18px 22px 10px;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(255,255,255,.16) transparent;
-}
-#emodal.fxed-ready .fxed-pane{display:none;animation:fxedPane .26s ease}
-#emodal.fxed-ready .fxed-pane.on{display:block}
-@keyframes fxedPane{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-#emodal.fxed-ready .fxed-section-head{margin-bottom:18px}
-#emodal.fxed-ready .fxed-section-title{
-  margin:0 0 5px;
-  font-size:1rem;font-weight:800;letter-spacing:-.01em;color:#f4f7f5;
-}
-#emodal.fxed-ready .fxed-section-sub{
-  margin:0;
-  font-size:.72rem;line-height:1.5;color:rgba(255,255,255,.42);
-}
-#emodal.fxed-ready .fxed-field{
-  display:flex;flex-direction:column;gap:7px;
-  margin-bottom:17px;
-}
-#emodal.fxed-ready .fxed-label{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  font-size:.76rem;font-weight:600;color:rgba(255,255,255,.78);
-}
-#emodal.fxed-ready .fxed-label-text{font-size:inherit;opacity:1;align-self:auto}
-#emodal.fxed-ready .fxed-count{
-  font-size:.66rem;font-weight:500;font-variant-numeric:tabular-nums;
-  color:rgba(255,255,255,.36);
-}
-#emodal.fxed-ready .fxed-help{
-  font-size:.66rem;line-height:1.45;color:rgba(255,255,255,.36);
-}
-#emodal.fxed-ready #enick,
-#emodal.fxed-ready #ebio{
-  width:100%;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.13);
-  border-radius:14px;
-  padding:12px 14px;
-  color:#f7f8f7;
-  font:inherit;
-  font-size:.9rem;
-  line-height:1.45;
-  outline:none;
-  transition:border-color .18s,box-shadow .18s,background .18s;
-}
-#emodal.fxed-ready #enick{height:46px}
-#emodal.fxed-ready #ebio{
-  min-height:124px;
-  max-height:240px;
-  resize:vertical;
-  line-height:1.55;
-}
-#emodal.fxed-ready #enick::placeholder,
-#emodal.fxed-ready #ebio::placeholder{color:rgba(255,255,255,.3)}
-#emodal.fxed-ready #enick:focus,
-#emodal.fxed-ready #ebio:focus{
-  border-color:rgba(74,222,128,.62);
-  background:rgba(255,255,255,.065);
-  box-shadow:0 0 0 3px rgba(74,222,128,.11);
-}
-#emodal.fxed-ready .fxed-ava-card{
-  display:flex;flex-direction:column;gap:9px;
-  padding:14px;
-  border-radius:16px;
-  background:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.09);
-}
+#emodal.fxed-ready .fxed-panes{flex:1;min-height:0;overflow-y:auto;padding:20px 20px 26px}
+#emodal.fxed-ready .fxed-pane{display:flex;flex-direction:column;gap:18px}
+#emodal.fxed-ready .fxed-pane[hidden]{display:none}
+#emodal.fxed-ready .fxed-pane.fxed-pane-anim{animation:fxedPaneFwd .45s var(--ui-ease,ease) both}
+#emodal.fxed-ready .fxed-pane.fxed-pane-anim[data-dir="back"]{animation-name:fxedPaneBack}
+@keyframes fxedPaneFwd{from{opacity:0;transform:translateX(16px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes fxedPaneBack{from{opacity:0;transform:translateX(-16px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+#emodal.fxed-ready .fxed-section-title{margin:0;font-family:var(--fs-display,system-ui);font-size:1.08rem;letter-spacing:-.01em;color:#fff}
+#emodal.fxed-ready .fxed-section-sub{margin:5px 0 0;color:#a1a1aa;font-size:.82rem;line-height:1.5}
+
+/* поля */
+#emodal.fxed-ready .fxed-field{display:flex;flex-direction:column;gap:8px}
+#emodal.fxed-ready .fxed-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.8rem;font-weight:600;color:#e4e4e7}
+#emodal.fxed-ready .fxed-nick-st{font:600 .7rem/1 var(--ui-mono,monospace);padding:5px 9px;border-radius:999px;opacity:0;transform:translateY(3px);transition:opacity .25s,transform .25s}
+#emodal.fxed-ready .fxed-nick-st.ok,#emodal.fxed-ready .fxed-nick-st.bad,#emodal.fxed-ready .fxed-nick-st.wait{opacity:1;transform:none}
+#emodal.fxed-ready .fxed-nick-st.ok{color:#4ade80;background:rgba(74,222,128,.1);box-shadow:inset 0 0 0 1px rgba(74,222,128,.32)}
+#emodal.fxed-ready .fxed-nick-st.ok::before{content:"✓ "}
+#emodal.fxed-ready .fxed-nick-st.bad{color:#ff6b75;background:rgba(255,43,58,.1);box-shadow:inset 0 0 0 1px rgba(255,43,58,.35)}
+#emodal.fxed-ready .fxed-nick-st.bad::before{content:"✕ "}
+#emodal.fxed-ready .fxed-nick-st.wait{color:#a1a1aa;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+#emodal.fxed-ready .fxed-input{position:relative;display:flex;align-items:center}
+#emodal.fxed-ready .fxed-prefix{position:absolute;left:15px;z-index:1;color:#71717a;font:600 .95rem var(--ui-mono,monospace);pointer-events:none}
+#emodal.fxed-ready #enick{height:50px;padding:0 54px 0 34px;border-radius:14px;font-size:16px;font-weight:600}
+#emodal.fxed-ready #ebio{min-height:140px;height:140px;padding:14px 54px 14px 15px;border-radius:14px;line-height:1.55;font-size:15px;resize:vertical}
+#emodal.fxed-ready .fxed-ring{position:absolute;right:10px;width:32px;height:32px;display:grid;place-items:center;pointer-events:none}
+#emodal.fxed-ready .fxed-input-area .fxed-ring{top:10px}
+#emodal.fxed-ready .fxed-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+#emodal.fxed-ready .fxed-ring circle{fill:none;stroke-width:2.2}
+#emodal.fxed-ready .fxed-ring .bg{stroke:rgba(255,255,255,.09)}
+#emodal.fxed-ready .fxed-ring .fg{stroke:#d4d4d8;stroke-linecap:round;transition:stroke-dashoffset .3s var(--ui-ease,ease),stroke .3s}
+#emodal.fxed-ready .fxed-ring.warn .fg{stroke:#fbbf24}
+#emodal.fxed-ready .fxed-ring.full .fg{stroke:#ff2b3a}
+#emodal.fxed-ready .fxed-ring b{font:600 9px var(--ui-mono,monospace);color:#71717a}
+#emodal.fxed-ready .fxed-help{font-size:.74rem;line-height:1.5;color:#71717a}
+
+/* аватар */
+#emodal.fxed-ready .fxed-ava-card{display:flex;flex-direction:column;gap:10px}
+#emodal.fxed-ready .fxed-ava-drop{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;border:1.5px dashed rgba(255,255,255,.16);background:rgba(255,255,255,.02);cursor:pointer;transition:border-color .25s,background .25s,transform .3s var(--ui-spring,ease)}
+#emodal.fxed-ready .fxed-ava-drop:hover,#emodal.fxed-ready .fxed-ava-drop.fxed-drop{border-color:rgba(255,43,58,.65);background:rgba(255,43,58,.06)}
+#emodal.fxed-ready .fxed-ava-drop.fxed-drop{transform:scale(1.015)}
+#emodal.fxed-ready .fxed-ava-drop svg{width:40px;height:40px;padding:10px;box-sizing:border-box;flex:none;border-radius:12px;background:rgba(255,255,255,.06);fill:none;stroke:#f4f4f5;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#emodal.fxed-ready .fxed-ava-txt b{display:block;font-size:.9rem;color:#fff}
+#emodal.fxed-ready .fxed-ava-txt small{display:block;margin-top:3px;font-size:.76rem;line-height:1.45;color:#a1a1aa}
 #emodal.fxed-ready .fxed-ava-actions{display:flex;gap:8px;flex-wrap:wrap}
-#emodal.fxed-ready #echoose,
-#emodal.fxed-ready #ewallup,
-#emodal.fxed-ready #epass{
-  align-self:flex-start;
-  padding:9px 13px;
-  border-radius:12px;
-  font-size:.76rem;
-  font-weight:600;
-  color:#f4f7f5;
-  background:rgba(255,255,255,.075);
-  border:1px solid rgba(255,255,255,.13);
-  transition:background .18s,border-color .18s,transform .15s;
-}
-#emodal.fxed-ready #echoose:hover,
-#emodal.fxed-ready #ewallup:hover,
-#emodal.fxed-ready #epass:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22)}
-#emodal.fxed-ready #echoose:active,
-#emodal.fxed-ready #ewallup:active,
-#emodal.fxed-ready #epass:active{transform:scale(.97)}
-#emodal.fxed-ready .fxed-btn-ghost{
-  all:unset;
-  cursor:pointer;
-  padding:9px 13px;
-  border-radius:12px;
-  font-size:.76rem;
-  font-weight:600;
-  color:#fca5a5;
-  background:rgba(239,68,68,.1);
-  border:1px solid rgba(239,68,68,.2);
-  transition:background .18s,transform .15s;
-}
-#emodal.fxed-ready .fxed-btn-ghost:hover{background:rgba(239,68,68,.18)}
-#emodal.fxed-ready .fxed-btn-ghost:active{transform:scale(.97)}
 
-/* ---------- обои ---------- */
-#emodal.fxed-ready .wgrid{
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
-  width:100%;
-}
-#emodal.fxed-ready .wopt{
-  min-height:58px;
-  padding:17px 7px 8px;
-  border-radius:13px;
-  font-size:.66rem;
-  line-height:1.2;
-  text-align:left;
-  color:rgba(255,255,255,.82);
-  background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
-  border:1px solid rgba(255,255,255,.1);
-  transition:transform .16s,border-color .16s,background .16s,box-shadow .16s;
-}
-#emodal.fxed-ready .wopt:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.09)}
-#emodal.fxed-ready .wopt.on{
-  color:#f4fff8;
-  border-color:rgba(74,222,128,.75);
-  background:linear-gradient(155deg,rgba(74,222,128,.2),rgba(74,222,128,.045));
-  box-shadow:0 0 0 1px rgba(74,222,128,.18),0 8px 22px rgba(74,222,128,.08);
-}
-#emodal.fxed-ready .wopt.lock{opacity:.42}
-#emodal.fxed-ready .wopt .wdot{
-  left:8px;top:8px;
-  width:7px;height:7px;
-}
-#emodal.fxed-ready .fxed-wall-check{
-  position:absolute;right:7px;top:6px;
-  font-size:.6rem;font-weight:900;color:#4ade80;
-  opacity:0;transition:opacity .15s;
-}
-#emodal.fxed-ready .wopt.on .fxed-wall-check{opacity:1}
-#emodal.fxed-ready #ewallup{margin-top:9px}
+/* обои */
+#emodal.fxed-ready .fxed-walls{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;width:100%}
+#emodal.fxed-ready .fxed-wall{--mx:-500px;--my:-500px;position:relative;isolation:isolate;display:flex;align-items:flex-end;height:86px;padding:10px 11px;box-sizing:border-box;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#0d0d11;color:#f4f4f5;font:600 .78rem/1.2 var(--ui-font,system-ui);text-align:left;cursor:pointer;overflow:hidden;opacity:1;transition:transform .3s var(--ui-spring,ease),border-color .2s,box-shadow .3s}
+#emodal.fxed-ready .fxed-wall::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(160px circle at var(--mx) var(--my),rgba(255,255,255,.12),transparent 60%)}
+#emodal.fxed-ready .fxed-wall:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.24)}
+#emodal.fxed-ready .fxed-wall .wdot{display:none}
+#emodal.fxed-ready .fxed-wall-sw{position:absolute;inset:0;z-index:-2;background:radial-gradient(120% 95% at 18% 8%,var(--wd,#888),transparent 62%),radial-gradient(90% 90% at 100% 100%,rgba(139,92,246,.35),transparent 70%),linear-gradient(180deg,transparent 40%,rgba(0,0,0,.65));opacity:.6;transition:opacity .3s,transform .7s var(--ui-ease,ease)}
+#emodal.fxed-ready .fxed-wall:hover .fxed-wall-sw{opacity:.85;transform:scale(1.08)}
+#emodal.fxed-ready .fxed-wall.on{border-color:#fff;background:#0d0d11;box-shadow:0 0 0 1px #fff,0 14px 30px -14px var(--wd,#fff)}
+#emodal.fxed-ready .fxed-wall.on .fxed-wall-sw{opacity:.95}
+#emodal.fxed-ready .fxed-wall.lock .fxed-wall-sw{filter:grayscale(.75);opacity:.28}
+#emodal.fxed-ready .fxed-wall.lock{color:#a1a1aa}
+#emodal.fxed-ready .fxed-wall-check,#emodal.fxed-ready .fxed-wall-lock{position:absolute;right:8px;top:8px;width:20px;height:20px;box-sizing:border-box;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#emodal.fxed-ready .fxed-wall-check{padding:4px;border-radius:50%;background:#fff;stroke:#09090b;stroke-width:3.2;opacity:0;transform:scale(.4);transition:opacity .25s,transform .35s var(--ui-spring,ease)}
+#emodal.fxed-ready .fxed-wall.on .fxed-wall-check{opacity:1;transform:none}
+#emodal.fxed-ready .fxed-wall-lock{padding:2px;stroke:#d4d4d8;stroke-width:2}
+#emodal.fxed-ready .fxed-wallup{align-self:flex-start}
 
-/* ---------- куплено / premium ---------- */
-#emodal.fxed-ready .fxed-owned{
-  margin-top:16px;
-  padding:14px;
-  border-radius:16px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.12);
+/* клан и аккаунт */
+#emodal.fxed-ready .fxed-clan{max-width:none}
+#emodal.fxed-ready .fxed-account{border-radius:16px;border:1px solid rgba(255,255,255,.1);overflow:hidden;background:rgba(255,255,255,.02)}
+#emodal.fxed-ready .fxed-acc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;font-size:.86rem;border-bottom:1px solid rgba(255,255,255,.06)}
+#emodal.fxed-ready .fxed-acc-row:last-child{border-bottom:0}
+#emodal.fxed-ready .fxed-acc-row span{color:#a1a1aa}
+#emodal.fxed-ready .fxed-acc-row b{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--ui-mono,monospace);font-size:.8rem}
+#emodal.fxed-ready .fxed-sec{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02)}
+#emodal.fxed-ready .fxed-sec-title{font-weight:600;font-size:.9rem}
+
+/* ---------- низ ---------- */
+#emodal.fxed-ready .fxed-foot{flex:none;border-top:1px solid rgba(255,255,255,.07);padding:12px 20px;background:rgba(8,8,11,.75);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+#emodal.fxed-ready .fxed-err .err{min-height:0;margin:0 0 8px}
+#emodal.fxed-ready .fxed-err .err:empty{display:none}
+#emodal.fxed-ready .fxed-foot-row{display:flex;align-items:center;gap:12px}
+#emodal.fxed-ready .fxed-dirty{display:flex;align-items:center;gap:8px;min-width:0;font-size:.78rem;color:#a1a1aa;opacity:0;transform:translateY(5px);transition:opacity .3s,transform .3s var(--ui-ease,ease)}
+#emodal.fxed-ready .fxed-dirty.on{opacity:1;transform:none}
+#emodal.fxed-ready .fxed-dirty i{width:7px;height:7px;flex:none;border-radius:50%;background:#fbbf24;box-shadow:0 0 10px #fbbf24}
+#emodal.fxed-ready .fxed-dirty span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#emodal.fxed-ready .fxed-kbd{font:600 10px/1 var(--ui-mono,monospace);padding:4px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.18);color:#a1a1aa;background:rgba(255,255,255,.04)}
+#emodal.fxed-ready .fxed-actions{margin:0 0 0 auto;display:flex;gap:8px;flex:none}
+#emodal.fxed-ready .fxed-actions .btn{height:44px;padding:0 22px;border-radius:13px;font-size:.9rem}
+#emodal.fxed-ready #eyes.fxed-hot{box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 0 0 4px rgba(255,43,58,.2),0 12px 30px -10px rgba(255,43,58,.6);animation:fxedHot 2.4s ease-in-out infinite}
+@keyframes fxedHot{50%{box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 0 0 7px rgba(255,43,58,.1),0 12px 30px -10px rgba(255,43,58,.4)}}
+
+/* карандаш в профиле */
+#pen.fxed-spin{animation:fxedPenSpin .42s var(--ui-ease,ease)}
+@keyframes fxedPenSpin{0%{transform:none}60%{transform:rotate(-35deg) scale(1.18)}100%{transform:rotate(0) scale(1)}}
+
+/* ---------- телефон ---------- */
+@media (max-width:760px){
+  #emodal.fxed-ready .mcard.fxed-shell{width:100%;height:100vh;height:100dvh;border-radius:0;border:0}
+  #emodal.fxed-ready .fxed-head{padding:calc(12px + env(safe-area-inset-top)) 14px 12px}
+  #emodal.fxed-ready #fxed-title-label{font-size:1.1rem}
+  #emodal.fxed-ready .fxed-admin span{display:none}
+  #emodal.fxed-ready .fxed-admin{width:38px;padding:0}
+  #emodal.fxed-ready .fxed-body{display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain}
+  #emodal.fxed-ready .fxed-preview{flex:none;overflow:visible;border-right:0;border-bottom:1px solid rgba(255,255,255,.07);padding:14px}
+  #emodal.fxed-ready .fxed-preview-label,#emodal.fxed-ready .fxed-tip{display:none}
+  #emodal.fxed-ready .fxed-cover{height:86px}
+  #emodal.fxed-ready .fxed-cover{height:64px}
+  #emodal.fxed-ready .fxed-pcard-body{margin-top:-30px;padding:0 14px 14px;display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:6px;align-items:end}
+  #emodal.fxed-ready .fxed-ava-ring{width:72px;height:72px;grid-row:1/3}
+  #emodal.fxed-ready .fxed-nickline{margin:0;align-self:end}
+  #emodal.fxed-ready .fxed-role-chip{align-self:start}
+  #emodal.fxed-ready .fxed-bio,#emodal.fxed-ready .fxed-meta{grid-column:1/-1}
+  #emodal.fxed-ready .fxed-nick{font-size:1.2rem}
+  #emodal.fxed-ready .fxed-bio{max-height:4.5em}
+  #emodal.fxed-ready .fxed-main{flex:1 0 auto;min-height:auto}
+  #emodal.fxed-ready .fxed-tabs{position:sticky;top:0;z-index:5;margin:0;border-radius:0;border-left:0;border-right:0;padding:6px 10px;background:rgba(10,10,13,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  #emodal.fxed-ready .fxed-tab-ind{top:6px;bottom:6px}
+  #emodal.fxed-ready .fxed-tab{flex:0 0 auto;padding:0 13px}
+  #emodal.fxed-ready .fxed-tab.on{flex:1 1 auto}
+  #emodal.fxed-ready .fxed-tab:not(.on) .fxed-tab-label{display:none}
+  #emodal.fxed-ready .fxed-panes{flex:1 0 auto;overflow:visible;padding:16px 14px 20px}
+  #emodal.fxed-ready .fxed-walls{grid-template-columns:repeat(3,1fr);gap:8px}
+  #emodal.fxed-ready .fxed-wall{height:74px;font-size:.72rem;padding:8px}
+  #emodal.fxed-ready .fxed-foot{position:sticky;bottom:0;z-index:5;padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+  #emodal.fxed-ready .fxed-kbd{display:none}
+  #emodal.fxed-ready .fxed-actions .btn{height:44px;padding:0 18px}
 }
-#emodal.fxed-ready .fxed-owned-head{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin-bottom:4px;
-}
-#emodal.fxed-ready .fxed-owned-head b{
-  font-size:.82rem;font-weight:700;color:rgba(255,255,255,.9);
-}
-#emodal.fxed-ready .fxed-owned-count{
-  min-width:22px;height:22px;padding:0 7px;
-  display:inline-flex;align-items:center;justify-content:center;
-  border-radius:999px;
-  font-size:.64rem;font-weight:800;
-  color:#111;background:#f2f2f2;
-}
-#emodal.fxed-ready .fxed-owned .fxed-help{margin:2px 0 10px}
-#emodal.fxed-ready .fxed-owned-list{display:flex;flex-direction:column;gap:6px}
-#emodal.fxed-ready .fxed-owned-row{
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  padding:9px 10px;
-  border-radius:12px;
-  background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.08);
-  animation:fxedOwnedIn .28s ease both;
-}
-#emodal.fxed-ready .fxed-owned-ico{
-  width:28px;height:28px;flex:none;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:9px;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.14);
-  color:#f4f4f4;font-size:.8rem;
-}
-#emodal.fxed-ready .fxed-owned-main{min-width:0;flex:1}
-#emodal.fxed-ready .fxed-owned-main b{
-  display:block;font-size:.76rem;font-weight:600;color:rgba(255,255,255,.9);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-#emodal.fxed-ready .fxed-owned-main small{
-  display:block;margin-top:1px;font-size:.6rem;color:rgba(255,255,255,.4);
-}
-#emodal.fxed-ready .fxed-owned-act{
-  flex:none;display:flex;align-items:center;gap:6px;margin-left:auto;
-}
-#emodal.fxed-ready .fxed-owned-on{
-  flex:none;padding:3px 7px;border-radius:999px;
-  font-size:.56rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
-  color:#0b0b0b;background:#f2f2f2;
-}
-#emodal.fxed-ready .fxed-owned-btn{
-  all:unset;cursor:pointer;flex:none;
-  padding:5px 10px;border-radius:999px;
-  font:inherit;font-size:.6rem;font-weight:700;letter-spacing:.01em;
-  color:#0b0b0b;background:#f2f2f2;border:1px solid #f2f2f2;
-  transition:background .16s ease,color .16s ease,border-color .16s ease,transform .16s ease;
-}
-#emodal.fxed-ready .fxed-owned-btn:hover{transform:translateY(-1px);background:#fff;border-color:#fff}
-#emodal.fxed-ready .fxed-owned-btn.ghost{
-  color:rgba(255,255,255,.8);background:transparent;border-color:rgba(255,255,255,.22);
-}
-#emodal.fxed-ready .fxed-owned-btn.ghost:hover{
-  color:#0b0b0b;background:#f2f2f2;border-color:#f2f2f2;
-}
-#emodal.fxed-ready .fxed-owned-btn:disabled{opacity:.45;cursor:wait;transform:none}
-#emodal.fxed-ready .fxed-owned-empty{
-  padding:12px;
-  border-radius:12px;
-  border:1px dashed rgba(255,255,255,.16);
-  color:rgba(255,255,255,.42);
-  font-size:.68rem;line-height:1.45;text-align:center;
-}
-@keyframes fxedOwnedIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-#emodal.fxed-ready .fxed-premium{
-  display:flex;align-items:center;gap:12px;
-  margin-top:14px;
-  padding:14px;
-  border-radius:16px;
-  background:linear-gradient(145deg,rgba(168,85,247,.13),rgba(56,189,248,.05));
-  border:1px solid rgba(168,85,247,.2);
-}
-#emodal.fxed-ready .fxed-premium-ico{
-  flex:none;font-size:1.35rem;
-  filter:drop-shadow(0 0 10px rgba(168,85,247,.5));
-}
-#emodal.fxed-ready .fxed-premium b{display:block;font-size:.8rem;color:#f4f0ff}
-#emodal.fxed-ready .fxed-premium small{
-  display:block;margin-top:2px;
-  font-size:.66rem;line-height:1.4;color:rgba(255,255,255,.48);
+@media (max-width:380px){
+  #emodal.fxed-ready .fxed-dirty span{display:none}
 }
 
-/* ---------- аккаунт ---------- */
-#emodal.fxed-ready .fxed-account{
-  display:flex;flex-direction:column;
-  border-radius:16px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.028);
-}
-#emodal.fxed-ready .fxed-acc-row{
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:12px 14px;
-  font-size:.76rem;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-#emodal.fxed-ready .fxed-acc-row:last-child{border-bottom:none}
-#emodal.fxed-ready .fxed-acc-row>span{color:rgba(255,255,255,.42);flex:none}
-#emodal.fxed-ready .fxed-acc-row>b{
-  font-weight:600;color:rgba(255,255,255,.85);
-  text-align:right;word-break:break-all;min-width:0;
-}
-#emodal.fxed-ready .fxed-sec{margin-top:18px}
-#emodal.fxed-ready .fxed-sec-title{font-size:.82rem;font-weight:700;margin-bottom:5px}
-#emodal.fxed-ready .fxed-sec .fxed-help{margin-bottom:10px}
-
-/* ---------- подвал ---------- */
-#emodal.fxed-ready .fxed-foot{
-  flex:none;
-  padding:11px 22px calc(14px + env(safe-area-inset-bottom));
-  border-top:1px solid rgba(255,255,255,.1);
-  background:rgba(8,8,8,.42);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-}
-#emodal.fxed-ready .fxed-err .err{
-  min-height:0;
-  font-size:.72rem;
-  line-height:1.4;
-  padding:0 2px 6px;
-}
-#emodal.fxed-ready #eerr:empty{display:none}
-#emodal.fxed-ready .fxed-foot-row{
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-}
-#emodal.fxed-ready .fxed-foot-hint{
-  max-width:300px;
-  font-size:.66rem;line-height:1.4;color:rgba(255,255,255,.34);
-}
-#emodal.fxed-ready .fxed-actions{
-  display:flex;gap:8px;flex:none;margin-left:auto;
-}
-#emodal.fxed-ready .fxed-actions .btn{
-  min-width:112px;
-  padding:11px 18px;
-  border-radius:12px;
-  font-size:.82rem;
-  font-weight:700;
-  transition:transform .15s,box-shadow .18s,background .18s;
-}
-#emodal.fxed-ready .fxed-actions .btn:active{transform:scale(.97)}
-#emodal.fxed-ready #eyes{
-  background:linear-gradient(135deg,#22c55e,#15803d);
-  border:none;
-  color:#fff;
-  box-shadow:0 8px 24px rgba(34,197,94,.24);
-}
-#emodal.fxed-ready #eyes:hover{box-shadow:0 10px 30px rgba(34,197,94,.34)}
-#emodal.fxed-ready #eno{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  color:rgba(255,255,255,.75);
-}
-#emodal.fxed-ready #eno:hover{background:rgba(255,255,255,.1)}
-
-body.fxed-lock{overflow:hidden}
-
-/* ---------- адаптив ---------- */
-@media(max-width:820px){
-  #emodal.fxed-ready .fxed-body{grid-template-columns:minmax(240px,.75fr) minmax(0,1.25fr)}
-  #emodal.fxed-ready .fxed-preview{padding:18px}
-  #emodal.fxed-ready .fxed-tabs{padding:12px 16px 0}
-  #emodal.fxed-ready .fxed-panes{padding:16px 18px 8px}
-  #emodal.fxed-ready .fxed-foot{padding-left:18px;padding-right:18px}
-}
-/* ---------- анимации вкладок ---------- */
-#emodal.fxed-ready .fxed-tab.fxed-tab-pop{animation:fxedTabPop .3s cubic-bezier(.2,.9,.2,1)}
-@keyframes fxedTabPop{
-  0%{transform:scale(.95)}
-  55%{transform:scale(1.035)}
-  100%{transform:scale(1)}
-}
-#emodal.fxed-ready .fxed-panes[data-dir="fwd"] .fxed-pane.on.fxed-pane-anim{
-  animation:fxedPaneFwd .36s cubic-bezier(.2,.9,.2,1) both;
-}
-#emodal.fxed-ready .fxed-panes[data-dir="back"] .fxed-pane.on.fxed-pane-anim{
-  animation:fxedPaneBack .36s cubic-bezier(.2,.9,.2,1) both;
-}
-@keyframes fxedPaneFwd{
-  0%{opacity:0;transform:translateX(26px) scale(.985);filter:blur(5px)}
-  100%{opacity:1;transform:none;filter:blur(0)}
-}
-@keyframes fxedPaneBack{
-  0%{opacity:0;transform:translateX(-26px) scale(.985);filter:blur(5px)}
-  100%{opacity:1;transform:none;filter:blur(0)}
-}
-
-/* ---------- ручка: прокрутка вокруг оси ---------- */
-@keyframes fxedPenSpin{
-  0%{transform:rotate(0) scale(1)}
-  32%{transform:rotate(210deg) scale(.82)}
-  66%{transform:rotate(430deg) scale(1.1)}
-  100%{transform:rotate(720deg) scale(1)}
-}
-#pen{position:relative}
-#pen.fxed-spin{
-  animation:fxedPenSpin .62s cubic-bezier(.2,.8,.2,1);
-  pointer-events:none;
-  box-shadow:0 0 0 1px rgba(255,255,255,.22),0 0 26px rgba(255,255,255,.22);
-}
-#pen.fxed-spin::after{
-  content:"";position:absolute;inset:-8px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.35);
-  animation:fxedPenRing .62s ease-out;
-}
-@keyframes fxedPenRing{
-  0%{opacity:.9;transform:scale(.6)}
-  100%{opacity:0;transform:scale(1.55)}
-}
-
-@media(prefers-reduced-motion:reduce){
-  #emodal.fxed-ready.show .mcard.fxed-shell,
-  #emodal.fxed-ready .fxed-pane,
-  #emodal.fxed-ready .fxed-pane.fxed-pane-anim,
-  #emodal.fxed-ready .fxed-tab.fxed-tab-pop,
-  #emodal.fxed-ready .fxed-owned-row,
-  #pen.fxed-spin,
-  #pen.fxed-spin::after{animation:none!important}
-}
-
-@media(max-width:760px){
-  #emodal.fxed-ready{align-items:stretch}
-  #emodal.fxed-ready .mcard.fxed-shell{
-    width:100%;
-    height:100vh;
-    height:100dvh;
-    max-height:none;
-    border-radius:0;
-    border:none;
-    box-shadow:none;
-  }
-  #emodal.fxed-ready .fxed-head{padding:13px 16px;gap:12px}
-  #emodal.fxed-ready .fxed-head .mt{font-size:1.05rem}
-  #emodal.fxed-ready .fxed-kicker{font-size:.53rem;letter-spacing:.17em}
-  #emodal.fxed-ready .fxed-x{width:34px;height:34px}
-  #emodal.fxed-ready .fxed-admin{width:34px;height:34px;padding:0;border-radius:50%}
-  #emodal.fxed-ready .fxed-admin-label{display:none}
-  #emodal.fxed-ready .fxed-body{
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-  }
-  #emodal.fxed-ready .fxed-preview{
-    flex:none;
-    display:block;
-    overflow:visible;
-    padding:10px 14px 0;
-    border-right:none;
-    border-bottom:1px solid rgba(255,255,255,.06);
-    background:transparent;
-  }
-  #emodal.fxed-ready .fxed-preview-label,
-  #emodal.fxed-ready .fxed-tip{display:none}
-  #emodal.fxed-ready .fxed-card{
-    min-height:88px;
-    border-radius:16px;
-    box-shadow:none;
-  }
-  #emodal.fxed-ready .fxed-cover{position:absolute;inset:0;height:auto;opacity:.55}
-  #emodal.fxed-ready .fxed-cover::after{background:linear-gradient(90deg,rgba(16,19,18,.4),rgba(16,19,18,.82))}
-  #emodal.fxed-ready .fxed-cover-grid{opacity:.3}
-  #emodal.fxed-ready .fxed-wall-chip{display:none}
-  #emodal.fxed-ready .fxed-pcard-body{
-    position:relative;z-index:1;
-    padding:10px 12px;
-    display:grid;
-    grid-template-columns:62px minmax(0,1fr);
-    grid-template-areas:
-      "ava nick"
-      "ava bio";
-    align-items:center;
-    gap:4px 11px;
-  }
-  #emodal.fxed-ready .fxed-ava-row{
-    grid-area:ava;
-    margin:0;
-    align-self:center;
-    justify-content:flex-start;
-  }
-  #emodal.fxed-ready .fxed-ava-ring{
-    width:62px;height:62px;padding:2px;
-    box-shadow:none;
-  }
-  #emodal.fxed-ready #eava{width:58px;height:58px}
-  #emodal.fxed-ready .fxed-role-chip{display:none}
-  #emodal.fxed-ready .fxed-nickline{grid-area:nick;min-width:0}
-  #emodal.fxed-ready .fxed-nick{font-size:1rem;line-height:1.15}
-  #emodal.fxed-ready .fxed-title{display:none}
-  #emodal.fxed-ready .fxed-bio{
-    grid-area:bio;
-    min-height:0;
-    font-size:.67rem;
-    line-height:1.35;
-    -webkit-line-clamp:2;
-  }
-  #emodal.fxed-ready .fxed-meta{display:none}
-  #emodal.fxed-ready .fxed-main{flex:1;min-height:0}
-  #emodal.fxed-ready .fxed-tabs{
-    padding:9px 12px 0;
-    overflow-x:auto;
-    scrollbar-width:none;
-  }
-  #emodal.fxed-ready .fxed-tabs::-webkit-scrollbar{display:none}
-  #emodal.fxed-ready .fxed-tab{
-    flex:1 0 auto;
-    min-width:92px;
-    padding:9px 8px;
-    font-size:.7rem;
-    gap:5px;
-  }
-  #emodal.fxed-ready .fxed-panes{padding:13px 14px 8px}
-  #emodal.fxed-ready .fxed-section-head{margin-bottom:14px}
-  #emodal.fxed-ready .fxed-section-title{font-size:.92rem}
-  #emodal.fxed-ready .fxed-field{margin-bottom:14px}
-  #emodal.fxed-ready #ebio{min-height:104px}
-  #emodal.fxed-ready .wgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  #emodal.fxed-ready .wopt{min-height:54px}
-  #emodal.fxed-ready .fxed-foot{
-    padding:9px 14px calc(10px + env(safe-area-inset-bottom));
-  }
-  #emodal.fxed-ready .fxed-foot-hint{display:none}
-  #emodal.fxed-ready .fxed-actions{width:100%;margin-left:0}
-  #emodal.fxed-ready .fxed-actions .btn{flex:1;min-width:0;padding:12px 12px}
-  #emodal.fxed-ready .fxed-err .err{padding-bottom:5px}
-}
-@media(max-width:760px) and (max-height:620px){
-  #emodal.fxed-ready .fxed-preview{display:none}
-}
-@media(max-width:380px){
-  #emodal.fxed-ready .wgrid{grid-template-columns:1fr 1fr}
-  #emodal.fxed-ready .fxed-tab{min-width:84px;font-size:.66rem}
-}
-@media(prefers-reduced-motion:reduce){
-  #emodal.fxed-ready .mcard.fxed-shell,
-  #emodal.fxed-ready .fxed-pane,
-  #emodal.fxed-ready .fxed-live i{animation:none!important}
-  #emodal.fxed-ready .fxed-tab,
-  #emodal.fxed-ready .wopt,
-  #emodal.fxed-ready .fxed-ava-ring{transition:none!important}
+@media (prefers-reduced-motion:reduce){
+  #emodal.fxed-ready.show .mcard.fxed-shell,#emodal.fxed-ready .fxed-pane.fxed-pane-anim,#emodal.fxed-ready .fxed-ava-ring,
+  #emodal.fxed-ready .fxed-cover-mesh,#emodal.fxed-ready .fxed-live i,#emodal.fxed-ready #eyes.fxed-hot,#pen.fxed-spin{animation:none!important}
+  #emodal.fxed-ready .fxed-tab-ind{transition:none}
 }

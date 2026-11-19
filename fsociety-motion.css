@@ -156,7 +156,7 @@
 
 /* ---------- лишнее ---------- */
 #fx-online-card{display:none!important}
-#emodal.fxed-ready .fxed-kicker{display:none}
+
 
 /* ---------- кто просил меньше движения — получает меньше ---------- */
 @media (prefers-reduced-motion:reduce){
