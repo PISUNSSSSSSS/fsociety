@@ -116,9 +116,7 @@ body{background:var(--fs-bg);color:var(--fs-text)}
 #dock button.on::after{content:"";position:absolute;bottom:1px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--fs-red)}
 
 /* ---------- верхний ряд кнопок ---------- */
-#fxbtn,#fx2btn,#fxadminbtn,#bell,#langbtn,#back{border:1px solid var(--fs-line)}
-#fxbtn:hover,#fx2btn:hover{box-shadow:none;border-color:rgba(255,255,255,.3)}
-#fxbtn .fx-dot{background:var(--fs-red);box-shadow:0 0 8px var(--fs-red)}
+#bell,#langbtn,#back{border:1px solid var(--fs-line)}
 
 /* ---------- редактор профиля ---------- */
 #emodal.fxed-ready .fxed-kicker,#emodal.fxed-ready .fxed-live{color:var(--fs-mute)}

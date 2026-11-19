@@ -49,7 +49,7 @@
     m.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     if (!m.classList.contains("show")) return;
     // 2) кнопка «Отмена» / «Закрыть»
-    var btns = m.querySelectorAll(".mbtns button, [id$='_close'], [id$='no'], .fx2-modal-close");
+    var btns = m.querySelectorAll(".mbtns button, [id$='_close'], [id$='no']");
     for (var i = 0; i < btns.length; i++) {
       var b = btns[i];
       if (!shown(b) || b.classList.contains("main") && btns.length > 1) continue;
@@ -63,24 +63,11 @@
   function backStep() {
     var n;
     if ((n = byId("fspriv")) && n.classList.contains("show")) { closePrivacy(); return true; }
-    if ((n = byId("fxstoryview")) && n.classList.contains("show")) { esc(); return true; }
-    if ((n = byId("fx2modal")) && n.classList.contains("show")) { esc(); return true; }
-    if ((n = byId("fxex-palette")) && shown(n)) { esc(); return true; }
     if ((n = byId("emodal")) && n.classList.contains("show")) { esc(); if (n.classList.contains("show")) closeModalEl(n); return true; }
     var modals = D.querySelectorAll("#edmodal.show,#formmodal.show,#amodal.show,#wlmodal.show,#wmodal.show,#tmodal.show,#nmodal.show,#umodal.show,#pmodal.show,#bmodal.show,#modal.show");
     if (modals.length) { closeModalEl(modals[0]); return true; }
     if ((n = byId("sheet")) && n.classList.contains("show")) { try { closeSheet(); } catch (e) { n.classList.remove("show"); } return true; }
     if ((n = byId("shade")) && n.classList.contains("open")) { try { closeShade(); } catch (e) { n.classList.remove("open"); } return true; }
-    var panels = [["fx2panel", "[data-fx2-back]"], ["fxpanel", "[data-fx-back]"]];
-    for (var i = 0; i < panels.length; i++) {
-      var p = byId(panels[i][0]);
-      if (!p || !p.classList.contains("show")) continue;
-      var backs = p.querySelectorAll(panels[i][1] + ",[data-fxex-back]");
-      for (var j = 0; j < backs.length; j++) if (shown(backs[j])) { backs[j].click(); return true; }
-      esc();
-      if (p.classList.contains("show")) { var x = p.querySelector(".fx-x,#fxclose,#fx2close"); if (x) x.click(); else p.classList.remove("show"); }
-      return true;
-    }
     var v = curView();
     var inner = { dm: ["dmback", "groupback"], servers: ["srvback"] }[v] || [];
     for (var k = 0; k < inner.length; k++) { var ib = byId(inner[k]); if (shown(ib)) { ib.click(); return true; } }
@@ -148,7 +135,6 @@
 
   function applyInvisible(on) {
     ls("fs_invisible", on ? "1" : null);
-    try { if (window.fxPlus && typeof window.fxPlus.presence === "function") window.fxPlus.presence(!on); } catch (e) {}
   }
   function applyEmailMask() {
     var on = ls("fs_hide_mail") !== "0";
@@ -214,10 +200,6 @@
     var srv = !priv.missing && !!priv.data;
 
     card.appendChild(mk("div", "fsp-sec", L("Кто меня видит", "Who sees me")));
-    card.appendChild(sw(L("Невидимка", "Invisible"), L("Не показываться в списке «Онлайн»", "Hide me from the Online list"), srv ? !!d.invisible : ls("fs_invisible") === "1", async function (on) {
-      if (srv) await setPriv({ invisible: on });
-      applyInvisible(on);
-    }));
     if (srv) card.appendChild(sw(L("Инкогнито", "Incognito"), L("Смотреть профили, не попадая в «Гости»", "View profiles without showing up in Guests"), !!d.incognito, function (on) { return setPriv({ incognito: on }); }));
     card.appendChild(sw(L("Скрывать почту", "Hide my email"), L("Почта в профиле размыта, пока не нажмёшь на неё", "Email on your profile stays blurred until tapped"), ls("fs_hide_mail") !== "0", async function (on) {
       ls("fs_hide_mail", on ? null : "0"); applyEmailMask();
@@ -347,8 +329,7 @@
       var u = me();
       hubEl.style.display = u ? "" : "none";
       if (!u) return;
-      var on = byId("fx-online-count"); var oc = on ? parseInt(on.textContent, 10) || 0 : 0;
-      meta.chat.textContent = oc > 0 ? L(oc + " в сети", oc + " online") : L("общая комната", "main room");
+      meta.chat.textContent = L("общая комната", "main room");
       var dmb = byId("dmbadge"), n = dmb ? parseInt(dmb.textContent, 10) || 0 : 0;
       meta.dm.textContent = n ? L(n + " непрочит.", n + " unread") : L("нет новых", "no new");
       meta.dm.classList.toggle("hot", n > 0);
@@ -461,7 +442,7 @@
     D.addEventListener("click", function (e) {
       var m = e.target.closest && e.target.closest(".msgs .msg");
       var prev = D.querySelectorAll(".msgs .msg.fs-sel");
-      if (m && e.target.closest("a,button,img,video,audio,input,textarea,.fx-react")) return;
+      if (m && e.target.closest("a,button,img,video,audio,input,textarea")) return;
       for (var i = 0; i < prev.length; i++) if (prev[i] !== m) prev[i].classList.remove("fs-sel");
       if (!m) return;
       m.classList.toggle("fs-sel");

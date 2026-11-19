@@ -202,11 +202,7 @@
 #emodal.fxed-ready #eava img{pointer-events:none}
 #emodal.fxed-ready #eava.fxed-drop{filter:brightness(1.25);box-shadow:0 0 0 3px #4ade80!important}
 #emodal.fxed-ready .fxed-role-chip{
-  flex:none;align-self:center;
-  padding:4px 9px;border-radius:999px;
-  font-size:.58rem;font-weight:800;letter-spacing:.08em;
-  color:var(--c,#4ade80);border:1px solid currentColor;
-  background:rgba(0,0,0,.25);
+  flex:none;align-self:center;display:inline-flex;
 }
 #emodal.fxed-ready .fxed-nickline{min-width:0;line-height:1.15}
 #emodal.fxed-ready .fxed-nick{
@@ -218,7 +214,6 @@
   font-size:1.34rem;
   font-weight:800;
   line-height:1.18;
-  color:var(--c,#fff);
   overflow-wrap:anywhere;
 }
 #emodal.fxed-ready .fxed-title{

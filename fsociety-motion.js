@@ -99,7 +99,7 @@
   });
 
   /* ---------- 3. Списки появляются каскадом, сообщения — с нужной стороны ---------- */
-  var LIST = ".ulist,.dmcontacts,.grouplist,.fx-list,.rooms,.fxex-season-grid,.fx2-list";
+  var LIST = ".ulist,.dmcontacts,.grouplist,.rooms,.clan-list";
   var seen = new Set(), lastPendingAt = 0;
   function onAdded(muts) {
     if (calm()) return;
@@ -138,7 +138,7 @@
   new MutationObserver(onAdded).observe($("app") || B, { childList: true, subtree: true });
 
   /* ---------- 4. Нажатия: волна + лёгкая вибрация ---------- */
-  var TAP = ".btn,.fx-btn,.mini,.fx-tile,.room,.seg button,.fx2-subtab,.fx-tabs button,.wopt,.fx-daily,#dock button";
+  var TAP = ".btn,.mini,.room,.seg button,.wopt,#dock button";
   D.addEventListener("pointerdown", function (e) {
     var t = e.target.closest && e.target.closest(TAP);
     if (!t || t.disabled) return;
@@ -168,7 +168,6 @@
   }
   watchCount("nbadge", function () { var b = $("bell"); if (b) { replay(b, "fs-ring"); buzz([12, 40, 12]); } });
   watchCount("dmbadge");
-  watchCount("fx2-gem-badge");
 
   /* ---------- 6. Полоска активности сети ---------- */
   (function net() {

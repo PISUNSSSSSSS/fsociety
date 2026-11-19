@@ -17,8 +17,7 @@
     timer: 0,
     lastFocus: null,
     built: false,
-    spinning: false,
-    ownedSig: ""
+    spinning: false
   };
 
   function q(id) { return document.getElementById(id); }
@@ -54,17 +53,6 @@
     return (u && u.role) || "user";
   }
   function currentUser() { return safe(function () { return user; }, null); }
-  function wallet() {
-    return safe(function () {
-      return window.fxPlus2 && typeof window.fxPlus2.wallet === "function" ? window.fxPlus2.wallet() : null;
-    }, null);
-  }
-  function decorate() {
-    safe(function () {
-      if (window.fxPlus2 && typeof window.fxPlus2.decorate === "function") window.fxPlus2.decorate();
-    });
-  }
-
   /* ---------------- build ---------------- */
   function build() {
     var mt = card.querySelector(".mt");
@@ -150,11 +138,6 @@
     nickLine.appendChild(nickEl);
     pbody.appendChild(nickLine);
 
-    var titleEl = mk("div", "fxed-title");
-    titleEl.id = "fxed-title";
-    titleEl.hidden = true;
-    pbody.appendChild(titleEl);
-
     var bioEl = mk("div", "fxed-bio");
     bioEl.id = "fxed-bio";
     pbody.appendChild(bioEl);
@@ -163,10 +146,6 @@
     var sid = mk("span");
     sid.id = "fxed-sid";
     meta.appendChild(sid);
-    var fxChip = mk("span", "fxed-chip fx");
-    fxChip.id = "fxed-fx";
-    fxChip.hidden = true;
-    meta.appendChild(fxChip);
     pbody.appendChild(meta);
 
     pcard.appendChild(pbody);
@@ -328,36 +307,12 @@
     }
     wallField.appendChild(wallLabel);
     wallField.appendChild(txt(mk("div", "fxed-help"),
-      "Обои применяются к фону сайта. Платные открываются в PLUS 2 → Обои.",
-      "Wallpapers apply to the site background. Premium ones are in PLUS 2 → Wallpapers."));
+      "Обои применяются к фону сайта. Обои с замком доступны со статуса «Спонсор».",
+      "Wallpapers apply to the site background. Locked ones are available from Sponsor status."));
     if (wgrid) wallField.appendChild(wgrid);
     if (ewallup) wallField.appendChild(ewallup);
     p.appendChild(wallField);
 
-    var owned = mk("div", "fxed-owned");
-    var ownedHead = mk("div", "fxed-owned-head");
-    ownedHead.appendChild(txt(mk("b"), "Куплено", "Purchased"));
-    var ownedCount = mk("span", "fxed-owned-count", "0");
-    ownedCount.id = "fxed-owned-count";
-    ownedHead.appendChild(ownedCount);
-    owned.appendChild(ownedHead);
-    owned.appendChild(txt(mk("div", "fxed-help"),
-      "Всё, что уже куплено. Эффекты включай кнопкой, обои ставь сразу — без выхода из редактора.",
-      "Everything you own. Turn effects on and apply wallpapers right here."));
-    var ownedList = mk("div", "fxed-owned-list");
-    ownedList.id = "fxed-owned-list";
-    owned.appendChild(ownedList);
-    p.appendChild(owned);
-
-    var premium = mk("div", "fxed-premium");
-    premium.appendChild(mk("span", "fxed-premium-ico", "💎"));
-    var premMain = mk("div");
-    premMain.appendChild(txt(mk("b"), "Эффекты ника", "Nick effects"));
-    premMain.appendChild(txt(mk("small"),
-      "Дождь, звёзды, огонь и «дождь из денег» — покупаются в PLUS 2 → Эффекты, включаются в «Куплено» выше.",
-      "Rain, stars, fire and money rain — buy in PLUS 2 → Effects, enable in Purchased above."));
-    premium.appendChild(premMain);
-    p.appendChild(premium);
     return p;
   }
 
@@ -376,7 +331,6 @@
     box.appendChild(accountRow("Email", "Email", "fxed-email"));
     box.appendChild(accountRow("ID", "ID", "fxed-id"));
     box.appendChild(accountRow("Роль", "Role", "fxed-role"));
-    box.appendChild(accountRow("Кристаллы", "Crystals", "fxed-gems"));
     p.appendChild(box);
 
     var sec = mk("div", "fxed-sec");
@@ -396,226 +350,6 @@
     val.id = id;
     row.appendChild(val);
     return row;
-  }
-
-  /* ---------------- owned purchases ---------------- */
-  function privilegeMap() {
-    var map = safe(function () {
-      return window.fxPlus2 && window.fxPlus2.state ? window.fxPlus2.state.privilegeMap : null;
-    }, null);
-    return map instanceof Map ? map : new Map();
-  }
-  function wallTitle(pid) {
-    var id = String(pid || "").replace(/^wall_/, "");
-    var row = safe(function () {
-      for (var i = 0; i < WALLS.length; i++) if (WALLS[i][0] === id) return WALLS[i];
-      return null;
-    }, null);
-    return row ? tr(row[1], id) : id;
-  }
-  function kindTitle(kind) {
-    if (kind === "badge") return L("бейдж", "badge");
-    if (kind === "glow") return L("свечение ника", "name glow");
-    if (kind === "frame") return L("рамка аватара", "avatar frame");
-    if (kind === "banner") return L("баннер профиля", "profile banner");
-    if (kind === "highlight") return L("подсветка чата", "chat highlight");
-    if (kind === "effect") return L("эффект ника", "nick effect");
-    if (kind === "wallpaper") return L("обои", "wallpaper");
-    if (kind === "title") return L("титул", "title");
-    return L("привилегия", "privilege");
-  }
-  function wallIdFromPid(pid) {
-    return String(pid || "").replace(/^wall_/, "");
-  }
-  function currentWallId() {
-    return safe(function () {
-      if (typeof wallId !== "undefined" && wallId) return String(wallId);
-      var u = currentUser();
-      return u && u.wallpaper ? String(u.wallpaper) : "";
-    }, "");
-  }
-  function ownedRows() {
-    var w = wallet();
-    if (!w) return [];
-    var map = privilegeMap();
-    var rows = [];
-    var curWall = currentWallId();
-    if (w.title) rows.push({ pid: "title", title: w.title, kind: "title", active: true });
-    var privs = Array.isArray(w.privileges) ? w.privileges : [];
-    privs.forEach(function (pid) {
-      pid = String(pid || "");
-      if (!pid || pid === "custom_title") return;
-      var item = map.get(pid);
-      var kind = item && item.kind ? item.kind
-        : pid.indexOf("wall_") === 0 ? "wallpaper"
-        : pid.indexOf("fx_") === 0 ? "effect" : "privilege";
-      var title = item && item.title ? item.title
-        : kind === "wallpaper" ? L("Обои: ", "Wallpaper: ") + wallTitle(pid)
-        : pid;
-      var active = false;
-      if (kind === "effect") active = String(w.active_effect || "") === pid;
-      else if (kind === "wallpaper") active = curWall === wallIdFromPid(pid);
-      else if (kind === "badge" || kind === "highlight" || kind === "glow" ||
-               kind === "frame" || kind === "banner" || kind === "title") active = true;
-      rows.push({
-        pid: pid,
-        title: title,
-        kind: kind,
-        active: active
-      });
-    });
-    return rows;
-  }
-  function renderOwned(force) {
-    var list = q("fxed-owned-list");
-    var count = q("fxed-owned-count");
-    if (!list) return;
-    var w = wallet();
-    if (!w) {
-      if (count) count.textContent = "0";
-      if (!force && st.ownedSig === "guest") return;
-      st.ownedSig = "guest";
-      clear(list);
-      list.appendChild(mk("div", "fxed-owned-empty",
-        L("Войди в аккаунт, чтобы видеть покупки.", "Sign in to see your purchases.")));
-      return;
-    }
-    var rows = ownedRows();
-    var sig = JSON.stringify(rows);
-    if (!force && sig === st.ownedSig) return;
-    st.ownedSig = sig;
-    if (count) count.textContent = String(rows.length);
-    clear(list);
-    if (!rows.length) {
-      list.appendChild(mk("div", "fxed-owned-empty",
-        L("Пока ничего не куплено. Загляни в PLUS 2 → Привилегии.",
-          "Nothing purchased yet. Check PLUS 2 → Privileges.")));
-      return;
-    }
-    rows.forEach(function (r) {
-      var row = mk("div", "fxed-owned-row");
-      var icon = r.kind === "wallpaper" ? "▦"
-        : r.kind === "effect" ? "✦"
-        : r.kind === "badge" ? "◆"
-        : r.kind === "frame" ? "▣"
-        : r.kind === "title" ? "✎"
-        : r.kind === "highlight" ? "▤"
-        : "●";
-      row.appendChild(mk("span", "fxed-owned-ico", icon));
-      var main = mk("div", "fxed-owned-main");
-      main.appendChild(mk("b", "", r.title));
-      main.appendChild(mk("small", "", kindTitle(r.kind)));
-      row.appendChild(main);
-
-      var act = mk("div", "fxed-owned-act");
-      if (r.active) {
-        var onLabel = r.kind === "wallpaper" ? L("на сайте", "applied")
-          : r.kind === "effect" ? L("включён", "on")
-          : L("активно", "active");
-        act.appendChild(mk("span", "fxed-owned-on", onLabel));
-      }
-      if (r.kind === "effect") {
-        var eb = mk("button", "fxed-owned-btn" + (r.active ? " ghost" : ""),
-          r.active ? L("Выключить", "Turn off") : L("Включить", "Enable"));
-        eb.type = "button";
-        eb.onclick = function () { ownedEffect(r.pid, !r.active, eb); };
-        act.appendChild(eb);
-      } else if (r.kind === "wallpaper") {
-        var wb = mk("button", "fxed-owned-btn" + (r.active ? " ghost" : ""),
-          r.active ? L("Снять", "Remove") : L("Поставить", "Apply"));
-        wb.type = "button";
-        wb.onclick = function () {
-          ownedWallpaper(r.active ? "none" : wallIdFromPid(r.pid), wb);
-        };
-        act.appendChild(wb);
-      }
-      if (act.children.length) row.appendChild(act);
-      list.appendChild(row);
-    });
-  }
-
-  function rpcCall(name, args) {
-    var s = safe(function () { return sb; }, null);
-    if (!s) return Promise.reject(new Error("no-supabase"));
-    return Promise.resolve(s.rpc(name, args || {})).then(function (r) {
-      if (r && r.error) throw r.error;
-      return r ? r.data : null;
-    });
-  }
-  async function refreshOwnedWallet() {
-    var fx = safe(function () { return window.fxPlus2; }, null);
-    if (fx && typeof fx.refreshWallet === "function") {
-      await fx.refreshWallet();
-      return;
-    }
-    if (fx && typeof fx.reload === "function") fx.reload();
-  }
-  async function ownedEffect(pid, on, btn) {
-    if (!pid) return;
-    if (btn) btn.disabled = true;
-    try {
-      var fx = safe(function () { return window.fxPlus2; }, null);
-      if (fx && typeof fx.setEffect === "function") {
-        await fx.setEffect(on ? pid : "", btn);
-      } else {
-        await rpcCall("effect_set", { p_id: on ? pid : "" });
-        await refreshOwnedWallet();
-      }
-      renderOwned(true);
-      syncPreview(false);
-    } catch (e) {
-      safe(function () { toast(t("err_generic")); });
-    } finally {
-      if (btn) btn.disabled = false;
-    }
-  }
-  async function ownedWallpaper(id, btn) {
-    if (!id) return;
-    if (btn) btn.disabled = true;
-    try {
-      var fx = safe(function () { return window.fxPlus2; }, null);
-      if (fx && typeof fx.applyWallpaper === "function") {
-        await fx.applyWallpaper(id, btn);
-      } else {
-        var u = currentUser();
-        if (!u) throw new Error("guest");
-        safe(function () { setWall(id); });
-        u.wallpaper = id;
-        var s = safe(function () { return sb; }, null);
-        if (s) {
-          var r = await s.from("profiles").update({ wallpaper: id }).eq("id", u.id);
-          if (r && r.error) throw r.error;
-        }
-      }
-      safe(function () { eWall = id; buildWallGrid(); });
-      decorateWalls();
-      renderOwned(true);
-      syncPreview(false);
-    } catch (e) {
-      safe(function () { toast(t("err_generic")); });
-    } finally {
-      if (btn) btn.disabled = false;
-    }
-  }
-  async function loadOwned(force) {
-    var w = wallet();
-    var map = privilegeMap();
-    if (w && Array.isArray(w.privileges) && w.privileges.length && !map.size) {
-      var s = safe(function () { return sb; }, null);
-      if (s) {
-        try {
-          var r = await s.rpc("privilege_list");
-          if (r && !r.error && Array.isArray(r.data)) {
-            var next = new Map();
-            r.data.forEach(function (it) { next.set(it.id, it); });
-            safe(function () {
-              if (window.fxPlus2 && window.fxPlus2.state) window.fxPlus2.state.privilegeMap = next;
-            });
-          }
-        } catch (e) {}
-      }
-    }
-    renderOwned(force);
   }
 
   /* ---------------- tabs ---------------- */
@@ -651,7 +385,6 @@
     });
     if (name === "look") {
       decorateWalls();
-      loadOwned(true);
       setTimeout(function () { syncPreview(false); }, 0);
     }
   }
@@ -668,23 +401,17 @@
 
     var nickEl = q("fxed-nick");
     if (nickEl) {
-      var tx = nickEl.querySelector(".rnm");
-      if (!tx) {
-        tx = mk("span", "rnm");
-        nickEl.insertBefore(tx, nickEl.firstChild);
-      }
       var nextNick = nick || L("Твой ник", "Your nick");
-      if (tx.textContent !== nextNick) tx.textContent = nextNick;
-      if (u && u.id) nickEl.setAttribute("data-fx2-uid", String(u.id));
-      safe(function () { setRoleClass(nickEl, role); });
-
+      var sig = nextNick + "|" + role + "|" + (u ? u.id : "") + "|" + (isEn() ? "en" : "ru");
+      if (nickEl.getAttribute("data-fxed-sig") !== sig) {
+        nickEl.setAttribute("data-fxed-sig", sig);
+        if (typeof window.richName === "function") window.richName(nickEl, u ? u.id : null, nextNick, role);
+        else nickEl.textContent = nextNick;
+      }
     }
 
     var ava = q("eava");
-    if (ava && u) {
-      safe(function () { setRoleClass(ava, role); });
-      ava.setAttribute("data-fx2-ava-uid", String(u.id));
-    }
+    if (ava && u) safe(function () { setRoleClass(ava, role); });
 
     var bioEl = q("fxed-bio");
     if (bioEl) {
@@ -707,42 +434,14 @@
     if (roleVal) roleVal.textContent = u ? safe(function () { return roleLabel(role); }, role) : "—";
 
     var roleChip = q("fxed-role-chip");
-    if (roleChip) {
-      roleChip.textContent = u ? safe(function () { return roleLabel(role); }, role) : L("Гость", "Guest");
+    var roleSig = role + "|" + (isEn() ? "en" : "ru") + "|" + (u ? 1 : 0);
+    if (roleChip && roleChip.getAttribute("data-role") !== roleSig) {
+      roleChip.setAttribute("data-role", roleSig);
+      clear(roleChip);
       roleChip.className = "fxed-role-chip " + role;
+      if (u && typeof window.roleBadge === "function") roleChip.appendChild(window.roleBadge(role, "lg", true));
+      else roleChip.textContent = u ? safe(function () { return roleLabel(role); }, role) : L("Гость", "Guest");
     }
-
-    var w = wallet();
-    var titleEl = q("fxed-title");
-    if (titleEl) {
-      if (w && w.title) {
-        titleEl.textContent = w.title;
-        titleEl.hidden = false;
-      } else {
-        titleEl.textContent = "";
-        titleEl.hidden = true;
-      }
-    }
-
-    var fxEl = q("fxed-fx");
-    if (fxEl) {
-      var active = w && w.active_effect;
-      if (active) {
-        var item = safe(function () {
-          return window.fxPlus2 && window.fxPlus2.state && window.fxPlus2.state.privilegeMap
-            ? window.fxPlus2.state.privilegeMap.get(active)
-            : null;
-        }, null);
-        fxEl.textContent = "💫 " + (item && item.title ? item.title : L("эффект включён", "effect on"));
-        fxEl.hidden = false;
-      } else {
-        fxEl.hidden = true;
-      }
-    }
-
-    var gems = q("fxed-gems");
-    if (gems) gems.textContent = w ? "💎 " + (Number(w.gems) || 0) : "—";
-    renderOwned(false);
 
     var cardEl = q("fxed-card");
     var sel = document.querySelector("#wgrid .wopt.on");
@@ -758,7 +457,6 @@
       wallChip.hidden = !label;
     }
 
-    if (force) decorate();
   }
 
   /* ---------------- wall grid ---------------- */
@@ -800,24 +498,20 @@
     var u = currentUser();
     var ava = q("eava");
     if (ava) {
-      if (u) {
-        safe(function () { setRoleClass(ava, u.role); });
-        ava.setAttribute("data-fx2-ava-uid", String(u.id));
-      }
+      if (u) safe(function () { setRoleClass(ava, u.role); });
       ava.setAttribute("role", "button");
       ava.setAttribute("tabindex", "0");
       ava.setAttribute("aria-label", L("Сменить аватар", "Change avatar"));
     }
     var nickEl = q("fxed-nick");
-    if (nickEl && u) nickEl.setAttribute("data-fx2-uid", String(u.id));
+    if (nickEl) nickEl.removeAttribute("data-fxed-sig");
+    var chip = q("fxed-role-chip");
+    if (chip) chip.removeAttribute("data-role");
 
     showTab("main");
     syncPreview(true);
     setTimeout(function () { syncPreview(true); }, 350);
     setTimeout(function () { syncPreview(false); }, 900);
-    if (window.fxPlus2 && typeof window.fxPlus2.reload === "function" && !wallet()) {
-      safe(function () { window.fxPlus2.reload(); });
-    }
     clearInterval(st.timer);
     st.timer = setInterval(function () { syncPreview(false); }, 2200);
     document.body.classList.add("fxed-lock");
@@ -830,10 +524,6 @@
     clearInterval(st.timer);
     st.timer = 0;
     document.body.classList.remove("fxed-lock");
-    var nickEl = q("fxed-nick");
-    if (nickEl) nickEl.removeAttribute("data-fx2-uid");
-    var ava = q("eava");
-    if (ava) ava.removeAttribute("data-fx2-ava-uid");
     if (st.lastFocus && typeof st.lastFocus.focus === "function") {
       safe(function () { st.lastFocus.focus({ preventScroll: true }); });
     }
@@ -964,7 +654,7 @@
     document.addEventListener("keydown", function (e) {
       if (!st.open) return;
       if (e.key === "Escape") {
-        var other = document.querySelector("#pmodal.show,#modal.show,#bmodal.show,#edmodal.show,#fx2modal.show,#fx2panel.show,#fxpanel.show");
+        var other = document.querySelector("#pmodal.show,#modal.show,#bmodal.show,#edmodal.show,#formmodal.show");
         if (other) return;
         e.preventDefault();
         var no = q("eno");

@@ -135,7 +135,7 @@ textarea.fs-draft{box-shadow:0 0 0 2px var(--fs-red,#ff2b3a)!important;transitio
 
 /* ---------- кнопки-иконки сверху на маленьких экранах ---------- */
 @media (max-width:360px){
-  #fxbtn,#fx2btn,#fxadminbtn,#bell,#langbtn{transform:scale(.92)}
+  #bell,#langbtn{transform:scale(.92)}
 }
 
 @media (prefers-reduced-motion:reduce){
