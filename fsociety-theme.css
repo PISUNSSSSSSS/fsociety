@@ -65,13 +65,13 @@ body{background:var(--fs-bg);color:var(--fs-text)}
 
 /* ---------- кнопки ---------- */
 /* главное действие: белая плашка, чёрный текст */
-.btn.main,.fx-btn.main,.fx-daily,#emodal.fxed-ready #eyes{
+.btn.main,.fx-btn.main,.fx-daily{
   background:#f2f2f2;
   color:#000;
   border:1px solid transparent;
   box-shadow:none;
 }
-.btn.main:hover,.fx-btn.main:hover,.fx-daily:hover,#emodal.fxed-ready #eyes:hover{
+.btn.main:hover,.fx-btn.main:hover,.fx-daily:hover{
   background:#fff;
   box-shadow:0 0 0 3px var(--fs-red-soft);
 }
@@ -95,8 +95,7 @@ body{background:var(--fs-bg);color:var(--fs-text)}
 .fx-tile::before{display:none}
 
 /* ---------- активные вкладки и выбор: везде одинаково ---------- */
-.seg button.on,.fx-tabs button.on,.fx2-subtab.on,.fx2-scope-btn.on,.fx2-tag-btn.on,
-#emodal.fxed-ready .fxed-tab.on,#emodal.fxed-ready .wopt.on,.wopt.on{
+.seg button.on,.fx-tabs button.on,.fx2-subtab.on,.fx2-scope-btn.on,.fx2-tag-btn.on,.wopt.on{
   background:rgba(255,255,255,.16);
   border-color:rgba(255,255,255,.3);
   color:#fff;
@@ -116,15 +115,8 @@ body{background:var(--fs-bg);color:var(--fs-text)}
 #dock button.on::after{content:"";position:absolute;bottom:1px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--fs-red)}
 
 /* ---------- верхний ряд кнопок ---------- */
-#fxbtn,#fx2btn,#fxadminbtn,#bell,#langbtn,#back{border:1px solid var(--fs-line)}
-#fxbtn:hover,#fx2btn:hover{box-shadow:none;border-color:rgba(255,255,255,.3)}
-#fxbtn .fx-dot{background:var(--fs-red);box-shadow:0 0 8px var(--fs-red)}
+#bell,#langbtn,#back{border:1px solid var(--fs-line)}
 
-/* ---------- редактор профиля ---------- */
-#emodal.fxed-ready .fxed-kicker,#emodal.fxed-ready .fxed-live{color:var(--fs-mute)}
-#emodal.fxed-ready .fxed-kicker::before,#emodal.fxed-ready .fxed-live i{background:var(--fs-red);box-shadow:none}
-#emodal.fxed-ready .fxed-card,#emodal.fxed-ready .fxed-cover{border-color:var(--fs-line)}
-#emodal.fxed-ready #enick:focus,#emodal.fxed-ready #ebio:focus{border-color:rgba(255,255,255,.4);box-shadow:none}
 
 /* ---------- терминал: остаётся «экраном», но в белом ---------- */
 .fx-term-out,.fx-term-line,.fx-term-line span,.fx-term-cmd{color:#e8e8e8}

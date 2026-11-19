@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;700&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://zdtgznbyuhpskiyyxslt.supabase.co" crossorigin>
@@ -101,12 +102,11 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 #pava{width:104px;height:104px;border:3px solid var(--c);box-shadow:0 0 16px 2px var(--c)}
 #pava.owner,#pava.coowner,#pava.admin,#pava.moderator,#pava.sponsor{animation:pulse 2s ease-in-out infinite alternate}
 .prow{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap}
-#pnick{font-size:1.5rem;color:#fff;font-weight:bold;word-break:break-word}
+#pnick{font-size:1.5rem;font-weight:bold;word-break:break-word}
 .pen{width:30px;height:30px;border-radius:50%;padding:0;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:.95rem;color:#fff;transition:transform .2s}
 .pen:active{transform:rotate(-25deg) scale(.88)}
 .mail{opacity:.6;font-size:.85rem;word-break:break-all}
 .bio{font-size:.9rem;opacity:.85;line-height:1.4;max-width:300px;word-break:break-word}
-.badge{border:1px solid var(--c);color:var(--c);background:rgba(255,255,255,.07);font-weight:bold;letter-spacing:2px;font-size:.72rem;padding:3px 12px;border-radius:999px}
 .seg{display:flex;gap:4px;padding:4px;border-radius:999px;width:100%;box-sizing:border-box}
 .seg button{all:unset;flex:1;text-align:center;padding:8px 0;border-radius:999px;cursor:pointer;font-size:.9rem;color:#ccc;transition:background .3s,color .3s}
 .seg button.on{background:rgba(255,255,255,.22);color:#fff;font-weight:bold}
@@ -118,8 +118,6 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .msg{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:7px 10px;max-width:92%;align-self:flex-start;box-sizing:border-box}
 .msg.mine{align-self:flex-end;background:rgba(255,255,255,.14)}
 .mh{display:flex;align-items:center;gap:6px;font-size:.75rem}
-.mn{color:var(--c)}
-.mtag{border:1px solid var(--c);color:var(--c);font-size:.58rem;padding:0 6px;border-radius:999px;letter-spacing:1px}
 .mtime{opacity:.5}
 .mdel{all:unset;cursor:pointer;opacity:.5;margin-left:auto;padding:0 4px}
 .mb{font-size:.92rem;word-break:break-word;white-space:pre-wrap;margin-top:2px}
@@ -249,14 +247,15 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .flink:active{transform:scale(.98)}
 .flink .ft{font-weight:bold;font-size:.98rem;word-break:break-word;color:#fff}
 .flink .fm{font-size:.75rem;opacity:.65;display:flex;gap:8px;flex-wrap:wrap}
-.flink .fm .fn{color:var(--c);font-weight:bold}
+.flink .fm .fn{font-weight:bold}
 .thead{display:flex;flex-direction:column;gap:4px;text-align:left;width:100%}
 .thead h2{font-size:1.2rem;line-height:1.3}
+.thead .fm{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .tpost{padding:12px 14px;border-radius:16px;text-align:left;white-space:pre-wrap;word-break:break-word;font-size:.92rem;line-height:1.45;width:100%;box-sizing:border-box}
 .tr{display:flex;flex-direction:column;gap:3px;text-align:left;padding:9px 12px;border-radius:14px}
 .tr .trh{display:flex;gap:6px;align-items:center;font-size:.75rem;flex-wrap:wrap}
 .tr .trb{font-size:.9rem;white-space:pre-wrap;word-break:break-word}
-.tr .trn{color:var(--c);font-weight:bold;background:none;border:none;padding:0;font-size:.75rem;cursor:pointer;font-family:inherit}
+.tr .trn,.thead .trn{font-weight:bold;background:none;border:none;padding:0;font-size:.75rem;cursor:pointer;font-family:inherit}
 .tform{display:flex;flex-direction:column;gap:8px;width:100%}
 #th_in{height:76px}
 .rdel{all:unset;cursor:pointer;opacity:.5;margin-left:auto;font-size:.85rem;padding:0 4px}
@@ -364,6 +363,34 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
 .richname .rmoney i{position:absolute;top:-11px;font-style:normal;font-size:9px;line-height:1;color:#fbbf24;-webkit-text-fill-color:#fbbf24;font-weight:900;animation:richfall linear infinite;text-shadow:0 0 5px rgba(250,204,21,.8)}
 @keyframes richfall{0%{transform:translateY(-9px) rotate(0);opacity:0}20%{opacity:1}100%{transform:translateY(26px) rotate(200deg);opacity:0}}
 @keyframes richshine{to{background-position:250% 0}}
+/* ---------- ники, роли, клан-теги ---------- */
+.nm{--nc:#ededed;color:var(--nc);font-weight:650}
+.nm[data-role]{color:var(--nc)}
+.nm[data-role="sponsor"]{--nc:#facc15}
+.nm[data-role="moderator"]{--nc:#38bdf8}
+.nm[data-role="admin"]{--nc:#f59e0b}
+.nm[data-role="coowner"]{--nc:#ff4d5a}
+.nm[data-role="owner"]{--nc:#ff2b3a}
+.nm:not([data-role="user"])>.rnm{text-shadow:0 0 12px rgba(255,255,255,.12);text-shadow:0 0 12px color-mix(in srgb,var(--nc) 45%,transparent)}
+.nm[data-role="owner"]>.rnm{background:linear-gradient(90deg,#ff2b3a,#ff9a5a 45%,#ff2b3a 90%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 0 6px rgba(255,43,58,.45));animation:nmShine 5s linear infinite}
+@keyframes nmShine{to{background-position:-200% 0}}
+.ctag{--cc:#e5e5e5;display:inline-block;vertical-align:.1em;margin-right:.42em;padding:0 .4em;border-radius:4px;font:800 .78em/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.03em;color:var(--cc);color:color-mix(in srgb,var(--cc) 78%,#fff);-webkit-text-fill-color:currentColor;text-shadow:none;background:rgba(255,255,255,.08);background:color-mix(in srgb,var(--cc) 15%,transparent);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--cc) 40%,transparent);white-space:nowrap}
+.ctag::before{content:"[";opacity:.5;margin-right:1px}
+.ctag::after{content:"]";opacity:.5;margin-left:1px}
+#pnick .ctag,#u_nick .ctag,.fxed-nick .ctag{font-size:.6em;vertical-align:.25em}
+.fchip .ctag{display:none}
+.mcard>.rb{align-self:center}
+.rb{--rc:#a3a3a3;display:inline-flex;align-items:center;gap:3px;height:16px;padding:0 6px 0 4px;border-radius:5px;box-sizing:border-box;font:700 .56rem/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.08em;color:var(--rc);background:rgba(255,255,255,.06);background:color-mix(in srgb,var(--rc) 13%,transparent);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rc) 36%,transparent);white-space:nowrap;vertical-align:middle;flex:none}
+.rb svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.rb.lg{height:26px;gap:6px;padding:0 11px 0 9px;border-radius:8px;font-size:.74rem;letter-spacing:.03em}
+.rb.lg svg{width:14px;height:14px;stroke-width:2.2}
+.rb[data-role="sponsor"]{--rc:#facc15}
+.rb[data-role="moderator"]{--rc:#38bdf8}
+.rb[data-role="admin"]{--rc:#f59e0b}
+.rb[data-role="coowner"]{--rc:#ff4d5a}
+.rb[data-role="owner"]{--rc:#ff3b47;background:linear-gradient(100deg,rgba(255,43,58,.24),rgba(255,154,90,.2) 50%,rgba(255,43,58,.24));background-size:200% 100%;animation:nmShine 4s linear infinite}
+.mtag{display:inline-flex;align-items:center;height:16px;padding:0 6px;border-radius:5px;box-sizing:border-box;font-size:.56rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.72);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);text-transform:uppercase;white-space:nowrap;flex:none}
+@media (prefers-reduced-motion:reduce){.nm[data-role="owner"]>.rnm,.rb[data-role="owner"]{animation:none}}
 .gicon img,.srvicon img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
 #groupatt,#srvatt{flex:none;padding:9px 11px;display:flex;align-items:center;justify-content:center}
 #groupatt svg,#srvatt svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -385,13 +412,13 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
   100%{opacity:0;transform:scale(16) rotateY(360deg);color:#ef4444}
 }
 </style>
-<link rel="stylesheet" href="fsociety-plus.css">
-<link rel="stylesheet" href="fsociety-plus-2.css">
 <link rel="stylesheet" href="fsociety-edit.css">
 <link rel="stylesheet" href="fsociety-extra.css">
 <link rel="stylesheet" href="fsociety-theme.css">
 <link rel="stylesheet" href="fsociety-motion.css">
 <link rel="stylesheet" href="fsociety-app.css">
+<link rel="stylesheet" href="fsociety-clans.css">
+<link rel="stylesheet" href="fsociety-ui.css">
 </head>
 <body>
 <canvas id="wall"></canvas>
@@ -793,8 +820,8 @@ try{
 let cfToken=null,cfId=null;
 
 const TXT={
-  ru:{home_tag:"fsociety · наш сайт",m_home:"Главная",m_forum:"Forum",m_chat:"Чат",m_profile:"Профиль",m_admin:"Админ",f_posts:"Обсуждения",empty:"Тут еще не добавили ничего",chat_login:"Войди, чтобы читать и писать в чате",chat_empty:"Сообщений пока нет. Напиши первым!",msg_ph:"Сообщение...",msg_deleted:"сообщение удалено",msg_del_q:"Удалить это сообщение?",chat_slow:"Не так быстро, подожди секунду",s_guest:"Гость",s_lang:"Язык",s_wall:"Обои",s_out:"Выйти",s_in:"Войти",pick_role:"Выбери роль",pick_dur:"Выбери срок бана",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_ph:"Никнейм (2–20 символов)",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_captcha_srv:"Сервер не принял проверку Cloudflare",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",check_mail:"Проверь почту и подтверди email",logout:"Выйти из профиля",change_avatar:"Сменить фото",change_pass:"Сменить пароль",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",save:"Сохранить",edit_profile:"Редактировать профиль",bio_ph:"О себе (до 2000 символов)",wallpaper:"Анимированные обои",w_none:"Без обоев",w_matrix:"Matrix",w_stars:"Звёзды",w_aurora:"Сияние",w_neon:"Неон",w_embers:"Искры",w_rich:"Богатый",locked_wall:"Эти обои можно купить в PLUS 2 → Обои",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
-  en:{home_tag:"fsociety · our site",m_home:"Home",m_forum:"Forum",m_chat:"Chat",m_profile:"Profile",m_admin:"Admin",f_posts:"Discussions",empty:"Nothing has been added here yet",chat_login:"Log in to read and write in the chat",chat_empty:"No messages yet. Be the first!",msg_ph:"Message...",msg_deleted:"message deleted",msg_del_q:"Delete this message?",chat_slow:"Not so fast, wait a second",s_guest:"Guest",s_lang:"Language",s_wall:"Wallpaper",s_out:"Log out",s_in:"Log in",pick_role:"Choose a role",pick_dur:"Choose the ban duration",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_ph:"Nickname (2–20 characters)",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_captcha_srv:"The server rejected the Cloudflare check",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",check_mail:"Check your email and confirm it",logout:"Log out",change_avatar:"Change photo",change_pass:"Change password",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",save:"Save",edit_profile:"Edit profile",bio_ph:"About you (up to 2000 characters)",wallpaper:"Animated wallpapers",w_none:"No wallpaper",w_matrix:"Matrix",w_stars:"Stars",w_aurora:"Aurora",w_neon:"Neon",w_embers:"Embers",w_rich:"Rich",locked_wall:"These wallpapers can be bought in PLUS 2 → Wallpapers",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
+  ru:{home_tag:"fsociety · наш сайт",m_home:"Главная",m_forum:"Forum",m_chat:"Чат",m_profile:"Профиль",m_admin:"Админ",f_posts:"Обсуждения",empty:"Тут еще не добавили ничего",chat_login:"Войди, чтобы читать и писать в чате",chat_empty:"Сообщений пока нет. Напиши первым!",msg_ph:"Сообщение...",msg_deleted:"сообщение удалено",msg_del_q:"Удалить это сообщение?",chat_slow:"Не так быстро, подожди секунду",s_guest:"Гость",s_lang:"Язык",s_wall:"Обои",s_out:"Выйти",s_in:"Войти",pick_role:"Выбери роль",pick_dur:"Выбери срок бана",reg_title:"Регистрация",login_title:"Вход",forgot_title:"Восстановление пароля",reset_title:"Новый пароль",choose:"Выбрать фото",nick_ph:"Никнейм (2–20 символов)",email_ph:"Email",pass_ph:"Пароль (минимум 6 символов)",newpass_ph:"Новый пароль (минимум 6 символов)",code_ph:"Код из письма (6 цифр)",reg_btn:"Зарегистрироваться",login_btn:"Войти",send_code:"Отправить код",reset_btn:"Сменить пароль",to_login:"Уже есть аккаунт? Войти",to_reg:"Нет аккаунта? Зарегистрироваться",back_login:"Назад ко входу",resend:"Отправить код ещё раз",forgot:"Забыли пароль?",wait:"Подожди...",code_sent:"Код отправлен на почту",pass_changed:"Пароль изменён",err_nick:"Ник должен быть от 2 до 20 символов",err_nick_taken:"Этот ник уже занят",err_email:"Введи email",err_pass:"Пароль должен быть не короче 6 символов",err_bad:"Неверный email или пароль",err_exists:"Этот email уже зарегистрирован",err_net:"Нет связи с сервером, проверь интернет",err_captcha:"Подтверди, что ты не робот (дождись галочки)",err_captcha_srv:"Сервер не принял проверку Cloudflare",err_generic:"Что-то пошло не так, попробуй ещё раз",err_code:"Неверный или просроченный код",err_rate:"Слишком часто, подожди немного и попробуй снова",err_mail:"Не удалось отправить письмо, попробуй позже",err_same:"Новый пароль должен отличаться от старого",err_banned:"Этот аккаунт заблокирован",err_pass_match:"Пароли не совпадают",err_cur_pass:"Неверный текущий пароль",check_mail:"Проверь почту и подтверди email",logout:"Выйти из профиля",change_avatar:"Сменить фото",change_pass:"Сменить пароль",pass_title:"Смена пароля",cur_pass_ph:"Текущий пароль",newpass2_ph:"Повтори новый пароль",save:"Сохранить",edit_profile:"Редактировать профиль",bio_ph:"О себе (до 2000 символов)",wallpaper:"Анимированные обои",w_none:"Без обоев",w_matrix:"Matrix",w_stars:"Звёзды",w_aurora:"Сияние",w_neon:"Неон",w_embers:"Искры",w_rich:"Богатый",locked_wall:"Эти обои доступны со статуса «Спонсор»",logout_q:"Выйти из профиля?",yes:"Да",no:"Отмена",admin_panel:"Админ-панель",search_ph:"Поиск по нику, почте или ID",total:"Всего пользователей: {n}",loading:"Загрузка...",no_users:"Никого не найдено",delete_user:"Удалить",delete_q:"Удалить пользователя {n}? Это действие нельзя отменить.",saved:"Сохранено",banned_title:"Доступ ограничен",ban_until:"Бан до",ban_forever:"Бан навсегда",banned:"Забанен",devices:"устройств",ban_btn:"Забанить",ban_edit_btn:"Изменить бан",unban_btn:"Разбанить",ban_title:"Бан: {n}",ban_edit_title:"Изменить бан: {n}",ban_reason_ph:"Причина (необязательно)",ban_custom_ph:"Срок в минутах",ban_ip:"Заблокировать IP-адреса",ban_device:"Заблокировать устройства",ban_ok:"Подтвердить",ban_bad_dur:"Укажи срок в минутах",unban_q:"Снять бан с {n}?",d10:"10 минут",d60:"1 час",d1440:"1 день",d10080:"7 дней",d43200:"30 дней",dperm:"Навсегда",dcustom:"Свой срок (в минутах)"},
+  en:{home_tag:"fsociety · our site",m_home:"Home",m_forum:"Forum",m_chat:"Chat",m_profile:"Profile",m_admin:"Admin",f_posts:"Discussions",empty:"Nothing has been added here yet",chat_login:"Log in to read and write in the chat",chat_empty:"No messages yet. Be the first!",msg_ph:"Message...",msg_deleted:"message deleted",msg_del_q:"Delete this message?",chat_slow:"Not so fast, wait a second",s_guest:"Guest",s_lang:"Language",s_wall:"Wallpaper",s_out:"Log out",s_in:"Log in",pick_role:"Choose a role",pick_dur:"Choose the ban duration",reg_title:"Sign up",login_title:"Log in",forgot_title:"Password recovery",reset_title:"New password",choose:"Choose photo",nick_ph:"Nickname (2–20 characters)",email_ph:"Email",pass_ph:"Password (at least 6 characters)",newpass_ph:"New password (at least 6 characters)",code_ph:"Code from the email (6 digits)",reg_btn:"Sign up",login_btn:"Log in",send_code:"Send code",reset_btn:"Change password",to_login:"Already have an account? Log in",to_reg:"No account? Sign up",back_login:"Back to login",resend:"Send the code again",forgot:"Forgot password?",wait:"Please wait...",code_sent:"Code sent to your email",pass_changed:"Password changed",err_nick:"Nickname must be 2–20 characters",err_nick_taken:"This nickname is already taken",err_email:"Enter your email",err_pass:"Password must be at least 6 characters",err_bad:"Wrong email or password",err_exists:"This email is already registered",err_net:"Can't reach the server, check your internet",err_captcha:"Please confirm you are not a robot (wait for the checkmark)",err_captcha_srv:"The server rejected the Cloudflare check",err_generic:"Something went wrong, please try again",err_code:"Wrong or expired code",err_rate:"Too often, wait a bit and try again",err_mail:"Could not send the email, try later",err_same:"The new password must differ from the old one",err_banned:"This account is banned",err_pass_match:"Passwords do not match",err_cur_pass:"Wrong current password",check_mail:"Check your email and confirm it",logout:"Log out",change_avatar:"Change photo",change_pass:"Change password",pass_title:"Change password",cur_pass_ph:"Current password",newpass2_ph:"Repeat the new password",save:"Save",edit_profile:"Edit profile",bio_ph:"About you (up to 2000 characters)",wallpaper:"Animated wallpapers",w_none:"No wallpaper",w_matrix:"Matrix",w_stars:"Stars",w_aurora:"Aurora",w_neon:"Neon",w_embers:"Embers",w_rich:"Rich",locked_wall:"These wallpapers are available from Sponsor status",logout_q:"Log out of your profile?",yes:"Yes",no:"Cancel",admin_panel:"Admin panel",search_ph:"Search by nickname, email or ID",total:"Total users: {n}",loading:"Loading...",no_users:"Nobody found",delete_user:"Delete",delete_q:"Delete user {n}? This cannot be undone.",saved:"Saved",banned_title:"Access restricted",ban_until:"Banned until",ban_forever:"Banned forever",banned:"Banned",devices:"devices",ban_btn:"Ban",ban_edit_btn:"Edit ban",unban_btn:"Unban",ban_title:"Ban: {n}",ban_edit_title:"Edit ban: {n}",ban_reason_ph:"Reason (optional)",ban_custom_ph:"Duration in minutes",ban_ip:"Block IP addresses",ban_device:"Block devices",ban_ok:"Confirm",ban_bad_dur:"Enter the duration in minutes",unban_q:"Unban {n}?",d10:"10 minutes",d60:"1 hour",d1440:"1 day",d10080:"7 days",d43200:"30 days",dperm:"Forever",dcustom:"Custom (minutes)"}
 };
 Object.assign(TXT.ru,{
   f_new:"Новая тема",f_new_title:"Новая тема",f_thread_title:"Заголовок темы",f_body_ph:"Текст темы...",f_create:"Создать",
@@ -1066,7 +1093,34 @@ function countWord(n,base){
 }
 const rk=r=>RANK[r]||0;
 const ownerLike=r=>r==="owner"||r==="coowner";
-function roleLabel(r){r=r||"user";if(r==="coowner")return lang==="en"?"CO-OWNER":"СОВЛАДЕЛЕЦ";return String(r).toUpperCase()}
+const ROLE_NAME={
+  ru:{user:"Пользователь",sponsor:"Спонсор",moderator:"Модератор",admin:"Администратор",coowner:"Совладелец",owner:"Владелец"},
+  en:{user:"User",sponsor:"Sponsor",moderator:"Moderator",admin:"Admin",coowner:"Co-owner",owner:"Owner"}
+};
+const ROLE_SHORT={user:"USER",sponsor:"SPONSOR",moderator:"MOD",admin:"ADMIN",coowner:"CO-OWNER",owner:"OWNER"};
+const ROLE_ICO={
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+  sponsor:'<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 21 8 9l4-6 4 6z"/>',
+  moderator:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  admin:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  coowner:'<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/>',
+  owner:'<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z" fill="currentColor"/>'
+};
+const roleOk=r=>Object.prototype.hasOwnProperty.call(RANK,r);
+function roleLabel(r){r=roleOk(r)?r:"user";return ROLE_NAME[lang==="en"?"en":"ru"][r]}
+function paintRoleBadge(el,role,size){
+  role=roleOk(role)?role:"user";
+  el.className="rb"+(size==="lg"?" lg":"");
+  el.dataset.role=role;
+  el.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+ROLE_ICO[role]+'</svg>';
+  const s=document.createElement("span");s.textContent=size==="lg"?roleLabel(role):ROLE_SHORT[role];
+  el.appendChild(s);
+  el.title=roleLabel(role);
+  return el;
+}
+function roleBadge(role,size){return paintRoleBadge(document.createElement("span"),role,size)}
+function addRoleBadge(parent,role){if(role&&role!=="user"&&roleOk(role))parent.appendChild(roleBadge(role))}
+function ctxTag(text){const s=document.createElement("span");s.className="mtag";s.textContent=text;return s}
 const myRank=()=>user?rk(user.role):0;
 const isStaff=()=>myRank()>=2;
 const locale=()=>lang==="en"?"en-GB":"ru-RU";
@@ -1531,26 +1585,87 @@ function setAva(el,src,spin){
 }
 function setRoleClass(el,role){ROLEC.forEach(c=>el.classList.remove(c));el.classList.add(role)}
 function isRich(id){return !!id&&richIds.has(String(id))}
-function richName(el,id,nick){
+/* ник = [клан-тег] + ник в цвете роли; роль/клан подтягиваются из name_tags */
+const nameTags=new Map();
+let ntQueue=new Set(),ntTimer=0,ntMissing=false;
+const NT_TTL=120000;
+const HEX6=/^#[0-9a-f]{6}$/i;
+function isMissingFn(e){const m=String((e&&e.message)||"");return !!e&&(e.code==="PGRST202"||e.code==="42883"||/could not find the function|does not exist/i.test(m))}
+function ntWant(k){
+  if(!k||ntMissing||!sb)return;
+  const c=nameTags.get(k);
+  if(c&&Date.now()-c.at<NT_TTL)return;
+  ntQueue.add(k);
+  if(!ntTimer)ntTimer=setTimeout(ntFlush,40);
+}
+async function ntFlush(){
+  ntTimer=0;
+  const all=[...ntQueue],ids=all.slice(0,150);
+  ntQueue=new Set(all.slice(150));
+  if(!ids.length||!sb)return;
+  const now=Date.now();
+  ids.forEach(k=>nameTags.set(k,Object.assign({},nameTags.get(k)||{},{at:now})));
+  try{
+    const r=await sb.rpc("name_tags",{p_ids:ids});
+    if(r.error){if(isMissingFn(r.error))ntMissing=true;throw r.error}
+    const got=new Set();
+    (r.data||[]).forEach(x=>{
+      const k=String(x.user_id);got.add(k);
+      nameTags.set(k,{at:Date.now(),role:roleOk(x.role)?x.role:"user",clan:x.clan_id||null,tag:x.clan_tag||null,color:HEX6.test(x.clan_color||"")?x.clan_color:null,cname:x.clan_name||""});
+    });
+    ids.forEach(k=>{if(!got.has(k))nameTags.set(k,{at:Date.now(),role:null,clan:null,tag:null})});
+    ids.forEach(ntRepaint);
+  }catch(e){}
+  if(ntQueue.size&&!ntTimer)ntTimer=setTimeout(ntFlush,40);
+}
+function ntRepaint(k){
+  let list;
+  try{list=document.querySelectorAll('.nm[data-uid="'+(window.CSS&&CSS.escape?CSS.escape(k):k)+'"]')}catch(e){return}
+  list.forEach(ntPaint);
+}
+function ntForget(id){
+  if(!id)return;
+  const k=String(id);nameTags.delete(k);ntWant(k);
+}
+function ntPaint(el){
+  const k=el.dataset.uid,info=k?nameTags.get(k):null;
+  if(!el.dataset.rfix)el.dataset.role=(info&&info.role)||"user";
+  let ct=el.firstElementChild&&el.firstElementChild.classList.contains("ctag")?el.firstElementChild:null;
+  if(info&&info.tag){
+    if(!ct){ct=document.createElement("span");ct.className="ctag";el.insertBefore(ct,el.firstChild)}
+    ct.textContent=info.tag;
+    ct.title=info.cname||info.tag;
+    if(info.color)ct.style.setProperty("--cc",info.color);else ct.style.removeProperty("--cc");
+  }else if(ct)ct.remove();
+}
+function richName(el,id,nick,role){
   if(!el)return el;
   el.textContent="";
   el.classList.remove("richname");
+  el.classList.add("nm");
+  const k=id?String(id):"";
+  if(k)el.dataset.uid=k;else delete el.dataset.uid;
+  if(roleOk(role)){el.dataset.role=role;el.dataset.rfix="1"}else delete el.dataset.rfix;
   const tx=document.createElement("span");
   tx.className="rnm";tx.textContent=nick||"?";
-  el.appendChild(tx);
-  if(!isRich(id))return el;
-  el.classList.add("richname");
-  const rain=document.createElement("span");
-  rain.className="rmoney";
-  for(let i=0;i<7;i++){
-    const s=document.createElement("i");
-    s.textContent=i%2?"$":"💵";
-    s.style.left=(4+i*14)+"%";
-    s.style.animationDelay=(-(i*0.37)%2.4)+"s";
-    s.style.animationDuration=(2.1+(i%3)*0.45)+"s";
-    rain.appendChild(s);
-  }
-  el.appendChild(rain);
+  if(isRich(id)){
+    const w=document.createElement("span");w.className="richname";
+    w.appendChild(tx);
+    const rain=document.createElement("span");
+    rain.className="rmoney";
+    for(let i=0;i<7;i++){
+      const s=document.createElement("i");
+      s.textContent=i%2?"$":"💵";
+      s.style.left=(4+i*14)+"%";
+      s.style.animationDelay=(-(i*0.37)%2.4)+"s";
+      s.style.animationDuration=(2.1+(i%3)*0.45)+"s";
+      rain.appendChild(s);
+    }
+    w.appendChild(rain);
+    el.appendChild(w);
+  }else el.appendChild(tx);
+  ntPaint(el);
+  ntWant(k);
   return el;
 }
 async function loadRichUsers(){
@@ -1644,9 +1759,8 @@ function renderUser(){
   setAva($("pava"),user&&user.avatar,spin);
   setRoleClass($("me"),role);
   setRoleClass($("pava"),role);
-  $("badge").textContent=roleLabel(role);
-  $("badge").className="badge "+role;
-  if(user)richName($("pnick"),user.id,user.nick);else $("pnick").textContent="";
+  paintRoleBadge($("badge"),role,"lg");
+  if(user)richName($("pnick"),user.id,user.nick,role);else $("pnick").textContent="";
   $("psid").textContent=(user&&user.sid)?"ID: "+user.sid:"";
   $("pmail").textContent=user?user.email:"";
   $("pbio").textContent=(user&&user.bio)?user.bio:"";
@@ -1654,6 +1768,7 @@ function renderUser(){
   const ab=$("auditbtn");
   if(ab)ab.style.display=myRank()>=3?"":"none";
   dockActive();
+  if(window.fsClans&&typeof fsClans.onSelf==="function")try{fsClans.onSelf()}catch(e){}
 }
 function setPrev(src){setAva($("prev"),src,false)}
 async function loadUser(u){
@@ -1681,8 +1796,7 @@ async function loadUser(u){
   if(p&&p.wallpaper){
     const w=WALLS.find(x=>x[0]===p.wallpaper);
     const customOk=p.wallpaper!=="custom"||wallPath;
-    const owned=!!(window.fxPlus2&&typeof window.fxPlus2.wallUnlocked==="function"&&window.fxPlus2.wallUnlocked(p.wallpaper));
-    if(w&&(w[2]||rk(user.role)>=1||owned)&&customOk&&(p.wallpaper!==wallId||p.wallpaper==="custom"))setWall(p.wallpaper);
+    if(w&&(w[2]||rk(user.role)>=1)&&customOk&&(p.wallpaper!==wallId||p.wallpaper==="custom"))setWall(p.wallpaper);
   }
 }
 function clearForm(){
@@ -1721,8 +1835,7 @@ function buildWallGrid(){
   const g=$("wgrid");g.textContent="";
   WALLS.forEach(w=>{
     const id=w[0];
-    const owned=!!(window.fxPlus2&&typeof window.fxPlus2.wallUnlocked==="function"&&window.fxPlus2.wallUnlocked(id));
-    const ok=w[2]||myRank()>=1||owned;
+    const ok=w[2]||myRank()>=1;
     const custom=id==="custom";
     const customized=!!(user&&user.wallCustom);
     const b=document.createElement("button");
@@ -2244,12 +2357,10 @@ function msgNode(m){
     row.appendChild(rp);
   }
   const head=document.createElement("div");head.className="mh";
-  const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id,m.nick);
+  const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id,m.nick,role);
   nk.onclick=()=>{if(m.user_id)openProfile(m.user_id)};
   head.appendChild(nk);
-  if(role!=="user"){
-    const tg=document.createElement("span");tg.className="mtag";tg.textContent=roleLabel(role);head.appendChild(tg);
-  }
+  addRoleBadge(head,role);
   const tm=document.createElement("span");tm.className="mtime";
   tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
   head.appendChild(tm);
@@ -2418,9 +2529,8 @@ async function openProfile(id){
     if(p.rich_fx)richIds.add(String(p.id));else richIds.delete(String(p.id));
     setAva($("u_ava"),p.avatar,ownerLike(p.role));
     setRoleClass($("u_ava"),p.role||"user");
-    richName($("u_nick"),p.id,p.nick);
-    $("u_badge").textContent=roleLabel(p.role||"user");
-    $("u_badge").className="badge "+(p.role||"user");
+    richName($("u_nick"),p.id,p.nick,p.role||"user");
+    paintRoleBadge($("u_badge"),p.role||"user","lg");
     $("u_bio").textContent=p.bio||"";
     $("u_bio").style.display=p.bio?"":"none";
     $("u_meta").textContent=t("p_id")+": "+p.short_id;
@@ -2429,6 +2539,7 @@ async function openProfile(id){
     $("u_warn").onclick=()=>{if(canWarn)openWarn(p)};
     $("u_setava").style.display=myRank()>=4&&rk(p.role||"user")<myRank()?"":"none";
     initFriendBtn(p);
+    if(window.fsClans&&typeof fsClans.onProfile==="function")try{fsClans.onProfile(p)}catch(e){}
     $("umodal").classList.add("show");
     try{
       const wr=await sb.rpc("warnings_list",{p_user:id});
@@ -2605,8 +2716,8 @@ function renderForum(rows){
     const b=document.createElement("button");b.type="button";b.className="flink glass";
     const tt=document.createElement("div");tt.className="ft";tt.textContent=th.title;
     const fm=document.createElement("div");fm.className="fm";
-    const fn=document.createElement("span");fn.className="fn "+(th.role||"user");richName(fn,th.author,th.nick);
-    fm.appendChild(fn);
+    const fn=document.createElement("span");fn.className="fn";richName(fn,th.author,th.nick,th.role||"user");
+    fm.appendChild(fn);addRoleBadge(fm,th.role);
     fm.appendChild(document.createTextNode("· "+new Date(th.created_at).toLocaleDateString(locale())));
     fm.appendChild(document.createTextNode("· "+th.replies+" "+countWord(th.replies,"f_replies")));
     b.appendChild(tt);b.appendChild(fm);
@@ -2661,9 +2772,9 @@ function renderThread(th,rows){
   head.textContent="";
   const h=document.createElement("h2");h.textContent=th.title;
   const meta=document.createElement("div");meta.className="fm";
-  const au=document.createElement("button");au.type="button";au.className="trn "+(th.role||"user");richName(au,th.author,th.nick);
+  const au=document.createElement("button");au.type="button";au.className="trn";richName(au,th.author,th.nick,th.role||"user");
   au.onclick=()=>{if(th.author)openProfile(th.author)};
-  meta.appendChild(au);
+  meta.appendChild(au);addRoleBadge(meta,th.role);
   meta.appendChild(document.createTextNode(" · "+new Date(th.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"})));
   const et=editedTag(th.edited_at);if(et)meta.appendChild(et);
   if(user&&th.author===user.id){
@@ -2689,11 +2800,11 @@ function renderThread(th,rows){
     const card=document.createElement("div");card.className="tr glass";
     card.dataset.id=String(rp.id);card.dataset.kind="reply";
     const hd=document.createElement("div");hd.className="trh";
-    const nk=document.createElement("button");nk.type="button";nk.className="trn "+(rp.role||"user");richName(nk,rp.author,rp.nick);
+    const nk=document.createElement("button");nk.type="button";nk.className="trn";richName(nk,rp.author,rp.nick,rp.role||"user");
     nk.onclick=()=>{if(rp.author)openProfile(rp.author)};
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(rp.created_at).toLocaleString(locale(),{dateStyle:"short",timeStyle:"short"});
-    hd.appendChild(nk);hd.appendChild(tm);
+    hd.appendChild(nk);addRoleBadge(hd,rp.role);hd.appendChild(tm);
     const et=editedTag(rp.edited_at);if(et)hd.appendChild(et);
     if(user&&rp.author===user.id){
       const e=document.createElement("button");e.type="button";e.className="rdel";e.textContent="✎";e.title=t("edit");
@@ -3050,7 +3161,7 @@ function renderFriends(){
     frState.req.forEach(r=>{
       const row=document.createElement("div");row.className="frrow glass";
       const av=document.createElement("div");av.className="ava";setAva(av,r.avatar,false);setRoleClass(av,r.role||"user");row.appendChild(av);
-      const nm=document.createElement("span");nm.className="frnick";richName(nm,r.id,r.nick);row.appendChild(nm);
+      const nm=document.createElement("span");nm.className="frnick";richName(nm,r.id,r.nick,r.role);row.appendChild(nm);
       const bs=document.createElement("div");bs.className="frbtns";
       const ok=document.createElement("button");ok.type="button";ok.textContent="✓";ok.title=t("fr_accept");
       ok.onclick=()=>answerFriend(r.id,true);
@@ -3067,7 +3178,7 @@ function renderFriends(){
     frState.friends.forEach(f=>{
       const c=document.createElement("button");c.type="button";c.className="fchip";
       const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");
-      const sp=document.createElement("span");richName(sp,f.id,f.nick);
+      const sp=document.createElement("span");richName(sp,f.id,f.nick,f.role);
       c.appendChild(av);c.appendChild(sp);
       c.onclick=()=>openProfile(f.id);
       chips.appendChild(c);
@@ -3198,7 +3309,7 @@ function renderDmContacts(){
     const av=document.createElement("div");av.className="ava";setAva(av,c.avatar,false);setRoleClass(av,c.role||"user");b.appendChild(av);
     const mid=document.createElement("div");mid.className="dmmid";
     const top=document.createElement("div");top.className="dmtop";
-    const nm=document.createElement("span");nm.className="dmn2";richName(nm,c.id,c.nick);top.appendChild(nm);
+    const nm=document.createElement("span");nm.className="dmn2";richName(nm,c.id,c.nick,c.role);top.appendChild(nm);
     if(c.rel!=="friend"){const rl=document.createElement("span");rl.className="dmrel";rl.textContent=dmRelText(c.rel);top.appendChild(rl)}
     mid.appendChild(top);
     const last=document.createElement("div");last.className="dmlast";
@@ -3242,7 +3353,7 @@ async function dmInit(){
   }else{
     stopGroupPoll();
     if(dmWith){
-      richName($("dmnick"),dmWith.id,dmWith.nick);
+      richName($("dmnick"),dmWith.id,dmWith.nick,dmWith.role);
       $("dmrel").textContent=dmRelText(dmWith.rel);
       setAva($("dmava"),dmWith.avatar,false);setRoleClass($("dmava"),dmWith.role||"user");
       await dmLoadMsgs();
@@ -3413,11 +3524,11 @@ function renderGroupMsgs(){
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
     d.dataset.id=String(m.id);d.dataset.kind="group";
     const head=document.createElement("div");head.className="mh";
-    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick);
+    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick,m.role);
     nk.onclick=()=>{if(m.author)openProfile(m.author)};
     head.appendChild(nk);
-    if(m.author===groupWith.owner){const tg=document.createElement("span");tg.className="mtag";tg.textContent=t("group_owner");head.appendChild(tg)}
-    else if(m.role&&m.role!=="user"){const tg=document.createElement("span");tg.className="mtag";tg.textContent=roleLabel(m.role);head.appendChild(tg)}
+    addRoleBadge(head,m.role);
+    if(m.author===groupWith.owner)head.appendChild(ctxTag(t("group_owner")));
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     head.appendChild(tm);
@@ -3604,7 +3715,7 @@ async function openGroupMembers(){
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,m.avatar,false);setRoleClass(av,m.user_role||"user");row.appendChild(av);
       const gr=document.createElement("div");gr.className="grow";
-      const nm=document.createElement("div");nm.className="pname";richName(nm,m.user_id,(m.nick||"?")+(m.user_id===user.id?" ("+t("group_you")+")":""));
+      const nm=document.createElement("div");nm.className="pname";richName(nm,m.user_id,(m.nick||"?")+(m.user_id===user.id?" ("+t("group_you")+")":""),m.user_role);
       const sub=document.createElement("div");sub.className="gsub";sub.textContent=m.member_role==="owner"?t("group_owner"):t("group_member");
       gr.appendChild(nm);gr.appendChild(sub);row.appendChild(gr);
       if(g.owner===user.id&&m.member_role!=="owner"){
@@ -3643,7 +3754,7 @@ async function openGroupInvite(){
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");row.appendChild(av);
       const gr=document.createElement("div");gr.className="grow";
-      const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick);gr.appendChild(nm);row.appendChild(gr);
+      const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick,f.role);gr.appendChild(nm);row.appendChild(gr);
       const b=document.createElement("button");b.type="button";b.className="mini main";b.textContent=t("group_invite");
       b.onclick=async()=>{
         b.disabled=true;
@@ -3681,7 +3792,7 @@ async function openGroupCreate(){
         const cb=document.createElement("input");cb.type="checkbox";cb.value=f.id;
         cb.onchange=()=>{cb.checked?picked.add(f.id):picked.delete(f.id)};
         const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");
-        const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick);
+        const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick,f.role);
         gr.appendChild(nm);
         row.appendChild(cb);row.appendChild(av);row.appendChild(gr);wrap.appendChild(row);
       });
@@ -4045,11 +4156,11 @@ function renderServerMsgs(){
     const d=document.createElement("div");d.className="msg"+(mine?" mine":"");
     d.dataset.id=String(m.id);d.dataset.kind="server";
     const head=document.createElement("div");head.className="mh";
-    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick);
+    const nk=document.createElement("button");nk.type="button";nk.className="mn mnik";richName(nk,m.user_id||m.author,m.nick,m.role);
     nk.onclick=()=>{if(m.author)openProfile(m.author)};
     head.appendChild(nk);
-    if(m.role&&m.role!=="user"){const tg=document.createElement("span");tg.className="mtag";tg.textContent=roleLabel(m.role);head.appendChild(tg)}
-    if(m.author===srvCurrent.owner){const tg=document.createElement("span");tg.className="mtag";tg.textContent=t("srv_owner");head.appendChild(tg)}
+    addRoleBadge(head,m.role);
+    if(m.author===srvCurrent.owner)head.appendChild(ctxTag(t("srv_owner")));
     const tm=document.createElement("span");tm.className="mtime";
     tm.textContent=new Date(m.created_at).toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"});
     head.appendChild(tm);
@@ -4240,7 +4351,7 @@ async function openServerInvite(){
     list.forEach(f=>{
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,f.avatar,false);setRoleClass(av,f.role||"user");row.appendChild(av);
-      const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick);gr.appendChild(nm);row.appendChild(gr);
+      const gr=document.createElement("div");gr.className="grow";const nm=document.createElement("div");nm.className="pname";richName(nm,f.id,f.nick,f.role);gr.appendChild(nm);row.appendChild(gr);
       const b=document.createElement("button");b.type="button";b.className="mini main";b.textContent=t("srv_invite");
       b.onclick=async()=>{
         b.disabled=true;
@@ -4273,7 +4384,7 @@ async function openServerMembers(){
       const row=document.createElement("div");row.className="pickrow";
       const av=document.createElement("div");av.className="ava";setAva(av,m.avatar,false);setRoleClass(av,m.user_role||"user");row.appendChild(av);
       const gr=document.createElement("div");gr.className="grow";
-      const nm=document.createElement("div");nm.className="pname";richName(nm,m.user_id,(m.nick||"?")+(m.user_id===user.id?" ("+t("srv_you")+")":""));
+      const nm=document.createElement("div");nm.className="pname";richName(nm,m.user_id,(m.nick||"?")+(m.user_id===user.id?" ("+t("srv_you")+")":""),m.user_role);
       const sub=document.createElement("div");sub.className="gsub";sub.textContent=srvRoleLabel(m.member_role);gr.appendChild(nm);gr.appendChild(sub);row.appendChild(gr);
       if(srv.member_role==="owner"&&m.member_role!=="owner"){
         const tb=document.createElement("button");tb.type="button";tb.className="mini";tb.textContent=m.member_role==="admin"?t("srv_make_member"):t("srv_make_admin");
@@ -4602,9 +4713,9 @@ function renderUsers(){
   rows.forEach(u=>{
     const card=document.createElement("div");card.className="ucard glass";
     const top=document.createElement("div");top.className="urow";
-    const name=document.createElement("button");name.type="button";name.className="uopen";richName(name,u.id,"#"+u.short_id+" "+u.nick);
+    const name=document.createElement("button");name.type="button";name.className="uopen";richName(name,u.id,"#"+u.short_id+" "+u.nick,u.role);
     name.onclick=()=>openProfile(u.id);
-    const bd=document.createElement("span");bd.className="badge "+u.role;bd.textContent=roleLabel(u.role);
+    const bd=roleBadge(u.role);
     top.appendChild(name);top.appendChild(bd);
     const mail=document.createElement("div");mail.className="mail";mail.textContent=u.email;
     const date=document.createElement("div");date.className="mail";date.textContent=new Date(u.created_at).toLocaleDateString(locale());
@@ -4705,7 +4816,7 @@ function updateShade(){
   const u=user;
   setAva($("sh_ava"),u&&u.avatar,u&&ownerLike(u.role));
   setRoleClass($("sh_ava"),u?u.role:"user");
-  if(u)richName($("sh_nick"),u.id,u.nick);else $("sh_nick").textContent=t("s_guest");
+  if(u)richName($("sh_nick"),u.id,u.nick,u.role);else $("sh_nick").textContent=t("s_guest");
   $("sh_role").textContent=u?roleLabel(u.role):"";
   $("t_lang_l").textContent=t("s_lang")+": "+lang.toUpperCase();
   const w=WALLS.find(x=>x[0]===wallId);
@@ -4820,11 +4931,11 @@ if(sb){
 }
 boot();
 </script>
-<script src="fsociety-plus.js"></script>
-<script src="fsociety-plus-2.js"></script>
 <script src="fsociety-edit.js"></script>
-<script src="fsociety-extra.js"></script>
 <script src="fsociety-motion.js"></script>
 <script src="fsociety-app.js"></script>
+<script src="fsociety-clans.js"></script>
+<script src="fsociety-ui.js"></script>
+<script src="fsociety-osint.js"></script>
 </body>
 </html>
